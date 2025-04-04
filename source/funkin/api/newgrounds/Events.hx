@@ -8,7 +8,6 @@ import io.newgrounds.objects.events.Result;
 /**
  * Use Newgrounds to perform basic telemetry. Ignore if not logged in to Newgrounds.
  */
-@:nullSafety
 class Events
 {
   // Only allow letters, numbers, spaces, dashes, and underscores.
@@ -17,13 +16,16 @@ class Events
   public static function logEvent(eventName:String):Void
   {
     #if (FEATURE_NEWGROUNDS && FEATURE_NEWGROUNDS_EVENTS)
-    var eventHandler = NG.core.calls.event;
-
-    if (eventHandler != null)
+    if (NewgroundsClient.instance.isLoggedIn())
     {
-      var sanitizedEventName = EVENT_NAME_REGEX.replace(eventName, '');
-      var outcomeHandler = onEventLogged.bind(sanitizedEventName, _);
-      eventHandler.logEvent(sanitizedEventName).addOutcomeHandler(outcomeHandler).send();
+      var eventHandler = NG.core.calls.event;
+
+      if (eventHandler != null)
+      {
+        var sanitizedEventName = EVENT_NAME_REGEX.replace(eventName, '');
+        var outcomeHandler = onEventLogged.bind(sanitizedEventName, _);
+        eventHandler.logEvent(sanitizedEventName).addOutcomeHandler(outcomeHandler).send();
+      }
     }
     #end
   }

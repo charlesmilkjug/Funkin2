@@ -4,33 +4,29 @@ package funkin.api.newgrounds;
 import io.newgrounds.Call.CallError;
 import io.newgrounds.objects.ScoreBoard as LeaderboardData;
 import io.newgrounds.objects.events.Outcome;
-import io.newgrounds.utils.ScoreBoardList;
 
 class Leaderboards
 {
   public static function listLeaderboardData():Map<Leaderboard, LeaderboardData>
   {
-    var leaderboardList:Null<ScoreBoardList> = NewgroundsClient.instance.leaderboards;
-    if (leaderboardList == null)
+    if (NewgroundsClient.instance.leaderboards == null)
     {
       trace('[NEWGROUNDS] Not logged in, cannot fetch medal data!');
       return [];
     }
-    else
+
+    var result:Map<Leaderboard, LeaderboardData> = [];
+
+    for (leaderboardId in NewgroundsClient.instance.leaderboards.keys())
     {
-      var result:Map<Leaderboard, LeaderboardData> = [];
+      var leaderboardData = NewgroundsClient.instance.leaderboards.get(leaderboardId);
+      if (leaderboardData == null) continue;
 
-      for (leaderboardId in leaderboardList.keys())
-      {
-        var leaderboardData = leaderboardList.get(leaderboardId);
-        if (leaderboardData == null) continue;
-
-        // A little hacky, but it works.
-        result.set(cast leaderboardId, leaderboardData);
-      }
-
-      return result;
+      // A little hacky, but it works.
+      result.set(cast leaderboardId, leaderboardData);
     }
+
+    return result;
   }
 
   /**
@@ -46,10 +42,7 @@ class Leaderboards
 
     if (NewgroundsClient.instance.isLoggedIn())
     {
-      var leaderboardList = NewgroundsClient.instance.leaderboards;
-      if (leaderboardList == null) return;
-
-      var leaderboardData:Null<LeaderboardData> = leaderboardList.get(leaderboard.getId());
+      var leaderboardData = NewgroundsClient.instance.leaderboards.get(leaderboard.getId());
       if (leaderboardData != null)
       {
         leaderboardData.postScore(score, function(outcome:Outcome<CallError>):Void {
