@@ -17,16 +17,13 @@ class Events
   public static function logEvent(eventName:String):Void
   {
     #if (FEATURE_NEWGROUNDS && FEATURE_NEWGROUNDS_EVENTS)
-    if (NewgroundsClient.instance.isLoggedIn())
-    {
-      var eventHandler = NG.core.calls.event;
+    var eventHandler = NG.core.calls.event;
 
-      if (eventHandler != null)
-      {
-        var sanitizedEventName = EVENT_NAME_REGEX.replace(eventName, '');
-        var outcomeHandler = onEventLogged.bind(sanitizedEventName, _);
-        eventHandler.logEvent(sanitizedEventName).addOutcomeHandler(outcomeHandler).send();
-      }
+    if (eventHandler != null)
+    {
+      var sanitizedEventName = EVENT_NAME_REGEX.replace(eventName, '');
+      var outcomeHandler = onEventLogged.bind(sanitizedEventName, _);
+      eventHandler.logEvent(sanitizedEventName).addOutcomeHandler(outcomeHandler).send();
     }
     #end
   }
