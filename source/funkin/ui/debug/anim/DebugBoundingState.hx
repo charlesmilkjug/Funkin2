@@ -530,7 +530,7 @@ class DebugBoundingState extends FlxState
     offsetAnimationDropdown.onChange = function(event:UIEvent) {
       if (event.data != null)
       {
-        trace('Selected animation ${event?.data?.id}');
+        trace('Selected animation ${event.data.id}');
         playCharacterAnimation(event.data.id, true);
       }
     }
