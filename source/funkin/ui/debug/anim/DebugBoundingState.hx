@@ -527,9 +527,12 @@ class DebugBoundingState extends FlxState
 
     trace('Added ${offsetAnimationDropdown.dataSource.size} to HaxeUI dropdown');
 
-    offsetAnimationDropdown.onChange = function(event:UIEvent) {
-      trace('Selected animation ${event?.data?.id}');
-      playCharacterAnimation(event.data.id, true);
+     offsetAnimationDropdown.onChange = function(event:UIEvent) {
+      if (event.data != null)
+      {
+        trace('Selected animation ${event?.data?.id}');
+        playCharacterAnimation(event.data.id, true);
+      }
     }
 
     txtOffsetShit.text = 'Offset: ' + swagChar.animOffsets;
