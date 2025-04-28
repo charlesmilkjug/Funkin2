@@ -5,6 +5,7 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.FlxG;
 import funkin.play.notes.notestyle.NoteStyle;
 import flixel.group.FlxSpriteGroup;
+import funkin.play.notes.SustainTrail;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
