@@ -894,7 +894,9 @@ class PlayState extends MusicBeatSubState
       if (isInCountdown)
       {
         // Do NOT apply offsets at this point, because they already got applied the previous frame!
-        Conductor.instance.update(Conductor.instance.songPosition + elapsed * 1000, false);
+        @:privateAccess
+        if (!FlxG.game._lostFocus && Preferences.autoPause || !Preferences.autoPause) Conductor.instance.update(Conductor.instance.songPosition
+          + elapsed * 1000, false);
         if (Conductor.instance.songPosition >= (startTimestamp + Conductor.instance.combinedOffset))
         {
           trace("started song at " + Conductor.instance.songPosition);
@@ -907,8 +909,11 @@ class PlayState extends MusicBeatSubState
       if (Constants.EXT_SOUND == 'mp3') Conductor.instance.formatOffset = Constants.MP3_DELAY_MS;
       else
         Conductor.instance.formatOffset = 0.0;
-
-      Conductor.instance.update(Conductor.instance.songPosition + elapsed * 1000, false); // Normal conductor update.
+      @:privateAccess
+      if (!FlxG.game._lostFocus && Preferences.autoPause || !Preferences.autoPause)
+        Conductor.instance.update((FlxG.sound.music.pitch != 1) ? FlxG.sound.music.time
+        + elapsed * 1000 : (Conductor.instance.songPosition + elapsed * 1000),
+        false); // Normal conductor update.
 
       // If, after updating the conductor, the instrumental has finished, end the song immediately.
       // This helps prevent a major bug where the level suddenly loops back to the start or middle.
@@ -924,7 +929,7 @@ class PlayState extends MusicBeatSubState
     // Attempt to pause the game.
     if ((controls.PAUSE || androidPause) && isInCountdown && mayPauseGame && !justUnpaused)
     {
-      var event = new PauseScriptEvent(FlxG.random.bool(1 / 1000));
+      var event = new PauseScriptEvent(FlxG.random.bool((1 / 1000) * 100));
 
       dispatchEvent(event);
 
