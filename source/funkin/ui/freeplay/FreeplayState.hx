@@ -40,7 +40,7 @@ import funkin.ui.mainmenu.MainMenuState;
 import funkin.ui.MusicBeatSubState;
 import funkin.ui.story.Level;
 import funkin.ui.transition.LoadingState;
-import funkin.ui.transition.StickerSubState;
+import funkin.ui.transition.stickers.StickerSubState;
 import funkin.util.MathUtil;
 import funkin.util.SortUtil;
 import openfl.display.BlendMode;
@@ -789,7 +789,7 @@ class FreeplayState extends MusicBeatSubState
     FlxG.console.registerFunction('changeSelection', changeSelection);
 
     rememberSelection();
-    changeSelection();
+    changeSelection(0, false);
     refreshCapsuleDisplays();
   }
 
@@ -1746,6 +1746,7 @@ class FreeplayState extends MusicBeatSubState
     {
       curSelected = findClosestDiff(characterVariations, difficultiesAvailable[currentDifficultyIndex]);
       rememberedSongId = grpCapsules.members[curSelected].freeplayData?.data.id;
+      characterVariations = grpCapsules.members[curSelected].freeplayData?.data.getVariationsByCharacter(currentCharacter) ?? Constants.DEFAULT_VARIATION_LIST;
     }
     for (variation in characterVariations)
     {
@@ -2076,7 +2077,7 @@ class FreeplayState extends MusicBeatSubState
     }
   }
 
-  function changeSelection(change:Int = 0):Void
+  function changeSelection(change:Int = 0, playPreview:Bool = true):Void
   {
     var prevSelected:Int = curSelected;
 
@@ -2092,7 +2093,8 @@ class FreeplayState extends MusicBeatSubState
     {
       var songScore:Null<SaveScoreData> = Save.instance.getSongScore(daSongCapsule.freeplayData.data.id, currentDifficulty, currentVariation);
       intendedScore = songScore?.score ?? 0;
-      intendedCompletion = songScore == null ? 0.0 : ((songScore.tallies.sick + songScore.tallies.good) / songScore.tallies.totalNotes);
+      intendedCompletion = songScore == null ? 0.0 : ((songScore.tallies.sick +
+        songScore.tallies.good - songScore.tallies.missed) / songScore.tallies.totalNotes);
       rememberedSongId = daSongCapsule.freeplayData.data.id;
       changeDiff(0, false, false);
       daSongCapsule.refreshDisplay(false);
@@ -2119,8 +2121,11 @@ class FreeplayState extends MusicBeatSubState
 
     if (grpCapsules.countLiving() > 0 && !prepForNewRank)
     {
-      FlxG.sound.music?.pause();
-      FlxTimer.wait(FADE_IN_DELAY, playCurSongPreview.bind(daSongCapsule));
+      if (playPreview)
+      {
+        FlxG.sound.music?.pause();
+        FlxTimer.wait(FADE_IN_DELAY, playCurSongPreview.bind(daSongCapsule));
+      }
       grpCapsules.members[curSelected].selected = true;
 
       switchBackingImage(daSongCapsule.freeplayData);

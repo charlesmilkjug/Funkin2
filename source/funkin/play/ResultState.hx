@@ -1,34 +1,36 @@
 package funkin.play;
 
-import funkin.ui.story.StoryMenuState;
-import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.addons.display.FlxBackdrop;
+import flixel.effects.FlxFlicker;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
-import funkin.graphics.FunkinSprite;
-import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
-import funkin.ui.MusicBeatSubState;
 import flixel.math.FlxRect;
 import flixel.text.FlxBitmapText;
-import funkin.data.freeplay.player.PlayerRegistry;
-import funkin.data.freeplay.player.PlayerData.PlayerResultsAnimationData;
-import funkin.ui.freeplay.charselect.PlayableCharacter;
-import flixel.util.FlxColor;
 import flixel.tweens.FlxEase;
-import funkin.graphics.FunkinCamera;
-import funkin.ui.freeplay.FreeplayState;
 import flixel.tweens.FlxTween;
-import flixel.addons.display.FlxBackdrop;
-import funkin.audio.FunkinSound;
+import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
-import funkin.play.scoring.Scoring;
-import funkin.save.Save.SaveScoreData;
+import funkin.audio.FunkinSound;
+import funkin.data.freeplay.player.PlayerData.PlayerResultsAnimationData;
+import funkin.data.freeplay.player.PlayerRegistry;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.graphics.FunkinCamera;
+import funkin.graphics.FunkinSprite;
 import funkin.graphics.shaders.LeftMaskShader;
-import funkin.play.components.TallyCounter;
 import funkin.play.components.ClearPercentCounter;
+import funkin.play.components.TallyCounter;
+import funkin.play.scoring.Scoring;
+import funkin.play.song.Song;
+import funkin.data.song.SongRegistry;
+import funkin.save.Save.SaveScoreData;
+import funkin.ui.freeplay.charselect.PlayableCharacter;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.story.StoryMenuState;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
 #if FEATURE_NEWGROUNDS
 import funkin.api.newgrounds.Medals;
@@ -73,9 +75,10 @@ class ResultState extends MusicBeatSubState
       delay:Float
     }> = [];
 
-  var playerCharacterId:Null<String>;
+  var playerCharacterId:Null<String> = null;
+  var playerCharacter:Null<PlayableCharacter> = null;
 
-  var introMusicAudio:Null<FunkinSound>;
+  var introMusicAudio:Null<FunkinSound> = null;
 
   var rankBg:FunkinSprite;
   final cameraBG:FunkinCamera;
@@ -172,7 +175,7 @@ class ResultState extends MusicBeatSubState
 
     // Fetch playable character data. Default to BF on the results screen if we can't find it.
     playerCharacterId = PlayerRegistry.instance.getCharacterOwnerId(params.characterId);
-    var playerCharacter:Null<PlayableCharacter> = PlayerRegistry.instance.fetchEntry(playerCharacterId ?? 'bf');
+    playerCharacter = PlayerRegistry.instance.fetchEntry(playerCharacterId ?? 'bf');
 
     trace('Got playable character: ${playerCharacter?.getName()}');
     // Query JSON data based on the rank, then use that to build the animation(s) the player sees.
@@ -282,7 +285,7 @@ class ResultState extends MusicBeatSubState
       }
     }
 
-    var diffSpr:String = 'diff_${params?.difficultyId ?? 'Normal'}';
+    var diffSpr:String = 'diff_${params?.difficultyId ?? Constants.DEFAULT_DIFFICULTY}';
     difficulty.loadGraphic(Paths.image("resultScreen/" + diffSpr));
     add(difficulty);
 
@@ -485,8 +488,8 @@ class ResultState extends MusicBeatSubState
     bgFlash.visible = true;
     FlxTween.tween(bgFlash, {alpha: 0}, 5 / 24);
     // NOTE: Only divide if totalNotes > 0 to prevent divide-by-zero errors.
-    var clearPercentFloat = params.scoreData.tallies.totalNotes == 0 ? 0.0 : (params.scoreData.tallies.sick +
-      params.scoreData.tallies.good) / params.scoreData.tallies.totalNotes * 100;
+    var clearPercentFloat = params.scoreData.tallies.totalNotes == 0 ? 0.0 : (params.scoreData.tallies.sick + params.scoreData.tallies.good
+      - params.scoreData.tallies.missed) / params.scoreData.tallies.totalNotes * 100;
     clearPercentTarget = Math.floor(clearPercentFloat);
     // Prevent off-by-one errors.
 
@@ -781,13 +784,18 @@ class ResultState extends MusicBeatSubState
       var shouldTween = false;
       var shouldUseSubstate = false;
 
-      var stickerSet = (playerCharacterId == "pico") ? "stickers-set-2" : "stickers-set-1";
-      var stickerPack = switch (PlayState.instance?.currentChart?.song?.id)
+      var stickerPackId:Null<String> = null;
+
+      var song:Null<Song> = params.songId == null ? null : SongRegistry.instance.fetchEntry(params.songId);
+
+      if (song != null)
       {
-        case "tutorial": "tutorial";
-        case "darnell" | "lit-up" | "2hot": "weekend";
-        default: "all";
-      };
+        stickerPackId = song.getStickerPackId(params?.difficultyId ?? Constants.DEFAULT_DIFFICULTY, params?.variationId ?? Constants.DEFAULT_VARIATION);
+      }
+      if (stickerPackId == null && playerCharacter != null)
+      {
+        stickerPackId = playerCharacter.getStickerPackID();
+      }
 
       if (params.storyMode)
       {
@@ -810,11 +818,10 @@ class ResultState extends MusicBeatSubState
           // No new characters.
           shouldTween = false;
           shouldUseSubstate = true;
-          targetState = new funkin.ui.transition.StickerSubState(
+          targetState = new funkin.ui.transition.stickers.StickerSubState(
             {
               targetState: (sticker) -> new StoryMenuState(sticker),
-              stickerSet: stickerSet,
-              stickerPack: stickerPack
+              stickerPack: stickerPackId
             });
         }
       }
@@ -848,11 +855,10 @@ class ResultState extends MusicBeatSubState
         {
           shouldTween = false;
           shouldUseSubstate = true;
-          targetState = new funkin.ui.transition.StickerSubState(
+          targetState = new funkin.ui.transition.stickers.StickerSubState(
             {
               targetState: (sticker) -> FreeplayState.build(null, sticker),
-              stickerSet: stickerSet,
-              stickerPack: stickerPack
+              stickerPack: stickerPackId
             });
         }
       }
@@ -932,9 +938,15 @@ typedef ResultsStateParams =
 
   /**
    * The difficulty ID of the song/week we just played.
-   * @default Normal
+   * @default `Constants.DEFAULT_DIFFICULTY`
    */
   var ?difficultyId:String;
+
+  /**
+   * The variation ID of the song/week we just played.
+   * @default `Constants.DEFAULT_VARIATION`
+   */
+  var ?variationId:String;
 
   /**
    * The score, accuracy, and judgements.

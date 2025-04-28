@@ -123,22 +123,4 @@ class PlayerRegistry extends BaseRegistry<PlayableCharacter, PlayerData> impleme
   {
     return ownedCharacterIds.exists(characterId);
   }
-
-  /**
-   * A list of all the playable characters from the base game, in order.
-   */
-  public function listBaseGamePlayerIds():Array<String>
-  {
-    return ["bf", "pico"];
-  }
-
-  /**
-   * A list of all installed playable characters that are not from the base game.
-   */
-  public function listModdedPlayerIds():Array<String>
-  {
-    return listEntryIds().filter(function(id:String):Bool {
-      return listBaseGamePlayerIds().indexOf(id) == -1;
-    });
-  }
 }

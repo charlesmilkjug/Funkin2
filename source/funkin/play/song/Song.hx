@@ -276,6 +276,14 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
     return diff.album ?? '';
   }
 
+  public function getStickerPackId(diffId:String, variation:String):Null<String>
+  {
+    var diff:Null<SongDifficulty> = getDifficulty(diffId, variation);
+    if (diff == null) return null;
+
+    return diff.stickerPack;
+  }
+
   /**
    * Populate the difficulty data from the provided metadata.
    * Does not load chart data (that is triggered later when we want to play the song).
@@ -318,6 +326,7 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
 
         difficulty.difficultyRating = metadata.playData.ratings.get(diffId) ?? 0;
         difficulty.album = metadata.playData.album;
+        difficulty.stickerPack = metadata.playData.stickerPack;
 
         difficulty.stage = metadata.playData.stage;
         difficulty.noteStyle = metadata.playData.noteStyle;
@@ -629,29 +638,31 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
 
   public function onNoteHit(event:HitNoteScriptEvent) {};
 
-  public function onNoteMiss(event:NoteScriptEvent):Void {};
+  public function onNoteMiss(event:NoteScriptEvent):Void {}
 
-  public function onNoteGhostMiss(event:GhostMissNoteScriptEvent):Void {};
+  public function onNoteHoldDrop(event:HoldNoteScriptEvent) {}
 
-  public function onSongEvent(event:SongEventScriptEvent):Void {};
+  public function onNoteGhostMiss(event:GhostMissNoteScriptEvent):Void {}
 
-  public function onStepHit(event:SongTimeScriptEvent):Void {};
+  public function onSongEvent(event:SongEventScriptEvent):Void {}
 
-  public function onBeatHit(event:SongTimeScriptEvent):Void {};
+  public function onStepHit(event:SongTimeScriptEvent):Void {}
 
-  public function onCountdownStart(event:CountdownScriptEvent):Void {};
+  public function onBeatHit(event:SongTimeScriptEvent):Void {}
 
-  public function onCountdownStep(event:CountdownScriptEvent):Void {};
+  public function onCountdownStart(event:CountdownScriptEvent):Void {}
 
-  public function onCountdownEnd(event:CountdownScriptEvent):Void {};
+  public function onCountdownStep(event:CountdownScriptEvent):Void {}
 
-  public function onScriptEvent(event:ScriptEvent):Void {};
+  public function onCountdownEnd(event:CountdownScriptEvent):Void {}
 
-  public function onCreate(event:ScriptEvent):Void {};
+  public function onScriptEvent(event:ScriptEvent):Void {}
 
-  public function onDestroy(event:ScriptEvent):Void {};
+  public function onCreate(event:ScriptEvent):Void {}
 
-  public function onUpdate(event:UpdateScriptEvent):Void {};
+  public function onDestroy(event:ScriptEvent):Void {}
+
+  public function onUpdate(event:UpdateScriptEvent):Void {}
 
   static function _fetchData(id:String):Null<SongMetadata>
   {
@@ -730,6 +741,7 @@ class SongDifficulty
 
   public var difficultyRating:Int = 0;
   public var album:Null<String> = null;
+  public var stickerPack:Null<String> = null;
 
   public function new(song:Song, diffId:String, variation:String)
   {

@@ -3,7 +3,7 @@ package funkin.ui.gallery;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinCamera;
 import funkin.input.Cursor;
-import funkin.ui.transition.StickerSubState.StickerShit;
+import funkin.ui.transition.stickers.StickerSubState.StickerShit;
 import funkin.util.FileUtil;
 import flixel.FlxSprite;
 import flixel.addons.display.shapes.FlxShapeCircle;

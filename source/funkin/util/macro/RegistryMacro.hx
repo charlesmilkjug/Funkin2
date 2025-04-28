@@ -2,118 +2,109 @@ package funkin.util.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Expr.ComplexType;
+import haxe.macro.Expr.Field;
+import haxe.macro.Expr.TypeDefKind;
+import haxe.macro.Expr.MetadataEntry;
 import haxe.macro.Type;
+import haxe.macro.Type.ClassType;
 
 using Lambda;
 using haxe.macro.ExprTools;
 using haxe.macro.TypeTools;
 using StringTools;
 
+/**
+ * The type parameters for a class extending `BaseRegistry`.
+ */
+typedef RegistryTypeParams =
+{
+  /**
+   * The class type of the entry. Must implement `IRegistryEntry`.
+   */
+  var entryType:ClassType;
+
+  /**
+   * The type for the data of an entry. This is usually a typedef of a struct.
+   */
+  var dataType:Any; // DefType or ClassType
+
+}
+
+/**
+ * A set of build macros to be applied to `Registry` classes in the `funkin.data` package.
+ *
+ * @see `funkin.data.BaseRegistry`
+ */
 class RegistryMacro
 {
+  static final DATA_FILE_BASE_PATH:String = 'assets/preload/data';
+
+  /**
+   * Builds the registry class.
+   *
+   * @return The modified list of fields for the target class.
+   */
   public static macro function buildRegistry():Array<Field>
   {
-    var fields = Context.getBuildFields();
+    var cls:ClassType = Context.getLocalClass().get();
+    var fields:Array<Field> = Context.getBuildFields();
 
-    var cls = Context.getLocalClass().get();
+    // Classes with the `@:funkinBase` meta or `@:funkinProcessed` meta should be ignored.
+    var baseMeta:Null<MetadataEntry> = cls.meta.get().find(function(m) return m.name == ':funkinBase');
+    if (baseMeta != null || alreadyProcessed(cls)) return fields;
 
-    var baseMeta = cls.meta.get().find(function(m) return m.name == ':funkinBase');
-    if (baseMeta != null || alreadyProcessed(cls))
-    {
-      return fields;
-    }
+    var typeParams:RegistryTypeParams = getTypeParams(cls);
 
-    var typeParams = getTypeParams(cls);
-    var entryCls = typeParams.entryCls;
-    var jsonCls = typeParams.jsonCls;
+    // Build an internal class with static functions that allow the Entry class to call functions on the Registry class.
+    buildEntryImpl(typeParams.entryType, cls);
 
-    buildEntryImpl(entryCls, cls);
-    buildRegistryImpl(cls, entryCls, jsonCls);
+    fields = fields.concat(buildRegistryMethods(cls, fields, typeParams.entryType, typeParams.dataType));
 
-    fields = fields.concat(buildRegistryMethods(cls));
-
+    // Indicate that the class has been processed so we don't process twice.
     cls.meta.add(":funkinProcessed", [], cls.pos);
 
     return fields;
   }
 
+  /**
+   * Builds the registry entry class.
+   *
+   * @return The modified list of fields for the target class.
+   */
   public static macro function buildEntry():Array<Field>
   {
-    var fields = Context.getBuildFields();
+    var cls:ClassType = Context.getLocalClass().get();
+    var fields:Array<Field> = Context.getBuildFields();
 
-    var cls = Context.getLocalClass().get();
+    // Classes with the `@:funkinProcessed` meta should be ignored.
+    if (alreadyProcessed(cls)) return fields;
 
-    if (alreadyProcessed(cls))
-    {
-      return fields;
-    }
+    // Get the type of the JSON data for an entry.
+    var entryData:Any = getEntryData(cls);
 
-    var entryData = getEntryData(cls);
-
+    // Build variables and methods for the entry.
     fields = fields.concat(buildEntryVariables(cls, entryData));
     fields = fields.concat(buildEntryMethods(cls));
 
+    // Indicate that the class has been processed so we don't process twice.
     cls.meta.add(":funkinProcessed", [], cls.pos);
 
     return fields;
   }
 
   #if macro
-  static function fieldAlreadyExists(name:String):Bool
-  {
-    for (field in Context.getBuildFields())
-    {
-      if (field.name == name && !((field.access ?? []).contains(Access.AAbstract)))
-      {
-        return true;
-      }
-    }
-
-    function fieldAlreadyExistsSuper(name:String, superClass:Null<ClassType>)
-    {
-      if (superClass == null)
-      {
-        return false;
-      }
-
-      for (field in superClass.fields.get())
-      {
-        if (field.name == name && !field.isAbstract)
-        {
-          return true;
-        }
-      }
-
-      // recursively check superclasses
-      return fieldAlreadyExistsSuper(name, superClass.superClass?.t.get());
-    }
-
-    return fieldAlreadyExistsSuper(name, Context.getLocalClass().get().superClass?.t.get());
-  }
-
-  static function alreadyProcessed(cls:ClassType):Bool
-  {
-    var processedMeta = cls.meta.get().find(function(m) return m.name == ':funkinProcessed');
-
-    if (processedMeta != null)
-    {
-      return true;
-    }
-
-    if (cls.superClass != null)
-    {
-      return alreadyProcessed(cls.superClass.t.get());
-    }
-
-    return false;
-  }
-
-  static function getTypeParams(cls:ClassType):RegistryTypeParamsNew
+  /**
+   * Retrieve the type parameters for a class extending `BaseRegistry<T, J>`.
+   * @param cls The class to retrieve the type parameters for.
+   * @return The type parameters for the class.
+   */
+  static function getTypeParams(cls:ClassType):RegistryTypeParams
   {
     switch (cls.superClass.t.get().kind)
     {
       case KGenericInstance(_, params):
-        var typeParams:Array<Dynamic> = [];
+        var typeParams:Array<Any> = [];
         for (param in params)
         {
           switch (param)
@@ -126,13 +117,104 @@ class RegistryMacro
               throw 'Not a class';
           }
         }
-        return {entryCls: typeParams[0], jsonCls: typeParams[1]};
+        return {entryType: typeParams[0], dataType: typeParams[1]};
       default:
-        throw 'Not in the correct format';
+        throw '${cls.name}: Could not interpret type parameters of Registry class.';
     }
   }
 
-  static function getEntryData(cls:ClassType):Dynamic // DefType or ClassType
+  /**
+   * Builds new static and instance methods for a registry class.
+   *
+   * @param cls The registry class to build the methods for.
+   * @param fields The fields of the registry class.
+   * @param entryType The class type of entries in the registry.
+   * @param dataType The type of the data for entries in the registry.
+   * @return The modified list of fields for the target class.
+   */
+  static function buildRegistryMethods(cls:ClassType, fields:Array<Field>, entryType:ClassType, dataType:Dynamic):Array<Field>
+  {
+    var scriptedEntryClsName:String = entryType.pack.join('.') + '.Scripted' + entryType.name;
+
+    var getScriptedClassName:String = '${scriptedEntryClsName}';
+
+    var createScriptedEntry:String = '${scriptedEntryClsName}.init(clsName, "unknown")';
+
+    var newJsonParser:String = 'new json2object.JsonParser<${dataType.module}.${dataType.name}>()';
+
+    var dataFilePath:String = getRegistryDataFilePath(cls, fields);
+    var baseGameEntryIds:Array<Expr> = listBaseGameEntryIds('${DATA_FILE_BASE_PATH}/${dataFilePath}/');
+
+    return (macro class TempClass
+      {
+        public function listBaseGameEntryIds():Array<String>
+        {
+          return $a{baseGameEntryIds};
+        }
+
+        public function listModdedEntryIds():Array<String>
+        {
+          return listEntryIds().filter(function(id:String):Bool {
+            return listBaseGameEntryIds().indexOf(id) == -1;
+          });
+        }
+
+        function getScriptedClassNames()
+        {
+          return ${Context.parse(getScriptedClassName, Context.currentPos())}.listScriptClasses();
+        }
+
+        function createScriptedEntry(clsName:String)
+        {
+          return ${Context.parse(createScriptedEntry, Context.currentPos())};
+        }
+
+        public function parseEntryData(id:String)
+        {
+          var parser = ${Context.parse(newJsonParser, Context.currentPos())};
+          parser.ignoreUnknownVariables = false;
+
+          @:privateAccess
+          switch (this.loadEntryFile(id))
+          {
+            case {fileName: fileName, contents: contents}:
+              parser.fromJson(contents, fileName);
+            default:
+              return null;
+          }
+
+          if (parser.errors.length > 0)
+          {
+            @:privateAccess
+            this.printErrors(parser.errors, id);
+            return null;
+          }
+          return parser.value;
+        }
+
+        public function parseEntryDataRaw(contents:String, ?fileName:String)
+        {
+          var parser = ${Context.parse(newJsonParser, Context.currentPos())};
+          parser.ignoreUnknownVariables = false;
+          parser.fromJson(contents, fileName);
+
+          if (parser.errors.length > 0)
+          {
+            @:privateAccess
+            this.printErrors(parser.errors, fileName);
+            return null;
+          }
+          return parser.value;
+        }
+      }).fields.filter((field) -> return !MacroUtil.fieldAlreadyExists(field.name));
+  }
+
+  /**
+   * Retrieve the type of the JSON data for an entry.
+   * @param cls The entry class to retrieve the type of the JSON data for.
+   * @return Will be either a `DefType` or a `ClassType`.
+   */
+  static function getEntryData(cls:ClassType):Any // DefType or ClassType
   {
     try
     {
@@ -143,47 +225,21 @@ class RegistryMacro
         case Type.TType(t, _):
           return t.get();
         default:
-          throw 'Entry Data is not a class or typedef';
+          throw '${cls.name}: Type parameter for Entry must be a Class or typedef';
       }
     }
     catch (e)
     {
-      throw '
-        ${cls.name}:
-        Make sure IRegistryEntry is the last implement
-        class ExampleEntry implements ... implements IRegistryEntry
-      ';
+      throw '${cls.name}: IRegistryEntry must be the last implemented interface';
     }
   }
 
-  static function buildRegistryMethods(cls:ClassType):Array<Field>
-  {
-    var impl:String = 'funkin.macro.impl._${cls.name}_Impl';
-
-    return (macro class TempClass
-      {
-        function getScriptedClassNames()
-        {
-          return ${Context.parse(impl, Context.currentPos())}.getScriptedClassNames(this);
-        }
-
-        function createScriptedEntry(clsName:String)
-        {
-          return ${Context.parse(impl, Context.currentPos())}.createScriptedEntry(this, clsName);
-        }
-
-        public function parseEntryData(id:String)
-        {
-          return ${Context.parse(impl, Context.currentPos())}.parseEntryData(this, id);
-        }
-
-        public function parseEntryDataRaw(contents:String, ?fileName:String)
-        {
-          return ${Context.parse(impl, Context.currentPos())}.parseEntryDataRaw(this, contents, fileName);
-        }
-      }).fields.filter((field) -> return !fieldAlreadyExists(field.name));
-  }
-
+  /**
+   * Add fields to the entry class.
+   * @param cls The entry class to add fields to.
+   * @param entryData The type of the data for the entry.
+   * @return The modified list of fields for the target class.
+   */
   static function buildEntryVariables(cls:ClassType, entryData:Dynamic):Array<Field>
   {
     var entryDataType:ComplexType = Context.getType('${entryData.module}.${entryData.name}').toComplexType();
@@ -193,11 +249,17 @@ class RegistryMacro
         public final id:String;
 
         public final _data:Null<$entryDataType>;
-      }).fields.filter((field) -> return !fieldAlreadyExists(field.name));
+      }).fields.filter((field) -> return !MacroUtil.fieldAlreadyExists(field.name));
   }
 
+  /**
+   * Add methods to the entry class.
+   * @param cls The entry class to add methods to.
+   * @return The modified list of fields for the target class.
+   */
   static function buildEntryMethods(cls:ClassType):Array<Field>
   {
+    // The internal class built by `buildEntryImpl`.
     var impl:String = 'funkin.macro.impl._${cls.name}_Impl';
 
     return (macro class TempClass
@@ -216,80 +278,14 @@ class RegistryMacro
         {
           ${Context.parse(impl, Context.currentPos())}.destroy(this);
         }
-      }).fields.filter((field) -> !fieldAlreadyExists(field.name));
+      }).fields.filter((field) -> return !MacroUtil.fieldAlreadyExists(field.name));
   }
 
-  static function buildRegistryImpl(cls:ClassType, entryCls:ClassType, jsonCls:Dynamic):Void
-  {
-    var clsType:ComplexType = Context.getType('${cls.module}.${cls.name}').toComplexType();
-
-    var scriptedEntryClsName:String = entryCls.pack.join('.') + '.Scripted' + entryCls.name;
-
-    var getScriptedClassName:String = '${scriptedEntryClsName}';
-
-    var createScriptedEntry:String = '${scriptedEntryClsName}.init(clsName, "unknown")';
-
-    var newJsonParser:String = 'new json2object.JsonParser<${jsonCls.module}.${jsonCls.name}>()';
-
-    Context.defineType(
-      {
-        pos: Context.currentPos(),
-        pack: ['funkin', 'macro', 'impl'],
-        name: '_${cls.name}_Impl',
-        kind: TypeDefKind.TDClass(null, [], false, false, false),
-        fields: (macro class TempClass
-          {
-            public static inline function getScriptedClassNames(me:$clsType)
-            {
-              return ${Context.parse(getScriptedClassName, Context.currentPos())}.listScriptClasses();
-            }
-
-            public static inline function createScriptedEntry(me:$clsType, clsName:String)
-            {
-              return ${Context.parse(createScriptedEntry, Context.currentPos())};
-            }
-
-            public static inline function parseEntryData(me:$clsType, id:String)
-            {
-              var parser = ${Context.parse(newJsonParser, Context.currentPos())};
-              parser.ignoreUnknownVariables = false;
-
-              @:privateAccess
-              switch (me.loadEntryFile(id))
-              {
-                case {fileName: fileName, contents: contents}:
-                  parser.fromJson(contents, fileName);
-                default:
-                  return null;
-              }
-
-              if (parser.errors.length > 0)
-              {
-                @:privateAccess
-                me.printErrors(parser.errors, id);
-                return null;
-              }
-              return parser.value;
-            }
-
-            public static inline function parseEntryDataRaw(me:$clsType, contents:String, ?fileName:String)
-            {
-              var parser = ${Context.parse(newJsonParser, Context.currentPos())};
-              parser.ignoreUnknownVariables = false;
-              parser.fromJson(contents, fileName);
-
-              if (parser.errors.length > 0)
-              {
-                @:privateAccess
-                me.printErrors(parser.errors, fileName);
-                return null;
-              }
-              return parser.value;
-            }
-          }).fields
-      });
-  }
-
+  /**
+   * Build an internal class that calls functions for an associated registry class.
+   * @param cls The entry class to build the internal class for.
+   * @param registryCls The registry class that the entry class is associated with.
+   */
   static function buildEntryImpl(cls:ClassType, registryCls:ClassType):Void
   {
     var clsType:ComplexType = Context.getType('${cls.module}.${cls.name}').toComplexType();
@@ -321,13 +317,75 @@ class RegistryMacro
           }).fields
       });
   }
+
+  static function getRegistryDataFilePath(cls:ClassType, fields:Array<Field>):String
+  {
+    for (field in fields)
+    {
+      if (field.name == 'new')
+      {
+        // We found a field called `new`, it's probably the constructor.
+        switch (field.kind)
+        {
+          case FFun(f):
+            // Inside the function.
+            switch (f.expr.expr)
+            {
+              // Inside the block.
+              case EBlock(exprs):
+                var superCall:Expr = exprs[0];
+                switch (superCall.expr)
+                {
+                  // Inside the super() call.
+                  case ECall(_, args):
+                    // var registryId:String = args[0].toString();
+                    var dataPath:String = args[1].toString().replace('"', '').replace("'", '');
+                    // var versionRule = args[2].toString();
+
+                    return dataPath;
+                  default:
+                    Context.error('${cls.name}.new: RegistryMacro expected super call', field.pos);
+                }
+              default:
+                Context.error('${cls.name}.new: RegistryMacro expected super call', field.pos);
+            }
+          default:
+            // Continue looking for the actual constructor.
+        }
+      }
+    }
+
+    return '';
+  }
+
+  static function listBaseGameEntryIds(dataFilePath:String):Array<Expr>
+  {
+    var result:Array<Expr> = [];
+    var files:Array<String> = sys.FileSystem.readDirectory(dataFilePath);
+
+    for (file in files)
+    {
+      result.push(macro $v{file.replace('.json', '')});
+    }
+
+    return result;
+  }
+
+  /**
+   * Check whether this class has already been processed by the RegistryMacro,
+   * as indicated by the `@:funkinProcessed` meta.
+   * @param cls The class to check.
+   * @return `true` if the class has already been processed, `false` otherwise.
+   */
+  static function alreadyProcessed(cls:ClassType):Bool
+  {
+    // Check for the `@:funkinProcessed` meta.
+    var processedMeta:MetadataEntry = cls.meta.get().find(function(m) return m.name == ':funkinProcessed');
+    if (processedMeta != null) return true;
+
+    // If it's not found, check the superclass.
+    if (cls.superClass != null) return alreadyProcessed(cls.superClass.t.get());
+    return false;
+  }
   #end
 }
-
-#if macro
-typedef RegistryTypeParamsNew =
-{
-  var entryCls:ClassType;
-  var jsonCls:Dynamic; // DefType or ClassType
-}
-#end

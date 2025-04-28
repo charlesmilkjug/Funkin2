@@ -243,8 +243,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueScriptedClass imple
     var animNames:Array<String> = this.boxSprite?.animation?.getNameList() ?? [];
     trace('[DIALOGUE BOX] Successfully loaded ${animNames.length} animations for ${id}');
 
-    boxSprite.animation.callback = this.onAnimationFrame;
-    boxSprite.animation.finishCallback = this.onAnimationFinished;
+    boxSprite.animation.onFrameChange.add(this.onAnimationFrame);
+    boxSprite.animation.onFinish.add(this.onAnimationFinished);
   }
 
   /**
@@ -278,7 +278,9 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueScriptedClass imple
     textDisplay.setFormat(_data.text.fontFamily, _data.text.size, FlxColor.fromString(_data.text.color), LEFT, SHADOW,
       FlxColor.fromString(_data.text.shadowColor ?? '#00000000'), false);
     textDisplay.borderSize = _data.text.shadowWidth ?? 2;
-    textDisplay.sounds = [FunkinSound.load(Paths.sound(_data?.sound?.assetPath ?? 'pixelText'), _data?.sound?.volume ?? 0.6)];
+    textDisplay.sounds = [
+      FunkinSound.load(Paths.sound(_data?.sound?.assetPath ?? 'pixelText'), _data?.sound?.volume ?? 0.6)
+    ];
 
     textDisplay.completeCallback = onTypingComplete;
 

@@ -67,7 +67,7 @@ class DebugMenuSubState extends MusicBeatSubState
     createItem("GALLERY", () -> FlxG.switchState(() -> new funkin.ui.gallery.ScreenshotGalleryState()));
     #end
     // createItem("Input Offset Testing", openInputOffsetTesting);
-    // createItem("CHARACTER SELECT", openCharSelect, true);
+    createItem("CHARACTER SELECT", openCharSelect, true);
     // createItem("TEST STICKERS", testStickers);
     #if sys
     createItem("OPEN CRASH LOG FOLDER", openLogFolder);
@@ -126,7 +126,7 @@ class DebugMenuSubState extends MusicBeatSubState
 
   function testStickers()
   {
-    openSubState(new funkin.ui.transition.StickerSubState({}));
+    openSubState(new funkin.ui.transition.stickers.StickerSubState({}));
     trace('opened stickers');
   }
 

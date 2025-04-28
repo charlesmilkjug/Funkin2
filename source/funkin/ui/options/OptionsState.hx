@@ -269,7 +269,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
   function registerAllProgress()
   {
     // Register the scores and medals for all base game songs.
-    var allSongs:Array<String> = SongRegistry.instance.listBaseGameSongIds();
+    var allSongs:Array<String> = SongRegistry.instance.listBaseGameEntryIds();
 
     for (songID in allSongs)
     {
@@ -306,7 +306,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
     }
 
     // Register the scores and medals for all base game weeks.
-    var allLevels:Array<String> = LevelRegistry.instance.listBaseGameLevelIds();
+    var allLevels:Array<String> = LevelRegistry.instance.listBaseGameEntryIds();
 
     for (levelID in allLevels)
     {

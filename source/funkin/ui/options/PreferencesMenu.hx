@@ -129,7 +129,22 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     createPrefItemCheckbox('Launch in Fullscreen', 'Automatically launch the game in fullscreen on startup.', function(value:Bool):Void {
       Preferences.autoFullscreen = value;
     }, Preferences.autoFullscreen);
-
+    // disabled on macos due to "error: Late swap tearing currently unsupported"
+    #if !mac
+    createPrefItemEnum('VSync', 'If enabled, game will attempt to match framerate with your monitor.', [
+      "Off" => WindowVSyncMode.OFF,
+      "On" => WindowVSyncMode.ON,
+      "Adaptive" => WindowVSyncMode.ADAPTIVE,
+    ], function(key:String, value:WindowVSyncMode):Void {
+      trace("Setting vsync mode to " + key);
+      Preferences.vsyncMode = value;
+    }, switch (Preferences.vsyncMode)
+      {
+        case WindowVSyncMode.OFF: "Off";
+        case WindowVSyncMode.ON: "On";
+        case WindowVSyncMode.ADAPTIVE: "Adaptive";
+      });
+    #end
     #if web
     createPrefItemCheckbox('Unlocked Framerate', 'If enabled, the framerate will be unlocked.', function(value:Bool):Void {
       Preferences.unlockedFramerate = value;
@@ -167,13 +182,19 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
       var thyOffset:Int = 0;
       // Initializing thy text width (if thou text present)
       var thyTextWidth:Int = 0;
-      if (Std.isOfType(daItem, EnumPreferenceItem)) thyTextWidth = cast(daItem, EnumPreferenceItem).lefthandText.getWidth();
-      else if (Std.isOfType(daItem, NumberPreferenceItem)) thyTextWidth = cast(daItem, NumberPreferenceItem).lefthandText.getWidth();
-
-      if (thyTextWidth != 0)
+      switch (Type.typeof(daItem))
       {
-        // Magic number because of the weird offset thats being added by default
-        thyOffset += thyTextWidth - 75;
+        case TClass(CheckboxPreferenceItem):
+          thyTextWidth = 0;
+          thyOffset = 0;
+        case TClass(EnumPreferenceItem):
+          thyTextWidth = cast(daItem, EnumPreferenceItem<Dynamic>).lefthandText.getWidth();
+          thyOffset = 0 + thyTextWidth - 75;
+        case TClass(NumberPreferenceItem):
+          thyTextWidth = cast(daItem, NumberPreferenceItem).lefthandText.getWidth();
+          thyOffset = 0 + thyTextWidth - 75;
+        default:
+          // Huh?
       }
 
       if (items.selectedItem == daItem)
@@ -224,7 +245,8 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
   function createPrefItemNumber(prefName:String, prefDesc:String, onChange:Float->Void, ?valueFormatter:Float->String, defaultValue:Int, min:Int, max:Int,
       step:Float = 0.1, precision:Int):Void
   {
-    var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, step, precision, onChange, valueFormatter);
+    var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, step, precision, onChange,
+      valueFormatter);
     items.addItem(prefName, item);
     preferenceItems.add(item.lefthandText);
     preferenceDesc.push(prefDesc);
@@ -257,9 +279,9 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
    * @param onChange Gets called every time the player changes the value; use this to apply the value
    * @param defaultValue The value that is loaded in when the pref item is created (usually your Preferences.settingVariable)
    */
-  function createPrefItemEnum(prefName:String, prefDesc:String, values:Map<String, String>, onChange:String->Void, defaultValue:String):Void
+  function createPrefItemEnum<T>(prefName:String, prefDesc:String, values:Map<String, T>, onChange:String->T->Void, defaultKey:String):Void
   {
-    var item = new EnumPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, values, defaultValue, onChange);
+    var item = new EnumPreferenceItem<T>(0, (120 * items.length) + 30, prefName, values, defaultKey, onChange);
     items.addItem(prefName, item);
     preferenceItems.add(item.lefthandText);
     preferenceDesc.push(prefDesc);

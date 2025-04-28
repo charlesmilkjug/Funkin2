@@ -24,37 +24,34 @@ class LevelRegistry extends BaseRegistry<Level, LevelData> implements ISingleton
 
   /**
    * A list of all the story weeks from the base game, in order.
-   * TODO: Should this be hardcoded?
+   * @return Array<String>
    */
-  public function listBaseGameLevelIds():Array<String>
+  public function listBaseGameEntryIds():Array<String>
   {
+    // This MUST be hard-coded (overriding the auto-generated method)
+    // because the auto-generated method spits out values in alphabetical order.
     return [
-      "tutorial",
-      "week1",
-      "week2",
-      "week3",
-      "week4",
-      "week5",
-      "week6",
-      "week7",
-      "weekend1"
+      'tutorial',
+      'week1',
+      'week2',
+      'week3',
+      'week4',
+      'week5',
+      'week6',
+      'week7',
+      'weekend1'
     ];
   }
 
+  /**
+   * A list of all the story weeks in the game, in order.
+   * Modded levels are in alphabetical order at the end of the list.
+   * @return Array<String>
+   */
   public function listSortedLevelIds():Array<String>
   {
-    var result = listEntryIds();
-    result.sort(SortUtil.defaultsThenAlphabetically.bind(listBaseGameLevelIds()));
+    var result:Array<String> = listEntryIds();
+    result.sort(SortUtil.defaultsThenAlphabetically.bind(listBaseGameEntryIds()));
     return result;
-  }
-
-  /**
-   * A list of all installed story weeks that are not from the base game.
-   */
-  public function listModdedLevelIds():Array<String>
-  {
-    return listEntryIds().filter(function(id:String):Bool {
-      return listBaseGameLevelIds().indexOf(id) == -1;
-    });
   }
 }

@@ -483,52 +483,6 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
   }
 
   /**
-   * A list of all the story weeks from the base game, in order.
-   * TODO: Should this be hardcoded?
-   */
-  public function listBaseGameSongIds():Array<String>
-  {
-    return [
-      "tutorial",
-      "bopeebo",
-      "fresh",
-      "dadbattle",
-      "spookeez",
-      "south",
-      "monster",
-      "pico",
-      "philly-nice",
-      "blammed",
-      "satin-panties",
-      "high",
-      "milf",
-      "cocoa",
-      "eggnog",
-      "winter-horrorland",
-      "senpai",
-      "roses",
-      "thorns",
-      "ugh",
-      "guns",
-      "stress",
-      "darnell",
-      "lit-up",
-      "2hot",
-      "blazin"
-    ];
-  }
-
-  /**
-   * A list of all installed story weeks that are not from the base game.
-   */
-  public function listModdedSongIds():Array<String>
-  {
-    return listEntryIds().filter(function(id:String):Bool {
-      return listBaseGameSongIds().indexOf(id) == -1;
-    });
-  }
-
-  /**
    * A list of all difficulties for a specific character.
    */
   public function listAllDifficulties(characterId:String):Array<String>
