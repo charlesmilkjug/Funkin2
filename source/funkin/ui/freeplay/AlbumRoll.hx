@@ -73,14 +73,9 @@ class AlbumRoll extends FlxSpriteGroup
   function onAlbumFinish(animName:String):Void
   {
     // Play the idle animation for the current album.
-    if (animName != "idle")
-    {
-      newAlbumArt.playAnimation('idle', true, false, true);
-    }
+    if (animName != "idle") newAlbumArt.playAnimation('idle', true, false, true);
     else
-    {
       newAlbumArt.cleanupAnimation('idle');
-    }
   }
 
   /**
@@ -91,13 +86,10 @@ class AlbumRoll extends FlxSpriteGroup
     if (albumId == null)
     {
       this.visible = false;
-      difficultyStars.stars.visible = false;
       return;
     }
     else
-    {
       this.visible = true;
-    }
 
     albumData = AlbumRegistry.instance.fetchEntry(albumId);
 

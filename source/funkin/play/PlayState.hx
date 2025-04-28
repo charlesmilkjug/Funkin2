@@ -595,19 +595,14 @@ class PlayState extends MusicBeatSubState
     super();
 
     // Validate parameters.
-    if (params == null && lastParams == null)
-    {
-      throw 'PlayState constructor called with no available parameters.';
-    }
+    if (params == null && lastParams == null) throw 'PlayState constructor called with no available parameters.';
     else if (params == null)
     {
       trace('WARNING: PlayState constructor called with no parameters. Reusing previous parameters.');
       params = lastParams;
     }
     else
-    {
       lastParams = params;
-    }
 
     // Apply parameters.
     currentSong = params.targetSong;
@@ -674,10 +669,7 @@ class PlayState extends MusicBeatSubState
     // Prepare the Conductor.
     Conductor.instance.forceBPM(null);
 
-    if (currentChart.offsets != null)
-    {
-      Conductor.instance.instrumentalOffset = currentChart.offsets.getInstrumentalOffset(currentInstrumental);
-    }
+    if (currentChart.offsets != null) Conductor.instance.instrumentalOffset = currentChart.offsets.getInstrumentalOffset(currentInstrumental);
 
     Conductor.instance.mapTimeChanges(currentChart.timeChanges);
     var pre:Float = (Conductor.instance.beatLengthMs * -5) + startTimestamp;
@@ -695,9 +687,7 @@ class PlayState extends MusicBeatSubState
       initCharacters();
     }
     else
-    {
       initMinimalMode();
-    }
     initStrumlines();
     initPopups();
 
@@ -765,31 +755,18 @@ class PlayState extends MusicBeatSubState
 
       // Choose an error message.
       var message:String = 'There was a critical error. Click OK to return to the main menu.';
-      if (currentSong == null)
-      {
-        message = 'There was a critical error loading this song\'s chart. Click OK to return to the main menu.';
-      }
-      else if (currentDifficulty == null)
-      {
-        message = 'There was a critical error selecting a difficulty for this song. Click OK to return to the main menu.';
-      }
+      if (currentSong == null) message = 'There was a critical error loading this song\'s chart. Click OK to return to the main menu.';
+      else if (currentDifficulty == null) message = 'There was a critical error selecting a difficulty for this song. Click OK to return to the main menu.';
       else if (currentChart == null)
-      {
         message = 'There was a critical error retrieving data for this song on "$currentDifficulty" difficulty with variation "$currentVariation". Click OK to return to the main menu.';
-      }
       else if (currentChart.notes == null)
-      {
         message = 'There was a critical error retrieving note data for this song on "$currentDifficulty" difficulty with variation "$currentVariation". Click OK to return to the main menu.';
-      }
 
       // Display a popup. This blocks the application until the user clicks OK.
       lime.app.Application.current.window.alert(message, 'Error loading PlayState');
 
       // Force the user back to the main menu.
-      if (isSubState)
-      {
-        this.close();
-      }
+      if (isSubState) this.close();
       else
       {
         this.remove(currentStage);
@@ -850,10 +827,7 @@ class PlayState extends MusicBeatSubState
         if (vocals != null) vocals.stop();
         vocals = currentChart.buildVocals(currentInstrumental);
 
-        if (vocals.members.length == 0)
-        {
-          trace('WARNING: No vocals found for this song.');
-        }
+        if (vocals.members.length == 0) trace('WARNING: No vocals found for this song.');
       }
       vocals.pause();
       vocals.time = 0 - Conductor.instance.combinedOffset;
@@ -877,6 +851,9 @@ class PlayState extends MusicBeatSubState
       // Delete all notes and reset the arrays.
       regenNoteData();
 
+      // so the song doesn't start too early :D
+      Conductor.instance.update(-5000, false);
+
       // Reset camera zooming
       cameraBopIntensity = Constants.DEFAULT_BOP_INTENSITY;
       hudCameraZoomIntensity = (cameraBopIntensity - 1.0) * 2.0;
@@ -885,11 +862,24 @@ class PlayState extends MusicBeatSubState
       health = Constants.HEALTH_STARTING;
       songScore = 0;
       Highscore.tallies.combo = 0;
-      Countdown.performCountdown();
+      // timer for vwoosh
+      var vwooshTimer = new FlxTimer();
+
+      vwooshTimer.start(0.5, (t:FlxTimer) -> {
+        Conductor.instance.update(startTimestamp - Conductor.instance.combinedOffset, false);
+
+        if (playerStrumline.notes.length == 0) playerStrumline.updateNotes();
+        if (opponentStrumline.notes.length == 0) opponentStrumline.updateNotes();
+
+        playerStrumline.vwooshInNotes();
+        opponentStrumline.vwooshInNotes();
+
+        Countdown.performCountdown();
+      });
 
       // Reset the health icons.
-      currentStage?.getBoyfriend()?.initHealthIcon(false);
-      currentStage?.getDad()?.initHealthIcon(true);
+      if (currentStage.getBoyfriend() != null) currentStage.getBoyfriend().initHealthIcon(false);
+      if (currentStage.getDad() != null) currentStage.getDad().initHealthIcon(true);
 
       needsReset = false;
     }
@@ -910,23 +900,15 @@ class PlayState extends MusicBeatSubState
     }
     else
     {
-      if (Constants.EXT_SOUND == 'mp3')
-      {
-        Conductor.instance.formatOffset = Constants.MP3_DELAY_MS;
-      }
+      if (Constants.EXT_SOUND == 'mp3') Conductor.instance.formatOffset = Constants.MP3_DELAY_MS;
       else
-      {
         Conductor.instance.formatOffset = 0.0;
-      }
 
       Conductor.instance.update(Conductor.instance.songPosition + elapsed * 1000, false); // Normal conductor update.
 
       // If, after updating the conductor, the instrumental has finished, end the song immediately.
       // This helps prevent a major bug where the level suddenly loops back to the start or middle.
-      if (Conductor.instance.songPosition >= (FlxG.sound.music.endTime ?? FlxG.sound.music.length))
-      {
-        if (mayPauseGame) endSong(skipEndingTransition);
-      }
+      if (Conductor.instance.songPosition >= (FlxG.sound.music.endTime ?? FlxG.sound.music.length)) if (mayPauseGame) endSong(skipEndingTransition);
     }
 
     var androidPause:Bool = false;

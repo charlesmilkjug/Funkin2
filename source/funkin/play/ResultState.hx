@@ -29,6 +29,7 @@ import funkin.save.Save.SaveScoreData;
 import funkin.graphics.shaders.LeftMaskShader;
 import funkin.play.components.TallyCounter;
 import funkin.play.components.ClearPercentCounter;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
 #if FEATURE_NEWGROUNDS
 import funkin.api.newgrounds.Medals;
 #end
@@ -186,13 +187,27 @@ class ResultState extends MusicBeatSubState
         if (Preferences.naughtyness && animData.filter != "naughty" || !Preferences.naughtyness && animData.filter != "safe") continue;
       }
 
-      var animPath:String = Paths.stripLibrary(animData.assetPath);
-      var animLibrary:String = Paths.getLibrary(animData.assetPath);
+      var animPath:String = "";
+      var animLibrary:String = "";
+
+      if (animData.assetPath != null)
+      {
+        animPath = Paths.stripLibrary(animData.assetPath);
+        animLibrary = Paths.getLibrary(animData.assetPath);
+      }
       var offsets = animData.offsets ?? [0, 0];
       switch (animData.renderType)
       {
         case 'animateatlas':
-          var animation:FlxAtlasSprite = new FlxAtlasSprite(offsets[0], offsets[1], Paths.animateAtlas(animPath, animLibrary));
+          @:nullSafety(Off)
+          var animation:FlxAtlasSprite = null;
+
+          if (animData.scriptClass != null) animation = ScriptedFlxAtlasSprite.init(animData.scriptClass, offsets[0], offsets[1]);
+          else
+            animation = new FlxAtlasSprite(offsets[0], offsets[1], Paths.animateAtlas(animPath, animLibrary));
+
+          if (animation == null) continue;
+
           animation.zIndex = animData.zIndex ?? 500;
 
           animation.scale.set(animData.scale ?? 1.0, animData.scale ?? 1.0);

@@ -21,11 +21,12 @@ import funkin.ui.title.TitleState;
 import funkin.ui.story.StoryMenuState;
 import funkin.ui.Prompt;
 import funkin.util.WindowUtil;
+import funkin.api.newgrounds.Referral;
 #if FEATURE_DISCORD_RPC
 import funkin.api.discord.DiscordClient;
 #end
 #if FEATURE_NEWGROUNDS
-import io.newgrounds.NG;
+import funkin.api.newgrounds.NewgroundsClient;
 #end
 
 class MainMenuState extends MusicBeatState
@@ -168,11 +169,13 @@ class MainMenuState extends MusicBeatState
     this.leftWatermarkText.text = Constants.VERSION;
 
     #if FEATURE_NEWGROUNDS
-    if (NG.core?.loggedIn)
+    if (NewgroundsClient.instance.isLoggedIn())
     {
-      this.leftWatermarkText.text += ' | Newgrounds: Logged in as ${NG.core?.user?.name}';
+      this.leftWatermarkText.text += ' | Newgrounds: Logged in as ${NewgroundsClient.instance.user?.name}';
     }
     #end
+
+    this.rightWatermarkText.text = "STABLE BUILD";
   }
 
   function playMenuMusic():Void
@@ -233,14 +236,7 @@ class MainMenuState extends MusicBeatState
 
   function selectMerch()
   {
-    NG.core?.calls.loader.loadReferral(false)
-      .addComponentParameter("referral_name", "merch_link")
-      .addResponseHandler(response -> {
-        if (response.success) WindowUtil.openURL(response.result.data.url)
-        else
-          WindowUtil.openURL(Constants.URL_MERCH_FALLBACK);
-      })
-      .send();
+    Referral.doMerchReferral();
   }
   #end
 

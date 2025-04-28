@@ -93,6 +93,11 @@ class FreeplayState extends MusicBeatSubState
    */
   public static final FADE_OUT_END_VOLUME:Float = 0.0;
 
+  /**
+   * For the audio preview, the time to wait before attempting to load a song preview.
+   */
+  public static final FADE_IN_DELAY:Float = 0.25;
+
   var songs:Array<Null<FreeplaySongData>> = [];
 
   var curSelected:Int = 0;
@@ -203,6 +208,7 @@ class FreeplayState extends MusicBeatSubState
 
     currentCharacter = fetchPlayableCharacter();
     currentVariation = rememberedVariation;
+    currentDifficulty = rememberedDifficulty;
     styleData = FreeplayStyleRegistry.instance.fetchEntry(currentCharacter.getFreeplayStyleID());
     rememberedCharacterId = currentCharacter?.id ?? Constants.DEFAULT_CHARACTER;
     fromCharSelect = params?.fromCharSelect ?? false;
@@ -1573,13 +1579,13 @@ class FreeplayState extends MusicBeatSubState
     {
       if (dj != null) dj.resetAFKTimer();
       changeDiff(-1);
-      generateSongList(currentFilter, true);
+      generateSongList(currentFilter, true, false);
     }
     if (controls.UI_RIGHT_P)
     {
       if (dj != null) dj.resetAFKTimer();
       changeDiff(1);
-      generateSongList(currentFilter, true);
+      generateSongList(currentFilter, true, false);
     }
 
     if (controls.BACK && !busy)
@@ -1672,6 +1678,37 @@ class FreeplayState extends MusicBeatSubState
   }
 
   /**
+   * findClosestDiff will find the closest difficulty to the given diff.
+   * It will return the index of the closest song in the grpCapsules.members array.
+   * @param diff
+   * @return Int
+   */
+  function findClosestDiff(characterVariations:Array<String>, diff:String):Int
+  {
+    var closestIndex:Int = 0;
+    var closest:Int = curSelected;
+
+    for (index in 0...grpCapsules.members.length)
+    {
+      var song:Null<FreeplaySongData> = grpCapsules.members[index].freeplayData;
+      if (song == null) continue;
+      var characterVar = song.data.getVariationsByCharacter(currentCharacter);
+      var songDiff:Null<String> = song.data.getDifficulty(diff, null, characterVar)?.difficulty;
+      // if the difference between the current index and this index is the smallest so far,
+      // take this one as the closest index. (By comparing with the closest variable)
+      var c:Int = curSelected - index;
+      if (songDiff == diff && (Math.abs(c) < Math.abs(closestIndex - curSelected) || closestIndex == 0))
+      {
+        // trace('Found closest diff: ${songDiff} at index ${index} (current: ${curSelected})');
+        closestIndex = index;
+        closest = c;
+      }
+    }
+
+    return closestIndex;
+  }
+
+  /**
    * changeDiff is the root of both difficulty and variation changes/management.
    * It will check the difficulty of the current variation, all available variations, and all available difficulties per variation.
    * It's generally recommended that after calling this you re-sort the song list, however usually it's already on the way to being sorted.
@@ -1688,9 +1725,10 @@ class FreeplayState extends MusicBeatSubState
     // but sometimes pico can be the default variation (weekend 1 songs), and bf can be `bf` variation (darnell)
     var characterVariations:Array<String> = grpCapsules.members[curSelected].freeplayData?.data.getVariationsByCharacter(currentCharacter) ?? Constants.DEFAULT_VARIATION_LIST;
 
+    var difficultiesAvailable:Array<String> = allDifficulties;
     // Gets all available difficulties for our character, via our available variations
-    var difficultiesAvailable:Array<String> = grpCapsules.members[curSelected].freeplayData?.data.listDifficulties(null,
-      characterVariations) ?? allDifficulties;
+    var songDifficulties:Array<String> = grpCapsules.members[curSelected].freeplayData?.data.listDifficulties(null,
+      characterVariations) ?? Constants.DEFAULT_DIFFICULTY_LIST;
 
     var currentDifficultyIndex:Int = difficultiesAvailable.indexOf(currentDifficulty);
 
@@ -1703,6 +1741,12 @@ class FreeplayState extends MusicBeatSubState
 
     // Update the current difficulty
     currentDifficulty = difficultiesAvailable[currentDifficultyIndex];
+    // For when we change the difficulty, but the song doesn't have that difficulty!
+    if (!songDifficulties.contains(difficultiesAvailable[currentDifficultyIndex]))
+    {
+      curSelected = findClosestDiff(characterVariations, difficultiesAvailable[currentDifficultyIndex]);
+      rememberedSongId = grpCapsules.members[curSelected].freeplayData?.data.id;
+    }
     for (variation in characterVariations)
     {
       if (grpCapsules.members[curSelected].freeplayData?.data.hasDifficulty(currentDifficulty, variation) ?? false)
@@ -2075,7 +2119,8 @@ class FreeplayState extends MusicBeatSubState
 
     if (grpCapsules.countLiving() > 0 && !prepForNewRank)
     {
-      playCurSongPreview(daSongCapsule);
+      FlxG.sound.music?.pause();
+      FlxTimer.wait(FADE_IN_DELAY, playCurSongPreview.bind(daSongCapsule));
       grpCapsules.members[curSelected].selected = true;
 
       switchBackingImage(daSongCapsule.freeplayData);
@@ -2097,6 +2142,8 @@ class FreeplayState extends MusicBeatSubState
     }
     else
     {
+      // Make sure the player is still hovering over the song we want to load preview for
+      if (!daSongCapsule.selected) return;
       var previewSong:Null<Song> = daSongCapsule?.freeplayData?.data;
       if (previewSong == null) return;
 

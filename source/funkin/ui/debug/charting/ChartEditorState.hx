@@ -358,7 +358,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     // Make sure playhead doesn't scroll outside the song.
     if (value + playheadPositionInPixels < 0) playheadPositionInPixels = -value;
     if (value + playheadPositionInPixels > songLengthInPixels) playheadPositionInPixels = songLengthInPixels - value;
-    
+
     if (value > songLengthInPixels) value = songLengthInPixels;
 
     if (value == scrollPositionInPixels) return value;
@@ -1068,7 +1068,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    * Whether the clipboard is valid and contains a json of notes and events.
    */
   var clipboardValid:Bool = true;
-
 
   /**
    * If true, we are currently in the process of quitting the chart editor.
@@ -2393,7 +2392,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         }
       }
 
-      if (!FileUtil.doesFileExist(chartPath))
+      if (!FileUtil.fileExists(chartPath))
       {
         trace('Previously loaded chart file (${chartPath.toString()}) does not exist, disabling link...');
         menuItemRecentChart.disabled = true;
@@ -3270,7 +3269,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     #if sys
     // TODO: Is there a way to open a folder and highlight a file in it?
     var absoluteBackupsPath:String = Path.join([Sys.getCwd(), ChartEditorImportExportHandler.BACKUPS_PATH]);
-    WindowUtil.openFolder(absoluteBackupsPath);
+    FileUtil.openFolder(absoluteBackupsPath);
     return true;
     #else
     trace('No file system access, cannot open backups folder.');
@@ -3364,7 +3363,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     handlePostUpdate();
   }
-
 
   /**
    * Function called when the game window loses focus.
@@ -4274,7 +4272,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         overlapsSelection = true;
       }
 
-
       var overlapsHealthIcons:Bool = FlxG.mouse.overlaps(healthIconBF) || FlxG.mouse.overlaps(healthIconDad);
 
       if (FlxG.mouse.justPressedMiddle)
@@ -5115,7 +5112,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
       var variationMetadata:Null<SongMetadata> = songMetadata.get(selectedVariation);
       if (variationMetadata != null)
-      variationMetadata.playData.difficulties.sort(SortUtil.defaultsThenAlphabetically.bind(Constants.DEFAULT_DIFFICULTY_LIST_FULL));
+        variationMetadata.playData.difficulties.sort(SortUtil.defaultsThenAlphabetically.bind(Constants.DEFAULT_DIFFICULTY_LIST_FULL));
 
       var difficultyToolbox:ChartEditorDifficultyToolbox = cast this.getToolbox(CHART_EDITOR_TOOLBOX_DIFFICULTY_LAYOUT);
       if (difficultyToolbox == null) return;

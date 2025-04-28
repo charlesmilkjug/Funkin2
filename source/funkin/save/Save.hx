@@ -112,6 +112,7 @@ class Save
           zoomCamera: true,
           debugDisplay: false,
           autoPause: true,
+          vsyncMode: 'Off',
           strumlineBackgroundOpacity: 0,
           autoFullscreen: false,
           inputOffset: 0,
