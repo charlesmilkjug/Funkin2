@@ -382,7 +382,9 @@ class Strumline extends FlxSpriteGroup
       FlxTween.tween(note, {yOffset: 0}, vwooshTime,
         {
           ease: FlxEase.expoOut,
-          onComplete: (twn) -> note.yOffset = 0;
+          onComplete: (twn) -> {
+            note.yOffset = 0;
+          }
         });
     }
 
@@ -396,7 +398,9 @@ class Strumline extends FlxSpriteGroup
       FlxTween.tween(holdNote, {yOffset: 0}, vwooshTime,
         {
           ease: FlxEase.expoOut,
-          onComplete: (twn) -> holdNote.yOffset = 0;
+          onComplete: (twn) -> {
+            holdNote.yOffset = 0;
+          }
         });
     }
   }
