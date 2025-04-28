@@ -77,8 +77,8 @@
       "name": "hscript",
       "type": "git",
       "dir": null,
-      "ref": "27c86f9a761c1d16d4433c4cf252eccb7b2e18de",
-      "url": "https://github.com/FunkinCrew/hscript"
+      "ref": "2f395d3af4b193498ba3c062c57378a74e8d0074",
+      "url": "https://github.com/charlesmilkjug/hscript"
     },
     {
       "name": "hxcpp",
@@ -185,15 +185,15 @@
       "name": "openfl",
       "type": "git",
       "dir": null,
-      "ref": "d061c936b462f040304ec2bd42d9f59d2e59e285",
+      "ref": "6eaf85506e3b00d8f99a5456b18469294a666f33",
       "url": "https://github.com/FunkinCrew/openfl"
     },
     {
       "name": "polymod",
       "type": "git",
       "dir": null,
-      "ref": "0fbdf27fe124549730accd540cec8a183f8652c0",
-      "url": "https://github.com/larsiusprime/polymod"
+      "ref": "e7d398e8f497a38f24225d1f295ac161f784cad4",
+      "url": "https://github.com/charlesmilkjug/polymod"
     },
     {
       "name": "thx.core",
