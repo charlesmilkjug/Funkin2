@@ -77,7 +77,7 @@
       "name": "hscript",
       "type": "git",
       "dir": null,
-      "ref": "2f395d3af4b193498ba3c062c57378a74e8d0074",
+      "ref": "3c0908efc4cc179ac59024f57bb0c7f2e5b88ee1",
       "url": "https://github.com/charlesmilkjug/hscript"
     },
     {
@@ -192,7 +192,7 @@
       "name": "polymod",
       "type": "git",
       "dir": null,
-      "ref": "e7d398e8f497a38f24225d1f295ac161f784cad4",
+      "ref": "ff9dc2619ce4146a5ef372578ff50d16627306e4",
       "url": "https://github.com/charlesmilkjug/polymod"
     },
     {
