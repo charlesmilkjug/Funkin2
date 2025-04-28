@@ -314,6 +314,8 @@ class Strumline extends FlxSpriteGroup
 
       if (holdNote.noteData == target) return holdNote;
     }
+
+    return null;
   }
 
   /**
