@@ -212,6 +212,38 @@ class InitState extends FlxState
     ModuleHandler.loadModuleCache();
     ModuleHandler.callOnCreate();
 
+    final gc:Void->Void = () ->
+      {
+        #if cpp
+        cpp.vm.Gc.run(true);
+        #else
+        openfl.system.System.gc();
+        #end
+      }
+
+    final clearCache:Void->Void = () -> {
+      FlxG.bitmap.dumpCache();
+
+      final cache = cast(openfl.Assets.cache, openfl.utils.AssetCache);
+      for (key => _ in cache.font)
+        cache.removeFont(key);
+
+      for (key => _ in cache.sound)
+        cache.removeSound(key);
+
+      openfl.Assets.cache.clear();
+    }
+
+    FlxG.signals.preStateSwitch.add(() -> {
+      clearCache();
+      gc();
+    });
+
+    FlxG.signals.postStateSwitch.add(() -> {
+      clearCache();
+      gc();
+    });
+
     funkin.input.Cursor.hide();
 
     trace('Parsing game data took: ${TimerUtil.ms(perfStart)}');
