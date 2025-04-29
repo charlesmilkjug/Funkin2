@@ -235,19 +235,16 @@ class FlxAnimateFilterRenderer
 
   public function new()
   {
-    if (FlxG.game.stage.context3D != null)
-    {
-      // context = new openfl.display3D.Context3D(null);
-      renderer = new OpenGLRenderer(FlxG.game.stage.context3D);
-      renderer.__worldTransform = new Matrix();
-      renderer.__worldColorTransform = new ColorTransform();
-    }
+    // context = new openfl.display3D.Context3D(null);
+    renderer = new OpenGLRenderer(FlxG.game.stage.context3D);
+    renderer.__worldTransform = new Matrix();
+    renderer.__worldColorTransform = new ColorTransform();
   }
 
   @:noCompletion function setRenderer(renderer:DisplayObjectRenderer, rect:Rectangle)
   {
     @:privateAccess
-    if (FlxG.game.stage.context3D != null)
+    if (true)
     {
       var displayObject = FlxG.game;
       var pixelRatio = FlxG.game.stage.__renderer.__pixelRatio;
@@ -281,7 +278,7 @@ class FlxAnimateFilterRenderer
   public function applyFilter(target:BitmapData = null, target1:BitmapData = null, target2:BitmapData = null, bmp:BitmapData, filters:Array<BitmapFilter>,
       rect:Rectangle, bmpRect:Rectangle)
   {
-    if (filters == null || filters.length == 0 || FlxG.game.stage.context3D == null) return bmp;
+    if (filters == null || filters.length == 0) return bmp;
 
     renderer.__setBlendMode(NORMAL);
     renderer.__worldAlpha = 1;
@@ -353,8 +350,6 @@ class FlxAnimateFilterRenderer
 
   public function applyBlend(blend:BlendMode, bitmap:BitmapData)
   {
-    if (FlxG.game.stage.context3D != null) return bitmap;
-
     bitmap.__update(false, true);
     var bmp = new BitmapData(bitmap.width, bitmap.height, 0);
 
@@ -388,7 +383,7 @@ class FlxAnimateFilterRenderer
 
   public function graphicstoBitmapData(gfx:Graphics)
   {
-    if (gfx.__bounds == null || FlxG.game.stage.context3D == null) return null;
+    if (gfx.__bounds == null) return null;
     // var cacheRTT = renderer.__context3D.__state.renderToTexture;
     // var cacheRTTDepthStencil = renderer.__context3D.__state.renderToTextureDepthStencil;
     // var cacheRTTAntiAlias = renderer.__context3D.__state.renderToTextureAntiAlias;
