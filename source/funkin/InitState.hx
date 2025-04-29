@@ -222,7 +222,7 @@ class InitState extends FlxState
       }
 
     final clearCache:Void->Void = () -> {
-      FlxG.bitmap.dumpCache();
+      FlxG.bitmap.clearCache();
 
       final cache = cast(openfl.Assets.cache, openfl.utils.AssetCache);
       for (key => _ in cache.font)
