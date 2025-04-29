@@ -22,15 +22,15 @@ class PixelatedIcon extends FlxFilteredSprite
 
     switch (char)
     {
-      case "bf-christmas" | "bf-car" | "bf-pixel" | "bf-holding-gf":
+      case "bf-christmas" | "bf-car" | "bf-pixel" | "bf-holding-gf" | "bf-dark":
         charPath += "bfpixel";
       case "monster-christmas":
         charPath += "monsterpixel";
       case "mom" | "mom-car":
         charPath += "mommypixel";
-      case "pico-blazin" | "pico-playable" | "pico-speaker" | "pico-pixel" | "pico-holding-nene":
+      case "pico-blazin" | "pico-playable" | "pico-christmas" | "pico-dark" | "pico-speaker" | "pico-pixel" | "pico-holding-nene":
         charPath += "picopixel";
-      case "gf-christmas" | "gf-car" | "gf-pixel" | "gf-tankmen":
+      case "gf-christmas" | "gf-car" | "gf-dark" | "gf-pixel" | "gf-tankmen":
         charPath += "gfpixel";
       case "dad":
         charPath += "dadpixel";
