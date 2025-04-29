@@ -86,6 +86,12 @@ class InitState extends FlxState
     // Disable the thing on Windows where it tries to send a bug report to Microsoft because why do they care?
     WindowUtil.disableCrashHandler();
 
+    // Disable the lime/openfl log crashing the game and redirect the error printing.
+    lime.utils.Log.throwErrors = false;
+    lime.utils.Log.onError.add((error:String) -> {
+      lime.app.Application.current.window.alert(error, "Assets Error!");
+    });
+
     #if FEATURE_DEBUG_TRACY
     funkin.util.WindowUtil.initTracy();
     #end
@@ -144,7 +150,7 @@ class InitState extends FlxState
     #if FEATURE_DISCORD_RPC
     DiscordClient.instance.init();
 
-    lime.app.Application.current.onExit.add(function(exitCode) {
+    lime.app.Application.current.onExit.add((exitCode) -> {
       DiscordClient.instance.shutdown();
     });
     #end

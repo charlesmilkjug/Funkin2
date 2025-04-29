@@ -76,6 +76,8 @@ class SongMenuItem extends FlxSpriteGroup
 
   var index:Int;
 
+  public var curSelected:Int;
+
   public function new(x:Float, y:Float)
   {
     super(x, y);
@@ -496,10 +498,10 @@ class SongMenuItem extends FlxSpriteGroup
     updateSelected();
   }
 
-  public function initPosition(x:Float, y:Float):Void
+  public function initPosition(x:Float = 0, x:Float = 0):Void
   {
-    if (x != null) this.x = x;
-    if (y != null) this.y = y;
+    this.x = x;
+    this.y = y;
   }
 
   public function initData(freeplayData:Null<FreeplaySongData>, ?styleData:FreeplayStyle = null, index:Int = null):Void
@@ -535,7 +537,7 @@ class SongMenuItem extends FlxSpriteGroup
   var frameOutTypeBeat:Int = 0;
 
   var xFrames:Array<Float> = [1.7, 1.8, 0.85, 0.85, 0.97, 0.97, 1];
-  var xPosLerpLol:Array<Float> = [0.9, 0.4, 0.16, 0.16, 0.22, 0.22, 0.245]; // NUMBERS ARE JANK CUZ THE SCALING OR WHATEVER
+  var xPosLerpLol:Array<Float> = [0, 0, 0.16, 0.16, 0.22, 0.22, 0.245]; // NUMBERS ARE JANK CUZ THE SCALING OR WHATEVER
   var xPosOutLerpLol:Array<Float> = [0.245, 0.75, 0.98, 0.98, 1.2]; // NUMBERS ARE JANK CUZ THE SCALING OR WHATEVER
 
   public var realScaled:Float = 0.8;
@@ -546,9 +548,6 @@ class SongMenuItem extends FlxSpriteGroup
 
     new FlxTimer().start((1 / 24) * maxTimer, function(doShit) {
       doJumpIn = true;
-    });
-
-    new FlxTimer().start((0.09 * maxTimer) + 0.85, function(lerpTmr) {
       doLerp = true;
     });
 

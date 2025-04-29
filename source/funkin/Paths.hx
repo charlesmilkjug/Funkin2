@@ -149,6 +149,7 @@ class Paths
 
   public static function font(key:String):String
   {
+    // TODO: make this work in mods idk
     return 'assets/fonts/$key';
   }
 
