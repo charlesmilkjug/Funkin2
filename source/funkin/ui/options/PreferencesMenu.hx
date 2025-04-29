@@ -153,7 +153,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     #else
     createPrefItemNumber('FPS', 'The maximum framerate that the game targets.', function(value:Float) {
       Preferences.framerate = Std.int(value);
-    }, null, Preferences.framerate, 30, 300, 5, 0);
+    }, null, Preferences.framerate, 30, 300, 5, 0, 1);
     #end
 
     addCategory('Screenshots');
@@ -172,7 +172,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     }, Preferences.saveFormat);
     createPrefItemNumber('JPEG Quality', 'The quality of JPEG screenshots.', function(value:Float) {
       Preferences.jpegQuality = Std.int(value);
-    }, null, Preferences.jpegQuality, 0, 100, 5, 0);
+    }, null, Preferences.jpegQuality, 0, 100, 5, 0, 1);
   }
 
   override function update(elapsed:Float):Void
@@ -245,10 +245,10 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
    * @param precision Rounds decimals up to a `precision` amount of digits (ex: 4 -> 0.1234, 2 -> 0.12)
    */
   function createPrefItemNumber(prefName:String, prefDesc:String, onChange:Float->Void, ?valueFormatter:Float->String, defaultValue:Int, min:Int, max:Int,
-      step:Float = 0.1, precision:Int):Void
+      step:Float = 0.1, precision:Int, stepPrecise:Float = 0.1):Void
   {
-    var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, step, precision, onChange,
-      valueFormatter);
+    var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, step, precision, stepPrecise,
+      onChange, valueFormatter);
     items.addItem(prefName, item);
     preferenceItems.add(item.lefthandText);
     preferenceDesc.push(prefDesc);
@@ -269,7 +269,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     var formatter = function(value:Float) {
       return '${value}%';
     };
-    var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, 10, 0, newCallback, formatter);
+    var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, 10, 0, 1, newCallback, formatter);
     items.addItem(prefName, item);
     preferenceItems.add(item.lefthandText);
     preferenceDesc.push(prefDesc);
