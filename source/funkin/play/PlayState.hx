@@ -785,7 +785,7 @@ class PlayState extends MusicBeatSubState
 
   public override function update(elapsed:Float):Void
   {
-    if (criticalFailure || vwooshTimer.active) return;
+    if (criticalFailure) return;
 
     super.update(elapsed);
 
@@ -855,7 +855,7 @@ class PlayState extends MusicBeatSubState
       regenNoteData();
 
       // so the song doesn't start too early :D
-      Conductor.instance.update(-5000, false);
+      Conductor.instance.update(-500 + startTimestamp + Conductor.instance.beatLengthMs * -5);
 
       // Reset camera zooming
       cameraBopIntensity = Constants.DEFAULT_BOP_INTENSITY;
@@ -867,8 +867,6 @@ class PlayState extends MusicBeatSubState
       Highscore.tallies.combo = 0;
       // timer for vwoosh
       vwooshTimer.start(0.5, (t:FlxTimer) -> {
-        Conductor.instance.update(startTimestamp - Conductor.instance.combinedOffset, false);
-
         if (playerStrumline.notes.length == 0) playerStrumline.updateNotes();
         if (opponentStrumline.notes.length == 0) opponentStrumline.updateNotes();
 
@@ -939,6 +937,9 @@ class PlayState extends MusicBeatSubState
         persistentUpdate = false;
         // Enable drawing while the substate is open, allowing the game state to be shown behind the pause menu.
         persistentDraw = true;
+
+        // Prevent vwoosh timer from starting countdown in pause menu
+        vwooshTimer.active = false;
 
         // There is a 1/1000 change to use a special pause menu.
         // This prevents the player from resuming, but that's the point.
@@ -1108,6 +1109,8 @@ class PlayState extends MusicBeatSubState
     playerStrumline.clean();
     opponentStrumline.clean();
 
+    vwooshTimer.cancel();
+
     songScore = 0;
     updateScoreText();
 
@@ -1261,6 +1264,9 @@ class PlayState extends MusicBeatSubState
       dispatchEvent(event);
 
       if (event.eventCanceled) return;
+
+      // Resume vwooshTimer
+      if (!vwooshTimer.finished) vwooshTimer.active = true;
 
       // Resume music if we paused it.
       if (musicPausedBySubState)
