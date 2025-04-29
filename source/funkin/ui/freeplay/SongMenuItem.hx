@@ -26,7 +26,7 @@ class SongMenuItem extends FlxSpriteGroup
   var pixelIcon:PixelatedIcon;
 
   /**
-   * Modify this by calling `init()`
+   * Modify this by calling `initData()`
    * If `null`, assume this SongMenuItem is for the "Random Song" option.
    */
   public var freeplayData(default, null):Null<FreeplaySongData> = null;

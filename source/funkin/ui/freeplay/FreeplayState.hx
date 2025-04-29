@@ -771,7 +771,7 @@ class FreeplayState extends MusicBeatSubState
       var funnyMenu:SongMenuItem = grpCapsules.recycle(SongMenuItem);
 
       funnyMenu.initPosition(FlxG.width, 0);
-      funnyMenu.init(tempSong, styleData, i + 1);
+      funnyMenu.initData(tempSong, styleData, i + 1);
       funnyMenu.onConfirm = function() {
         capsuleOnOpenDefault(funnyMenu);
       };
