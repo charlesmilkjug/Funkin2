@@ -178,7 +178,7 @@ class FreeplayDJ extends FlxAtlasSprite
         }
         else
         {
-          if (getCurrentAnimation() != animPrefix) playFlashAnimation(animPrefix, true);
+          if (getCurrentAnimation() != animPrefix || !this.anim.isPlaying) playFlashAnimation(animPrefix, true);
           timeIdling = 0;
         }
       default:
