@@ -175,7 +175,7 @@ class MainMenuState extends MusicBeatState
     }
     #end
 
-    this.rightWatermarkText.text = "STABLE BUILD";
+    this.rightWatermarkText.text = "TOTALLY STABLE BUILD";
   }
 
   function playMenuMusic():Void
