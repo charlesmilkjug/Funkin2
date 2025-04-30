@@ -1,6 +1,6 @@
 package funkin.util.assets;
 
-class DataAssets
+@:nullSafety
 class DataAssets
 {
   static function buildDataPath(path:String):String
