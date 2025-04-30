@@ -1408,7 +1408,7 @@ class FreeplayState extends MusicBeatSubState
 
         if (touch.justPressed)
         {
-          touchY = touch.screenY;
+          touchY = touch.viewY;
           dyTouch = 0;
           velTouch = 0;
 
@@ -1702,7 +1702,8 @@ class FreeplayState extends MusicBeatSubState
 
       var songScore:Null<SaveScoreData> = Save.instance.getSongScore(daSong.data.id, currentDifficulty, currentVariation);
       intendedScore = songScore?.score ?? 0;
-      intendedCompletion = songScore == null ? 0.0 : ((songScore.tallies.sick + songScore.tallies.good) / songScore.tallies.totalNotes);
+      intendedCompletion = songScore == null ? 0.0 : ((songScore.tallies.sick +
+        songScore.tallies.good - songScore.tallies.missed) / songScore.tallies.totalNotes);
       rememberedDifficulty = currentDifficulty;
       grpCapsules.members[curSelected].refreshDisplay(updateRank);
     }
