@@ -1,6 +1,7 @@
 package source; // Yeah, I know...
 
 import sys.io.File;
+import sys.io.Process;
 
 /**
  * A script which executes before the game is built.
@@ -23,7 +24,7 @@ class NewgroundsCredentials
   {
     saveBuildTime();
 
-    CommandLine.prettyPrint('Building Funkin\'.. (${Sys.systemName})');
+    CommandLine.prettyPrint('Building Funkin\'... (${Sys.systemName})');
 
     buildCredsFile();
 
@@ -64,11 +65,11 @@ class NewgroundsCredentials
     #if sys
     if (sys.FileSystem.exists(NG_CREDS_PATH))
     {
-      trace('NewgroundsCredentials.hx already exists, skipping.');
+      Sys.println('NewgroundsCredentials.hx already exists, skipping...');
     }
     else
     {
-      trace('Creating NewgroundsCredentials.hx...');
+      Sys.println('Creating NewgroundsCredentials.hx...');
 
       var fileContents:String = NG_CREDS_TEMPLATE;
 

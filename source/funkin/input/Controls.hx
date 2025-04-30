@@ -1498,8 +1498,8 @@ class FlxActionInputDigitalMobileSwipeGameplay extends FlxActionInputDigital
     {
       if (touch.justPressed)
       {
-        var pos:FlxPoint = new FlxPoint(touch.screenX, touch.screenY);
-        var pos2:FlxPoint = new FlxPoint(touch.screenX, touch.screenY);
+        var pos:FlxPoint = new FlxPoint(touch.viewX, touch.viewY);
+        var pos2:FlxPoint = new FlxPoint(touch.viewX, touch.viewY);
 
         var swp:Swipes =
           {
@@ -1517,10 +1517,10 @@ class FlxActionInputDigitalMobileSwipeGameplay extends FlxActionInputDigital
       {
         var daSwipe = touchMap[touch.touchPointID];
 
-        daSwipe.curTouchPos.set(touch.screenX, touch.screenY);
+        daSwipe.curTouchPos.set(touch.viewX, touch.viewY);
 
-        var dx = daSwipe.initTouchPos.x - touch.screenX;
-        var dy = daSwipe.initTouchPos.y - touch.screenY;
+        var dx = daSwipe.initTouchPos.x - touch.viewX;
+        var dy = daSwipe.initTouchPos.y - touch.viewY;
 
         daSwipe.touchAngle = Math.atan2(dy, dx);
         daSwipe.touchLength = Math.sqrt(dx * dx + dy * dy);
