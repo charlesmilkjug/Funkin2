@@ -29,10 +29,12 @@ import funkin.api.discord.DiscordClient;
 import funkin.api.newgrounds.NewgroundsClient;
 #end
 
+@:nullSafety
 class MainMenuState extends MusicBeatState
 {
   var menuItems:MenuTypedList<AtlasMenuItem>;
 
+  var bg:FlxSprite;
   var magenta:FlxSprite;
   var camFollow:FlxObject;
 
@@ -40,10 +42,15 @@ class MainMenuState extends MusicBeatState
 
   static var rememberedSelectedIndex:Int = 0;
 
-  public function new(?_overrideMusic:Bool = false)
+  public function new(_overrideMusic:Bool = false)
   {
     super();
     overrideMusic = _overrideMusic;
+
+    bg = new FlxSprite(Paths.image('menuBG'));
+    menuItems = new MenuTypedList<AtlasMenuItem>();
+    magenta = new FlxSprite(Paths.image('menuBGMagenta'));
+    camFollow = new FlxObject(0, 0, 1, 1);
   }
 
   override function create():Void
@@ -63,7 +70,6 @@ class MainMenuState extends MusicBeatState
     persistentUpdate = true;
     persistentDraw = true;
 
-    var bg:FlxSprite = new FlxSprite(Paths.image('menuBG'));
     bg.scrollFactor.x = 0;
     bg.scrollFactor.y = 0.17;
     bg.setGraphicSize(Std.int(bg.width * 1.2));
@@ -71,10 +77,8 @@ class MainMenuState extends MusicBeatState
     bg.screenCenter();
     add(bg);
 
-    camFollow = new FlxObject(0, 0, 1, 1);
     add(camFollow);
 
-    magenta = new FlxSprite(Paths.image('menuBGMagenta'));
     magenta.scrollFactor.x = bg.scrollFactor.x;
     magenta.scrollFactor.y = bg.scrollFactor.y;
     magenta.setGraphicSize(Std.int(bg.width));
@@ -86,8 +90,6 @@ class MainMenuState extends MusicBeatState
     // TODO: Why doesn't this line compile I'm going fucking feral
 
     if (Preferences.flashingLights) add(magenta);
-
-    menuItems = new MenuTypedList<AtlasMenuItem>();
     add(menuItems);
     menuItems.onChange.add(onMenuItemChange);
     menuItems.onAcceptPress.add(function(_) {
@@ -153,7 +155,7 @@ class MainMenuState extends MusicBeatState
     subStateClosed.add(_ -> resetCamStuff(false));
 
     subStateOpened.add(sub -> {
-      if (Type.getClass(sub) == FreeplayState)
+      if (Std.isOfType(sub, FreeplayState))
       {
         new FlxTimer().start(0.5, _ -> {
           magenta.visible = false;
@@ -166,16 +168,19 @@ class MainMenuState extends MusicBeatState
     super.create();
 
     // This has to come AFTER!
-    this.leftWatermarkText.text = Constants.VERSION;
-
-    #if FEATURE_NEWGROUNDS
-    if (NewgroundsClient.instance.isLoggedIn())
+    if (this.leftWatermarkText != null)
     {
-      this.leftWatermarkText.text += ' | Newgrounds: Logged in as ${NewgroundsClient.instance.user?.name}';
-    }
-    #end
+      this.leftWatermarkText.text = Constants.VERSION;
 
-    this.rightWatermarkText.text = "TOTALLY STABLE BUILD";
+      #if FEATURE_NEWGROUNDS
+      if (NewgroundsClient.instance.isLoggedIn())
+      {
+        this.leftWatermarkText.text += ' | Newgrounds: Logged in as ${NewgroundsClient.instance.user?.name}';
+      }
+      #end
+    }
+
+    if (this.rightWatermarkText != null) this.rightWatermarkText.text = "TOTALLY STABLE BUILD";
   }
 
   function playMenuMusic():Void
@@ -189,7 +194,7 @@ class MainMenuState extends MusicBeatState
       });
   }
 
-  function resetCamStuff(?snap:Bool = true):Void
+  function resetCamStuff(snap:Bool = true):Void
   {
     FlxG.camera.follow(camFollow, null, 0.06);
 
@@ -240,7 +245,7 @@ class MainMenuState extends MusicBeatState
   }
   #end
 
-  public function openPrompt(prompt:Prompt, onClose:Void->Void):Void
+  public function openPrompt(prompt:Prompt, ?onClose:Void->Void):Void
   {
     menuItems.enabled = false;
     persistentUpdate = false;
@@ -285,7 +290,7 @@ class MainMenuState extends MusicBeatState
       {
         for (item in menuItems)
         {
-          if (touch.overlaps(item))
+          if (item != null && touch.overlaps(item))
           {
             if (menuItems.selectedIndex == item.ID && touch.justPressed) menuItems.accept();
             else
