@@ -39,141 +39,154 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
     // Initialize the custom DropDown view.
     DropDownBuilder.HANDLER_MAP.set("objTint", Type.getClassName(ObjectTintHandler));
 
-    // Numeric callbacks.
-    objPosX.onChange = function(_) {
-      if (linkedObj != null) linkedObj.x = objPosX.pos;
-    }
+    try
+    { // Numeric callbacks.
+      objPosX.onChange = function(_) {
+        if (linkedObj != null) linkedObj.x = objPosX.pos;
+      }
 
-    objPosY.onChange = function(_) {
-      if (linkedObj != null) linkedObj.y = objPosY.pos;
-    }
+      objPosY.onChange = function(_) {
+        if (linkedObj != null) linkedObj.y = objPosY.pos;
+      }
 
-    objZIdx.max = StageEditorState.MAX_Z_INDEX;
-    objZIdx.onChange = function(_) {
-      if (linkedObj != null)
-      {
-        linkedObj.zIndex = Std.int(objZIdx.pos);
-        state.updateArray();
+      objZIdx.max = StageEditorState.MAX_Z_INDEX;
+      objZIdx.onChange = function(_) {
+        if (linkedObj != null)
+        {
+          linkedObj.zIndex = Std.int(objZIdx.pos);
+          state.updateArray();
+        }
+      }
+
+      objAlpha.onChange = function(_) {
+        if (linkedObj != null) linkedObj.alpha = objAlpha.pos;
+      }
+
+      objAngle.onChange = function(_) {
+        if (linkedObj != null) linkedObj.angle = objAngle.pos;
+      }
+
+      objScaleX.onChange = function(_) {
+        if (linkedObj != null)
+        {
+          linkedObj.scale.x = objScaleX.pos;
+          linkedObj.updateHitbox();
+        }
+      }
+
+      objScaleY.onChange = function(_) {
+        if (linkedObj != null)
+        {
+          linkedObj.scale.y = objScaleY.pos;
+          linkedObj.updateHitbox();
+        }
+      }
+
+      objScrollX.onChange = function(_) {
+        if (linkedObj != null) linkedObj.scrollFactor.x = objScrollX.pos;
+      }
+
+      objScrollY.onChange = function(_) {
+        if (linkedObj != null) linkedObj.scrollFactor.y = objScrollY.pos;
+      }
+
+      objDance.onChange = function(_) {
+        if (linkedObj != null) linkedObj.danceEvery = Std.int(objDance.pos);
+      }
+
+      // Boolean callbacks.
+      objPixel.onChange = function(_) {
+        if (linkedObj != null) linkedObj.antialiasing = objPixel.selected; // Kind of misleading, but objPixel has the 'Antialiasing' label attached to it!
+      }
+
+      objFlipX.onChange = function(_) {
+        if (linkedObj != null) linkedObj.flipX = objFlipX.selected;
+      }
+
+      objFlipY.onChange = function(_) {
+        if (linkedObj != null) linkedObj.flipY = objFlipY.selected;
+      }
+
+      objBlend.onChange = function(_) {
+        if (linkedObj != null)
+        {
+          linkedObj.blend = (objBlend.selectedItem?.text ?? "NONE") == "NONE" ? null : AssetDataHandler.blendFromString(objBlend.selectedItem.text);
+        }
+      }
+
+      objTint.onChange = function(_) {
+        if (linkedObj != null)
+        {
+          linkedObj.color = FlxColor.fromString(_.value) ?? 0xFFFFFFFF;
+        }
       }
     }
-
-    objAlpha.onChange = function(_) {
-      if (linkedObj != null) linkedObj.alpha = objAlpha.pos;
-    }
-
-    objAngle.onChange = function(_) {
-      if (linkedObj != null) linkedObj.angle = objAngle.pos;
-    }
-
-    objScaleX.onChange = function(_) {
-      if (linkedObj != null)
-      {
-        linkedObj.scale.x = objScaleX.pos;
-        linkedObj.updateHitbox();
-      }
-    }
-
-    objScaleY.onChange = function(_) {
-      if (linkedObj != null)
-      {
-        linkedObj.scale.y = objScaleY.pos;
-        linkedObj.updateHitbox();
-      }
-    }
-
-    objScrollX.onChange = function(_) {
-      if (linkedObj != null) linkedObj.scrollFactor.x = objScrollX.pos;
-    }
-
-    objScrollY.onChange = function(_) {
-      if (linkedObj != null) linkedObj.scrollFactor.y = objScrollY.pos;
-    }
-
-    objDance.onChange = function(_) {
-      if (linkedObj != null) linkedObj.danceEvery = Std.int(objDance.pos);
-    }
-
-    // Boolean callbacks.
-    objPixel.onChange = function(_) {
-      if (linkedObj != null) linkedObj.antialiasing = objPixel.selected; // Kind of misleading, but objPixel has the 'Antialiasing' label attached to it!
-    }
-
-    objFlipX.onChange = function(_) {
-      if (linkedObj != null) linkedObj.flipX = objFlipX.selected;
-    }
-
-    objFlipY.onChange = function(_) {
-      if (linkedObj != null) linkedObj.flipY = objFlipY.selected;
-    }
-
-    objBlend.onChange = function(_) {
-      if (linkedObj != null)
-      {
-        linkedObj.blend = (objBlend.selectedItem?.text ?? "NONE") == "NONE" ? null : AssetDataHandler.blendFromString(objBlend.selectedItem.text);
-      }
-    }
-
-    objTint.onChange = function(_) {
-      if (linkedObj != null)
-      {
-        linkedObj.color = FlxColor.fromString(_.value) ?? 0xFFFFFFFF;
-      }
+    catch (e)
+    {
+      trace("YOU WILL NOT LAUGH\n" + e);
     }
   }
 
   override public function refresh()
   {
-    linkedObj = stageEditorState.selectedSprite;
-
-    objPosX.step = stageEditorState.moveStep;
-    objPosY.step = stageEditorState.moveStep;
-    objAngle.step = funkin.save.Save.instance.stageEditorAngleStep;
-
-    if (linkedObj == null)
+    try
     {
-      // If there is no selected object, reset displays.
-      objPosX.pos = 0;
-      objPosY.pos = 0;
-      objZIdx.pos = 0;
-      objAlpha.pos = 1;
-      objAngle.pos = 0;
-      objScaleX.pos = 1;
-      objScaleY.pos = 1;
-      objScrollX.pos = 1;
-      objScrollY.pos = 1;
-      objDance.pos = 0;
+      linkedObj = stageEditorState.selectedSprite;
 
-      objPixel.selected = true;
-      objFlipX.selected = false;
-      objFlipY.selected = false;
+      objPosX.step = stageEditorState.moveStep;
+      objPosY.step = stageEditorState.moveStep;
+      objAngle.step = funkin.save.Save.instance.stageEditorAngleStep;
 
-      objBlend.selectedIndex = 0;
-      objTint.selectedItem = Color.fromString("white");
+      if (linkedObj == null)
+      {
+        // If there is no selected object, reset displays.
+        objPosX.pos = 0;
+        objPosY.pos = 0;
+        objZIdx.pos = 0;
+        objAlpha.pos = 1;
+        objAngle.pos = 0;
+        objScaleX.pos = 1;
+        objScaleY.pos = 1;
+        objScrollX.pos = 1;
+        objScrollY.pos = 1;
+        objDance.pos = 0;
 
-      return;
+        objPixel.selected = true;
+        objFlipX.selected = false;
+        objFlipY.selected = false;
+
+        objBlend.selectedIndex = 0;
+        objTint.selectedItem = Color.fromString("white");
+
+        return;
+      }
+
+      // Otherwise, only update components whose linked object values have been changed.
+      if (objPosX.pos != linkedObj.x) objPosX.pos = linkedObj.x;
+      if (objPosY.pos != linkedObj.y) objPosY.pos = linkedObj.y;
+      if (objZIdx.pos != linkedObj.zIndex) objZIdx.pos = linkedObj.zIndex;
+      if (objAlpha.pos != linkedObj.alpha) objAlpha.pos = linkedObj.alpha;
+      if (objAngle.pos != linkedObj.angle) objAngle.pos = linkedObj.angle;
+      if (objScaleX.pos != linkedObj.scale.x) objScaleX.pos = linkedObj.scale.x;
+      if (objScaleY.pos != linkedObj.scale.y) objScaleY.pos = linkedObj.scale.y;
+      if (objScrollX.pos != linkedObj.scrollFactor.x) objScrollX.pos = linkedObj.scrollFactor.x;
+      if (objScrollY.pos != linkedObj.scrollFactor.y) objScrollY.pos = linkedObj.scrollFactor.y;
+      if (objDance.pos != linkedObj.danceEvery) objDance.pos = linkedObj.danceEvery;
+
+      if (objPixel.selected != linkedObj.antialiasing) objPixel.selected = linkedObj.antialiasing;
+      if (objFlipX.selected != linkedObj.flipX) objFlipX.selected = linkedObj.flipX;
+      if (objFlipY.selected != linkedObj.flipY) objFlipY.selected = linkedObj.flipY;
+
+      var blendMode:String = Std.string(linkedObj.blend) ?? "NONE";
+      if (objBlend.selectedItem != blendMode.toUpperCase()) objBlend.selectedItem = blendMode.toUpperCase();
+
+      var objColor:Color = Color.fromComponents(linkedObj.color.red, linkedObj.color.green, linkedObj.color.blue, linkedObj.color.alpha);
+      if (objTint.selectedItem != objColor) objTint.selectedItem = objColor;
     }
-
-    // Otherwise, only update components whose linked object values have been changed.
-    if (objPosX.pos != linkedObj.x) objPosX.pos = linkedObj.x;
-    if (objPosY.pos != linkedObj.y) objPosY.pos = linkedObj.y;
-    if (objZIdx.pos != linkedObj.zIndex) objZIdx.pos = linkedObj.zIndex;
-    if (objAlpha.pos != linkedObj.alpha) objAlpha.pos = linkedObj.alpha;
-    if (objAngle.pos != linkedObj.angle) objAngle.pos = linkedObj.angle;
-    if (objScaleX.pos != linkedObj.scale.x) objScaleX.pos = linkedObj.scale.x;
-    if (objScaleY.pos != linkedObj.scale.y) objScaleY.pos = linkedObj.scale.y;
-    if (objScrollX.pos != linkedObj.scrollFactor.x) objScrollX.pos = linkedObj.scrollFactor.x;
-    if (objScrollY.pos != linkedObj.scrollFactor.y) objScrollY.pos = linkedObj.scrollFactor.y;
-    if (objDance.pos != linkedObj.danceEvery) objDance.pos = linkedObj.danceEvery;
-
-    if (objPixel.selected != linkedObj.antialiasing) objPixel.selected = linkedObj.antialiasing;
-    if (objFlipX.selected != linkedObj.flipX) objFlipX.selected = linkedObj.flipX;
-    if (objFlipY.selected != linkedObj.flipY) objFlipY.selected = linkedObj.flipY;
-
-    var blendMode:String = Std.string(linkedObj.blend) ?? "NONE";
-    if (objBlend.selectedItem != blendMode.toUpperCase()) objBlend.selectedItem = blendMode.toUpperCase();
-
-    var objColor:Color = Color.fromComponents(linkedObj.color.red, linkedObj.color.green, linkedObj.color.blue, linkedObj.color.alpha);
-    if (objTint.selectedItem != objColor) objTint.selectedItem = objColor;
+    catch (e)
+    {
+      trace("YOU WILL NOT LAUGH\n" + e);
+    }
   }
 }
 
