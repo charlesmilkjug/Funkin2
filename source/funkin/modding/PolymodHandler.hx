@@ -458,6 +458,17 @@ class PolymodHandler
    */
   public static function forceReloadAssets():Void
   {
+    FlxG.bitmap.clearCache();
+
+    final cache = cast(openfl.Assets.cache, openfl.utils.AssetCache);
+    for (key => _ in cache.font)
+      cache.removeFont(key);
+
+    for (key => _ in cache.sound)
+      cache.removeSound(key);
+
+    openfl.Assets.cache.clear();
+
     // Forcibly clear scripts so that scripts can be edited.
     ModuleHandler.clearModuleCache();
     Polymod.clearScripts();
