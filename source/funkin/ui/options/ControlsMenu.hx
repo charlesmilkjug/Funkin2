@@ -186,14 +186,14 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
 
     prompt = new Prompt("\nPress any key to rebind\n\n\nBackspace to unbind\n    Escape to cancel", None);
     prompt.create();
-    prompt.createBgFromMargin(100, 0xFFfafd6d);
+    prompt.createBgFromMargin(125, 0x83fbfd6dd);
     prompt.back.scrollFactor.set(0, 0);
     prompt.exists = false;
     add(prompt);
 
     popup = new Prompt("\nYou cannot unbind\nthat key!\n\n\nEscape to exit", None);
     popup.create();
-    popup.createBgFromMargin(100, 0xFFfafd6d);
+    popup.createBgFromMargin(125, 0x83fbfd6dd);
     popup.back.scrollFactor.set(0, 0);
     popup.exists = false;
     add(popup);

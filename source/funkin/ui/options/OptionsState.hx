@@ -216,7 +216,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
       \nAre you sure?
     ", Custom("Delete", "Cancel"));
     prompt.create();
-    prompt.createBgFromMargin(100, 0xFFFAFD6D);
+    prompt.createBgFromMargin(125, 0x83fbfd6dd);
     prompt.back.scrollFactor.set(0, 0);
     add(prompt);
 
@@ -244,7 +244,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
     ", Yes_No);
 
     prompt.create();
-    prompt.createBgFromMargin(100, 0xFFFAFD6D);
+    prompt.createBgFromMargin(125, 0x83fbfd6dd);
     prompt.back.scrollFactor.set(0, 0);
     add(prompt);
 
