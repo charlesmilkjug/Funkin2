@@ -401,8 +401,6 @@ class CharSelectSubState extends MusicBeatSubState
     FlxG.sound.defaultSoundGroup.add(introSound);
     FlxG.sound.list.add(introSound);
 
-    FlxG.bitmap.clearUnused();
-
     openSubState(new IntroSubState());
     subStateClosed.addOnce((_) -> {
       remove(blackScreen);
@@ -804,8 +802,6 @@ class CharSelectSubState extends MusicBeatSubState
 
         cursorConfirmed.visible = true;
         cursorConfirmed.animation.play("idle", true);
-
-        FlxG.bitmap.clearUnused();
 
         grpCursors.visible = false;
 
