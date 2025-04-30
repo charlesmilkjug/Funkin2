@@ -359,6 +359,8 @@ class PolymodHandler
     result.push('.git');
     result.push('.gitignore');
     result.push('.gitattributes');
+    result.push('hxformat.json');
+    result.push('CHANGELOG.md');
     result.push('README.md');
 
     return result;
@@ -503,5 +505,7 @@ class PolymodHandler
     CharacterDataParser.loadCharacterCache(); // TODO: Migrate characters to BaseRegistry.
     NoteKindManager.loadScripts();
     ModuleHandler.loadModuleCache();
+
+    FlxG.bitmap.clearUnused();
   }
 }
