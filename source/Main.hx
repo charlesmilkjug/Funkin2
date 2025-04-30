@@ -15,11 +15,23 @@ import openfl.media.Video;
 import openfl.net.NetStream;
 import funkin.util.WindowUtil;
 
+// Adds support for FeralGamemode on Linux
+#if (linux && !DISABLE_GAMEMODE)
+@:cppInclude('./external/gamemode_client.h')
+@:cppFileCode('
+	#define GAMEMODE_AUTO
+')
+#end
+
 /**
  * The main class which initializes HaxeFlixel and starts the game in its initial state.
  */
 class Main extends Sprite
 {
+  public static var instance:Main;
+
+  public static var game:FlxGame;
+
   var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
   var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
   var initialState:Class<FlxState> = funkin.InitState; // The FlxState the game starts with.
@@ -42,6 +54,15 @@ class Main extends Sprite
   {
     super();
 
+    instance = this;
+
+    #if windows
+    @:functionCode("
+			#include <windows.h>
+			setProcessDPIAware() // Allows for more crispy visuals.
+		")
+    #end
+
     // Initialize custom logging.
     haxe.Log.trace = funkin.util.logging.AnsiTrace.trace;
     funkin.util.logging.AnsiTrace.traceBF();
@@ -50,22 +71,12 @@ class Main extends Sprite
     // TODO: Replace with loadEnabledMods() once the user can configure the mod list.
     funkin.modding.PolymodHandler.loadAllMods();
 
-    if (stage != null)
-    {
-      init();
-    }
-    else
-    {
-      addEventListener(Event.ADDED_TO_STAGE, init);
-    }
+    stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
   }
 
   function init(?event:Event):Void
   {
-    if (hasEventListener(Event.ADDED_TO_STAGE))
-    {
-      removeEventListener(Event.ADDED_TO_STAGE, init);
-    }
+    if (hasEventListener(Event.ADDED_TO_STAGE)) removeEventListener(Event.ADDED_TO_STAGE, init);
 
     setupGame();
   }
@@ -109,7 +120,7 @@ class Main extends Sprite
 
     WindowUtil.setVSyncMode(funkin.Preferences.vsyncMode);
 
-    var game:FlxGame = new FlxGame(gameWidth, gameHeight, initialState, Preferences.framerate, Preferences.framerate, skipSplash, startFullscreen);
+    game = new FlxGame(gameWidth, gameHeight, initialState, Preferences.framerate, Preferences.framerate, skipSplash, startFullscreen);
 
     // FlxG.game._customSoundTray wants just the class, it calls new from
     // create() in there, which gets called when it's added to the stage

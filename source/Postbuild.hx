@@ -6,12 +6,14 @@ import sys.io.File;
 /**
  * A script which executes after the game is built.
  */
-class Postbuild
+class Postbuild extends CommandLine
 {
   static inline final BUILD_TIME_FILE:String = '.build_time';
 
   static function main():Void
   {
+    CommandLine.prettyPrint('Finished building Friday Night Funkin\'!');
+
     printBuildTime();
   }
 
