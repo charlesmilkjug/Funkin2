@@ -130,11 +130,6 @@ class CLIUtil
           shouldLoadStage: false,
           stagePath: null
         }
-      stage:
-        {
-          shouldLoadStage: false,
-          stagePath: null
-        }
     };
   }
 

@@ -57,7 +57,7 @@ class BackupAvailableDialog extends Dialog
       // :[
       #if sys
       var absoluteBackupsPath:String = Path.join([Sys.getCwd(), StageEditorState.BACKUPS_PATH]);
-      WindowUtil.openFolder(absoluteBackupsPath);
+      FileUtil.openFolder(absoluteBackupsPath);
       #end
     }
 
