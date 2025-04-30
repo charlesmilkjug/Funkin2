@@ -1,13 +1,14 @@
 package funkin.util.assets;
 
 class DataAssets
+class DataAssets
 {
   static function buildDataPath(path:String):String
   {
     return 'assets/data/${path}';
   }
 
-  public static function listDataFilesInPath(path:String, ?suffix:String = '.json'):Array<String>
+  public static function listDataFilesInPath(path:String, suffix:String = '.json'):Array<String>
   {
     var textAssets = openfl.utils.Assets.list(TEXT);
 
