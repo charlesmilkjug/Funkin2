@@ -19,6 +19,7 @@ import thx.semver.VersionRule;
  *
  * Functions must be of the signature `(hxjsonast.Json, String) -> T`, where the String is the property name and `T` is the type of the property.
  */
+@:nullSafety
 class DataParse
 {
   /**
@@ -145,8 +146,6 @@ class DataParse
           default:
             throw 'Expected Backdrop property $name to be specify a valid "type", but it was "${backdropType}".';
         }
-
-        return null;
       default:
         throw 'Expected property $name to be an object, but it was ${json.value}.';
     }
@@ -309,6 +308,8 @@ class DataParse
         var data:Null<Int> = values[1] == null ? null : Tools.getValue(values[1]);
         var length:Null<Float> = values[2] == null ? null : Tools.getValue(values[2]);
         var alt:Null<Bool> = values[3] == null ? null : Tools.getValue(values[3]);
+
+        if (time == null || data == null) throw 'Property $name note is missing time and/or data values.';
 
         return new LegacyNote(time, data, length, alt);
       // return null;
