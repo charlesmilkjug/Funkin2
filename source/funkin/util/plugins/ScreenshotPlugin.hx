@@ -3,6 +3,7 @@ package funkin.util.plugins;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -11,6 +12,7 @@ import flixel.util.FlxTimer;
 import funkin.util.WindowUtil;
 import funkin.util.logging.CrashHandler;
 import flixel.addons.util.FlxAsyncLoop;
+import funkin.graphics.FunkinSprite;
 import funkin.input.Cursor;
 import funkin.audio.FunkinSound;
 import openfl.display.Bitmap;
@@ -21,44 +23,39 @@ import openfl.geom.Rectangle;
 import openfl.utils.ByteArray;
 import openfl.events.MouseEvent;
 import funkin.Preferences;
+import flixel.addons.plugin.screengrab.FlxScreenGrab;
 
-/**
- * Parameters for starting the `ScreenshotPlugin`.
- */
 typedef ScreenshotPluginParams =
 {
   ?region:Rectangle,
+  flashColor:Null<FlxColor>,
 };
 
 /**
- * A Flixel plugin, which renders on top of the game, and provides the functionality
- * and visual feedback for taking screenshots.
+ * TODO: Contribute this upstream.
  */
-@:nullSafety
 class ScreenshotPlugin extends FlxBasic
 {
   /**
    * Current `ScreenshotPlugin` instance
    */
-  public static var instance(get, never):ScreenshotPlugin;
+  public static var instance:ScreenshotPlugin = null;
 
-  static var _instance:Null<ScreenshotPlugin> = null;
-
-  static function get_instance():ScreenshotPlugin
-  {
-    if (_instance == null)
-    {
-      _instance = new ScreenshotPlugin({});
-    }
-    return _instance;
-  }
-
-  /**
-   * The folder where screenshots are saved
-   */
-  public static final SCREENSHOT_FOLDER:String = 'screenshots';
+  public static final SCREENSHOT_FOLDER = 'screenshots';
 
   var region:Null<Rectangle>;
+
+  /**
+   * The color used for the flash
+   */
+  public static var flashColor(default, set):Int = 0xFFFFFFFF;
+
+  public static function set_flashColor(v:Int):Int
+  {
+    flashColor = v;
+    if (instance != null && instance.flashBitmap != null) instance.flashBitmap.bitmapData = new BitmapData(lastWidth, lastHeight, true, v);
+    return flashColor;
+  }
 
   /**
    * A signal fired before the screenshot is taken.
@@ -71,8 +68,8 @@ class ScreenshotPlugin extends FlxBasic
    */
   public var onPostScreenshot(default, null):FlxTypedSignal<Bitmap->Void>;
 
-  static var lastWidth:Int = 0;
-  static var lastHeight:Int = 0;
+  private static var lastWidth:Int;
+  private static var lastHeight:Int;
 
   var flashSprite:Sprite;
   var flashBitmap:Bitmap;
@@ -86,7 +83,7 @@ class ScreenshotPlugin extends FlxBasic
 
   var screenshotBeingSpammed:Bool = false;
 
-  var screenshotSpammedTimer:Null<FlxTimer> = null;
+  var screenshotSpammedTimer:FlxTimer;
 
   var screenshotBuffer:Array<Bitmap> = [];
   var screenshotNameBuffer:Array<String> = [];
@@ -97,23 +94,31 @@ class ScreenshotPlugin extends FlxBasic
   var stateChanging:Bool = false;
   var noSavingScreenshots:Bool = false;
 
-  var flashTween:Null<FlxTween> = null;
+  var flashTween:FlxTween;
 
-  var previewFadeInTween:Null<FlxTween> = null;
-  var previewFadeOutTween:Null<FlxTween> = null;
+  var previewFadeInTween:FlxTween;
+  var previewFadeOutTween:FlxTween;
 
-  var asyncLoop:Null<FlxAsyncLoop> = null;
+  var asyncLoop:FlxAsyncLoop;
 
   public function new(params:ScreenshotPluginParams)
   {
     super();
+
+    if (instance != null)
+    {
+      destroy();
+      return;
+    }
+
+    instance = this;
 
     lastWidth = FlxG.width;
     lastHeight = FlxG.height;
 
     flashSprite = new Sprite();
     flashSprite.alpha = 0;
-    flashBitmap = new Bitmap(new BitmapData(lastWidth, lastHeight, true, Preferences.flashingLights ? FlxColor.WHITE : FlxColor.TRANSPARENT));
+    flashBitmap = new Bitmap(new BitmapData(lastWidth, lastHeight, true, params.flashColor));
     flashSprite.addChild(flashBitmap);
 
     previewSprite = new Sprite();
@@ -132,6 +137,7 @@ class ScreenshotPlugin extends FlxBasic
     FlxG.stage.addChild(flashSprite);
 
     region = params.region ?? null;
+    flashColor = params.flashColor;
 
     onPreScreenshot = new FlxTypedSignal<Void->Void>();
     onPostScreenshot = new FlxTypedSignal<Bitmap->Void>();
@@ -199,7 +205,7 @@ class ScreenshotPlugin extends FlxBasic
         sprite.alpha = 0;
       }
       // screenshot spamming timer
-      if (screenshotSpammedTimer == null || screenshotSpammedTimer.finished)
+      if (screenshotSpammedTimer == null || screenshotSpammedTimer.finished == true)
       {
         screenshotSpammedTimer = new FlxTimer().start(1, function(_) {
           // The player's stopped spamming shots, so we can stop the screenshot spam mode too
@@ -236,12 +242,12 @@ class ScreenshotPlugin extends FlxBasic
    */
   public static function initialize():Void
   {
-    FlxG.plugins.addPlugin(new ScreenshotPlugin({}));
+    FlxG.plugins.addPlugin(new ScreenshotPlugin(
+      {
+        flashColor: Preferences.flashingLights ? FlxColor.WHITE : null, // Was originally a black flash.
+      }));
   }
 
-  /**
-   * @return `true` if the screenshot key is currently pressed.
-   */
   public function hasPressedScreenshot():Bool
   {
     #if FEATURE_SCREENSHOTS
@@ -251,11 +257,16 @@ class ScreenshotPlugin extends FlxBasic
     #end
   }
 
-  function resizeBitmap(width:Int, height:Int):Void
+  public function updateFlashColor():Void
+  {
+    Preferences.flashingLights ? set_flashColor(FlxColor.WHITE) : null;
+  }
+
+  private function resizeBitmap(width:Int, height:Int)
   {
     lastWidth = width;
     lastHeight = height;
-    flashBitmap.bitmapData = new BitmapData(lastWidth, lastHeight, true, Preferences.flashingLights ? FlxColor.WHITE : FlxColor.TRANSPARENT);
+    flashBitmap.bitmapData = new BitmapData(lastWidth, lastHeight, true, flashColor);
     outlineBitmap.bitmapData = new BitmapData(Std.int(lastWidth / 5) + 10, Std.int(lastHeight / 5) + 10, true, 0xFFFFFFFF);
   }
 
@@ -266,8 +277,8 @@ class ScreenshotPlugin extends FlxBasic
   {
     onPreScreenshot.dispatch();
 
-    var shot:Bitmap = new Bitmap(BitmapData.fromImage(FlxG.stage.window.readPixels()));
-    if (screenshotBeingSpammed)
+    var shot = new Bitmap(BitmapData.fromImage(FlxG.stage.window.readPixels()));
+    if (screenshotBeingSpammed == true)
     {
       // Save the screenshots to the buffer instead
       if (screenshotBuffer.length < 100)
@@ -307,7 +318,7 @@ class ScreenshotPlugin extends FlxBasic
     onPostScreenshot.dispatch(shot);
   }
 
-  static final CAMERA_FLASH_DURATION:Float = 0.25;
+  final CAMERA_FLASH_DURATION = 0.25;
 
   /**
    * Visual and audio feedback when a screenshot is taken.
@@ -321,10 +332,10 @@ class ScreenshotPlugin extends FlxBasic
     FunkinSound.playOnce(Paths.sound('screenshot'), 1.0);
   }
 
-  static final PREVIEW_INITIAL_DELAY:Float = 0.25; // How long before the preview starts fading in.
-  static final PREVIEW_FADE_IN_DURATION:Float = 0.3; // How long the preview takes to fade in.
-  static final PREVIEW_FADE_OUT_DELAY:Float = 1.25; // How long the preview stays on screen.
-  static final PREVIEW_FADE_OUT_DURATION:Float = 0.3; // How long the preview takes to fade out.
+  static final PREVIEW_INITIAL_DELAY = 0.25; // How long before the preview starts fading in.
+  static final PREVIEW_FADE_IN_DURATION = 0.3; // How long the preview takes to fade in.
+  static final PREVIEW_FADE_OUT_DELAY = 1.25; // How long the preview stays on screen.
+  static final PREVIEW_FADE_OUT_DURATION = 0.3; // How long the preview takes to fade out.
 
   /**
    * Show a fancy preview for the screenshot
@@ -356,12 +367,12 @@ class ScreenshotPlugin extends FlxBasic
 
     // fuck it, cursed locally scoped functions, purely because im lazy
     // (and so we can check changingAlpha, which is locally scoped.... because I'm lazy...)
-    var onHover:MouseEvent->Void = function(e:MouseEvent) {
+    var onHover = function(e:MouseEvent) {
       if (!changingAlpha) e.target.alpha = 0.6;
       targetAlpha = 0.6;
     };
 
-    var onHoverOut:MouseEvent->Void = function(e:MouseEvent) {
+    var onHoverOut = function(e:MouseEvent) {
       if (!changingAlpha) e.target.alpha = 1;
       targetAlpha = 1;
     }
@@ -450,7 +461,7 @@ class ScreenshotPlugin extends FlxBasic
 
   static function getCurrentState():FlxState
   {
-    var state:FlxState = FlxG.state;
+    var state = FlxG.state;
     while (state.subState != null)
     {
       state = state.subState;
@@ -469,16 +480,16 @@ class ScreenshotPlugin extends FlxBasic
   }
 
   /**
-   * Convert a Bitmap to a PNG ByteArray to save to a file.
+   * Convert a Bitmap to a PNG or JPEG ByteArray to save to a file.
    */
   function encode(bitmap:Bitmap):ByteArray
   {
-    var compressor:PNGEncoderOptions = new PNGEncoderOptions();
+    var compressor = returnEncoder(Preferences.saveFormat);
     return bitmap.bitmapData.encode(bitmap.bitmapData.rect, compressor);
   }
 
-  var previousScreenshotName:Null<String> = null;
-  var previousScreenshotCopyNum:Int = 0;
+  var previousScreenshotName:String;
+  var previousScreenshotCopyNum:Int;
 
   /**
    * Save the generated bitmap to a file.
@@ -487,14 +498,14 @@ class ScreenshotPlugin extends FlxBasic
    * @param screenShotNum Used for the delay save option, to space out the saving of the images.
    * @param delaySave If true, the image gets saved with the screenShotNum as the delay.
    */
-  function saveScreenshot(bitmap:Bitmap, targetPath = "image", screenShotNum:Int = 0, delaySave:Bool = true):Void
+  function saveScreenshot(bitmap:Bitmap, targetPath = "image", screenShotNum:Int = 0, delaySave:Bool = true)
   {
     makeScreenshotPath();
     // Check that we're not overriding a previous image, and keep making a unique path until we can
     if (previousScreenshotName != targetPath && previousScreenshotName != (targetPath + ' (${previousScreenshotCopyNum})'))
     {
       previousScreenshotName = targetPath;
-      targetPath = getScreenshotPath() + targetPath + '.png';
+      targetPath = getScreenshotPath() + targetPath + '.' + Std.string(Preferences.saveFormat).toLowerCase();
       previousScreenshotCopyNum = 2;
     }
     else
@@ -506,21 +517,20 @@ class ScreenshotPlugin extends FlxBasic
         newTargetPath = targetPath + ' (${previousScreenshotCopyNum})';
       }
       previousScreenshotName = newTargetPath;
-      targetPath = getScreenshotPath() + newTargetPath + '.png';
+      targetPath = getScreenshotPath() + newTargetPath + '.' + Std.string(Preferences.saveFormat).toLowerCase();
     }
 
-    // TODO: Make screenshot saving work on browser.
+    // TODO: Make this work on browser.
     // Maybe save the images into a buffer that you can download as a zip or something? That'd work
     // Shouldn't be too hard to do something similar to the chart editor saving
 
-    if (delaySave)
-    { // Save the images with a delay (a timer)
+    if (delaySave) // Save the images with a delay (a timer)
       new FlxTimer().start(screenShotNum, function(_) {
-        var pngData:ByteArray = encode(bitmap);
+        var pngData = encode(bitmap);
 
         if (pngData == null)
         {
-          trace('[WARN] Failed to encode PNG data');
+          trace('[WARN] Failed to encode ${Preferences.saveFormat} data');
           previousScreenshotName = null;
           // Just in case
           unsavedScreenshotBuffer.shift();
@@ -537,14 +547,13 @@ class ScreenshotPlugin extends FlxBasic
           if (Preferences.previewOnSave) showFancyPreview(bitmap); // Only show the preview after a screenshot is saved
         }
       });
-    }
     else // Save the screenshot immediately
     {
-      var pngData:ByteArray = encode(bitmap);
+      var pngData = encode(bitmap);
 
       if (pngData == null)
       {
-        trace('[WARN] Failed to encode PNG data');
+        trace('[WARN] Failed to encode ${Preferences.saveFormat} data');
         previousScreenshotName = null;
         return;
       }
@@ -558,7 +567,7 @@ class ScreenshotPlugin extends FlxBasic
   }
 
   // I' m very happy with this code, all of it just works
-  function saveBufferedScreenshots(screenshots:Array<Bitmap>, screenshotNames:Array<String>):Void
+  function saveBufferedScreenshots(screenshots:Array<Bitmap>, screenshotNames)
   {
     trace('Saving screenshot buffer');
     var i:Int = 0;
@@ -572,16 +581,14 @@ class ScreenshotPlugin extends FlxBasic
     }, 1);
     getCurrentState().add(asyncLoop);
     if (!Preferences.flashingLights && !Preferences.previewOnSave)
-    {
       showFancyPreview(screenshots[screenshots.length - 1]); // show the preview for the last screenshot
-    }
   }
 
   /**
    * Similar to the above function, but cancels the tweens, undos the mouse
    * and doesn't have the async loop because this is called before the state changes
    */
-  function saveUnsavedBufferedScreenshots():Void
+  function saveUnsavedBufferedScreenshots()
   {
     stateChanging = true;
     // Cancel the tweens of the capture feedback if they're running
@@ -620,7 +627,17 @@ class ScreenshotPlugin extends FlxBasic
     unsavedScreenshotNameBuffer = [];
   }
 
-  function postStateSwitch():Void
+  public function returnEncoder(saveFormat:String):Any
+  {
+    return switch (saveFormat)
+    {
+      // JPEG encoder causes the game to crash?????
+      // case "JPEG": new openfl.display.JPEGEncoderOptions(Preferences.jpegQuality);
+      default: new openfl.display.PNGEncoderOptions();
+    }
+  }
+
+  function postStateSwitch()
   {
     stateChanging = false;
     screenshotBeingSpammed = false;
@@ -629,7 +646,7 @@ class ScreenshotPlugin extends FlxBasic
 
   override public function destroy():Void
   {
-    if (instance == this) _instance = null;
+    if (instance == this) instance = null;
 
     if (FlxG.plugins.list.contains(this)) FlxG.plugins.remove(this);
 
@@ -646,18 +663,13 @@ class ScreenshotPlugin extends FlxBasic
 
     @:privateAccess
     for (parent in [flashSprite, previewSprite])
-    {
-      if (parent == null) continue;
-      for (child in parent.__children)
-      {
+      for (child in (parent?.__children ?? []))
         parent.removeChild(child);
-      }
-    }
 
-    // flashSprite = null
-    // flashBitmap = null
-    // previewSprite = null
-    // shotPreviewBitmap = null
-    // outlineBitmap = null
+    flashSprite = null;
+    flashBitmap = null;
+    previewSprite = null;
+    shotPreviewBitmap = null;
+    outlineBitmap = null;
   }
 }
