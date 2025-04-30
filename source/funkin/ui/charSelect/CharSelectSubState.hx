@@ -401,6 +401,8 @@ class CharSelectSubState extends MusicBeatSubState
     FlxG.sound.defaultSoundGroup.add(introSound);
     FlxG.sound.list.add(introSound);
 
+    FlxG.bitmap.clearUnused();
+
     openSubState(new IntroSubState());
     subStateClosed.addOnce((_) -> {
       remove(blackScreen);
@@ -784,22 +786,10 @@ class CharSelectSubState extends MusicBeatSubState
       }
     }
 
-    if (cursorX < -1)
-    {
-      cursorX = 1;
-    }
-    if (cursorX > 1)
-    {
-      cursorX = -1;
-    }
-    if (cursorY < -1)
-    {
-      cursorY = 1;
-    }
-    if (cursorY > 1)
-    {
-      cursorY = -1;
-    }
+    if (cursorX < -1) cursorX = 1;
+    if (cursorX > 1) cursorX = -1;
+    if (cursorY < -1) cursorY = 1;
+    if (cursorY > 1) cursorY = -1;
 
     if (availableChars.exists(getCurrentSelected()) && Save.instance.charactersSeen.contains(availableChars[getCurrentSelected()]))
     {
@@ -815,6 +805,8 @@ class CharSelectSubState extends MusicBeatSubState
         cursorConfirmed.visible = true;
         cursorConfirmed.animation.play("idle", true);
 
+        FlxG.bitmap.clearUnused();
+
         grpCursors.visible = false;
 
         FlxG.sound.play(Paths.sound('CS_confirm'));
@@ -825,13 +817,6 @@ class CharSelectSubState extends MusicBeatSubState
         gfChill.playAnimation("confirm", true, false, true);
         pressedSelect = true;
         selectTimer.start(1.5, (_) -> {
-          // pressedSelect = false;
-          // FlxG.switchState(FreeplayState.build(
-          //   {
-          //     {
-          //       character: curChar
-          //     }
-          //   }));
           goToFreeplay();
         });
       }

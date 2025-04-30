@@ -3258,6 +3258,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       }
     }
     #end
+
+    FlxG.bitmap.clearUnused();
   }
 
   /**
