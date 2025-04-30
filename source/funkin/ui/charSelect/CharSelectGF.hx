@@ -164,8 +164,9 @@ class CharSelectGF extends FlxAtlasSprite implements IBPMSyncedScriptedClass
   /**
    * For switching between "GFs" such as gf, nene, etc
    * @param bf Which BF we are selecting, so that we know the accompyaning GF
+   * @param pressedSelect If select was pressed while switching character, play the confirm animation instead
    */
-  public function switchGF(bf:String):Void
+  public function switchGF(bf:String, pressedSelect:Bool = false):Void
   {
     var previousGFPath = currentGFPath;
 
@@ -193,7 +194,9 @@ class CharSelectGF extends FlxAtlasSprite implements IBPMSyncedScriptedClass
       animOutInfo = FramesJSFLParser.parse(animInfoPath + '/Out.txt');
     }
 
-    playAnimation("idle", true, false, false);
+    if (pressedSelect) playAnimation("confirm", true, false, true);
+    else
+      playAnimation("idle", true, false, false);
 
     updateHitbox();
   }
