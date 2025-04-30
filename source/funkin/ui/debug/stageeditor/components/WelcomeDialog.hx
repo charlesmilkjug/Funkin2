@@ -33,8 +33,6 @@ class WelcomeDialog extends Dialog
 
     for (file in Save.instance.stageEditorPreviousFiles)
     {
-      trace(file);
-
       if (!FileUtil.fileExists(file)) continue; // whats the point of loading something that doesnt exist
 
       var patj = new haxe.io.Path(file);
@@ -46,9 +44,9 @@ class WelcomeDialog extends Dialog
 
       #if sys
       var stat = sys.FileSystem.stat(file);
-      var sizeInMB = (stat.size / 1000000).round(3);
+      var sizeInMB = (stat.size / 1000000).round(2);
 
-      fileText.tooltip = "Full Name: " + file + "\nLast Modified: " + stat.mtime.toString() + "\nSize: " + sizeInMB + " MB";
+      fileText.tooltip = "Full Name: " + file + "\nLast Modified: " + stat.mtime.toString() + "\nSize: " + sizeInMB + "MB";
       #end
 
       contentRecent.addComponent(fileText);
@@ -56,7 +54,7 @@ class WelcomeDialog extends Dialog
 
     boxDrag.onClick = function(_) FileUtil.browseForSaveFile([FileUtil.FILE_FILTER_FNFS], loadFromFilePath, null, null, "Open Stage Data");
 
-    var defaultStages:Array<String> = StageRegistry.instance.listBaseGameEntryIds();
+    var defaultStages = StageRegistry.instance.listBaseGameStageIds();
     defaultStages.sort(funkin.util.SortUtil.alphabetically);
 
     for (stage in defaultStages)
@@ -132,7 +130,8 @@ class WelcomeDialog extends Dialog
 
   function killDaDialog()
   {
-    stageEditorState.updateDialog(StageEditorDialogType.OBJECT);
+    stageEditorState.updateDialog(StageEditorDialogType.OBJECT_GRAPHIC);
+    stageEditorState.updateDialog(StageEditorDialogType.OBJECT_PROPERTIES);
     stageEditorState.updateDialog(StageEditorDialogType.CHARACTER);
     stageEditorState.updateDialog(StageEditorDialogType.STAGE);
 
