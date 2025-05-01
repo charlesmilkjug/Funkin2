@@ -418,10 +418,7 @@ class Conductor
     var currentTime:Float = (FlxG.sound.music != null) ? FlxG.sound.music.time : 0.0;
     var currentLength:Float = (FlxG.sound.music != null) ? FlxG.sound.music.length : 0.0;
 
-    if (songPos == null)
-    {
-      songPos = currentTime;
-    }
+    if (songPos == null) songPos = currentTime;
 
     // Take into account instrumental and file format song offsets.
     songPos += applyOffsets ? (combinedOffset) : 0;
@@ -431,14 +428,9 @@ class Conductor
     var oldStep:Float = this.currentStep;
 
     // If the song is playing, limit the song position to the length of the song or beginning of the song.
-    if (FlxG.sound.music != null && FlxG.sound.music.playing)
-    {
-      this.songPosition = Math.min(currentLength, Math.max(0, songPos));
-    }
+    if (FlxG.sound.music != null && FlxG.sound.music.playing) this.songPosition = FlxMath.bound(Math.min(this.combinedOffset, 0), songPos, currentLength);
     else
-    {
       this.songPosition = songPos;
-    }
 
     // Set the song position we are at (for purposes of calculating note positions, etc).
 
@@ -453,10 +445,7 @@ class Conductor
       }
     }
 
-    if (currentTimeChange == null && bpmOverride == null && FlxG.sound.music != null)
-    {
-      trace('WARNING: Conductor is broken, timeChanges is empty.');
-    }
+    if (currentTimeChange == null && bpmOverride == null && FlxG.sound.music != null) trace('WARNING: Conductor is broken, timeChanges is empty.');
     else if (currentTimeChange != null && this.songPosition > 0.0)
     {
       // roundDecimal prevents representing 8 as 7.9999999
@@ -480,20 +469,11 @@ class Conductor
     }
 
     // FlxSignals are really cool.
-    if (currentStep != oldStep)
-    {
-      this.onStepHit.dispatch();
-    }
+    if (currentStep != oldStep) this.onStepHit.dispatch();
 
-    if (currentBeat != oldBeat)
-    {
-      this.onBeatHit.dispatch();
-    }
+    if (currentBeat != oldBeat) this.onBeatHit.dispatch();
 
-    if (currentMeasure != oldMeasure)
-    {
-      this.onMeasureHit.dispatch();
-    }
+    if (currentMeasure != oldMeasure) this.onMeasureHit.dispatch();
 
     // only update the timestamp if songPosition actually changed
     // which it doesn't do every frame!
@@ -543,10 +523,7 @@ class Conductor
       // Without any custom handling, `currentStepTime` becomes non-zero at `songPosition = 0`.
       if (songTimeChange.timeStamp < 0.0) songTimeChange.timeStamp = 0.0;
 
-      if (songTimeChange.timeStamp <= 0.0)
-      {
-        songTimeChange.beatTime = 0.0;
-      }
+      if (songTimeChange.timeStamp <= 0.0) songTimeChange.beatTime = 0.0;
       else
       {
         // Calculate the beat time of this timestamp.
@@ -564,10 +541,7 @@ class Conductor
       timeChanges.push(songTimeChange);
     }
 
-    if (timeChanges.length > 0)
-    {
-      trace('Done mapping time changes: ${timeChanges}');
-    }
+    if (timeChanges.length > 0) trace('Done mapping time changes: ${timeChanges}');
 
     // Update currentStepTime
     this.update(this.songPosition, false);

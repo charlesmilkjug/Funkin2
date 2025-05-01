@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.math.FlxMath;
+import funkin.graphics.shaders.HSVShader;
 
 /**
  * This is based heavily on the `FlxStrip` class. It uses `drawTriangles()` to clip a sustain note
@@ -23,6 +24,8 @@ class SustainTrail extends FlxSprite
    * `top left, bottom left, bottom right`
    */
   static final TRIANGLE_VERTEX_INDICES:Array<Int> = [0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7];
+
+  var hsvShader:HSVShader;
 
   public var strumTime:Float = 0; // millis
   public var noteDirection:NoteDirection = 0;
@@ -46,9 +49,15 @@ class SustainTrail extends FlxSprite
 
   /**
    * Set to `true` if the user missed the note or released the sustain.
-   * Should make the trail transparent.
+   * Should make the trail desaturated if released.
    */
   public var missedNote:Bool = false;
+
+  /**
+   * Set whenever the sustain is held, decrements when released.
+   * If it isn't regrabbed by the time it reaches `0`, handle the miss.
+   */
+  public var regrabTimer:Float = 0;
 
   /**
    * Set to `true` after handling additional logic for missing notes.
@@ -114,6 +123,8 @@ class SustainTrail extends FlxSprite
     this.fullSustainLength = sustainLength;
     this.noteDirection = noteDirection;
 
+    hsvShader = new HSVShader();
+
     setupHoldNoteGraphic(noteStyle);
     noteStyleOffsets = noteStyle.getHoldNoteOffsets();
 
@@ -131,14 +142,10 @@ class SustainTrail extends FlxSprite
     if (this.indices.length == indices.length)
     {
       for (i in 0...indices.length)
-      {
         this.indices[i] = indices[i];
-      }
     }
     else
-    {
       this.indices = new DrawData<Int>(indices.length, false, indices);
-    }
   }
 
   /**
@@ -150,14 +157,10 @@ class SustainTrail extends FlxSprite
     if (this.vertices.length == vertices.length)
     {
       for (i in 0...vertices.length)
-      {
         this.vertices[i] = vertices[i];
-      }
     }
     else
-    {
       this.vertices = new DrawData<Float>(vertices.length, false, vertices);
-    }
   }
 
   /**
@@ -169,14 +172,10 @@ class SustainTrail extends FlxSprite
     if (this.uvtData.length == uvtData.length)
     {
       for (i in 0...uvtData.length)
-      {
         this.uvtData[i] = uvtData[i];
-      }
     }
     else
-    {
       this.uvtData = new DrawData<Float>(uvtData.length, false, uvtData);
-    }
   }
 
   /**
@@ -213,6 +212,7 @@ class SustainTrail extends FlxSprite
 
     // alpha = 0.6;
     alpha = 1.0;
+    this.shader = hsvShader;
     // calls updateColorTransform(), which initializes processedGraphic!
     updateColorTransform();
 
@@ -229,11 +229,19 @@ class SustainTrail extends FlxSprite
   override function update(elapsed)
   {
     super.update(elapsed);
-    if (previousScrollSpeed != (parentStrumline?.scrollSpeed ?? 1.0))
-    {
-      triggerRedraw();
-    }
+    if (previousScrollSpeed != (parentStrumline?.scrollSpeed ?? 1.0)) triggerRedraw();
     previousScrollSpeed = parentStrumline?.scrollSpeed ?? 1.0;
+
+    if (regrabTimer > 0)
+    {
+      regrabTimer -= elapsed;
+      if (regrabTimer <= 0)
+      {
+        regrabTimer = 0;
+        desaturate();
+        alpha *= 0.75;
+      }
+    }
   }
 
   /**
@@ -278,10 +286,7 @@ class SustainTrail extends FlxSprite
    */
   public function updateClipping(songTime:Float = 0):Void
   {
-    if (graphic == null || customVertexData)
-    {
-      return;
-    }
+    if (graphic == null || customVertexData) return;
 
     var clipHeight:Float = FlxMath.bound(sustainHeight(sustainLength - (songTime - strumTime), parentStrumline?.scrollSpeed ?? 1.0), 0, graphicHeight);
     if (clipHeight <= 0.1)
@@ -290,9 +295,7 @@ class SustainTrail extends FlxSprite
       return;
     }
     else
-    {
       visible = true;
-    }
 
     var bottomHeight:Float = graphic.height * zoom * endOffset;
     var partHeight:Float = clipHeight - bottomHeight;
@@ -313,10 +316,7 @@ class SustainTrail extends FlxSprite
       // flipY makes the sustain render upside down.
       flipY ? 0.0 + bottomHeight : vertices[1] + partHeight;
     }
-    else
-    {
-      vertices[0 * 2 + 1]; // Inline with top left vertex (no partHeight available)
-    }
+    else vertices[0 * 2 + 1]; // Inline with top left vertex (no partHeight available)
 
     // Bottom right
     vertices[3 * 2] = graphicWidth;
@@ -405,6 +405,12 @@ class SustainTrail extends FlxSprite
     #end
   }
 
+  public function desaturate():Void
+    hsvShader.saturation = 0.2;
+
+  public function setHue(hue:Float):Void
+    hsvShader.hue = hue;
+
   public override function kill():Void
   {
     super.kill();
@@ -417,6 +423,7 @@ class SustainTrail extends FlxSprite
 
     hitNote = false;
     missedNote = false;
+    regrabTimer = 0;
   }
 
   public override function revive():Void
@@ -432,6 +439,11 @@ class SustainTrail extends FlxSprite
     hitNote = false;
     missedNote = false;
     handledMiss = false;
+    regrabTimer = 0;
+
+    hsvShader.hue = 1.0;
+    hsvShader.saturation = 1.0;
+    hsvShader.value = 1.0;
   }
 
   override public function destroy():Void
@@ -447,7 +459,9 @@ class SustainTrail extends FlxSprite
   override function updateColorTransform():Void
   {
     super.updateColorTransform();
+
     if (processedGraphic != null) processedGraphic.destroy();
+
     processedGraphic = FlxGraphic.fromGraphic(graphic, true);
     processedGraphic.bitmap.colorTransform(processedGraphic.bitmap.rect, colorTransform);
   }

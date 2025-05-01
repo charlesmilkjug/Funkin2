@@ -677,7 +677,7 @@ class PlayState extends MusicBeatSubState
     if (currentChart.offsets != null) Conductor.instance.instrumentalOffset = currentChart.offsets.getInstrumentalOffset(currentInstrumental);
 
     Conductor.instance.mapTimeChanges(currentChart.timeChanges);
-    var pre:Float = (Conductor.instance.beatLengthMs * -5) + startTimestamp;
+    var pre:Float = (Conductor.instance.beatLengthMs * -5) + startTimestamp + Conductor.instance.combinedOffset;
 
     trace('Attempting to start at ' + pre);
 
@@ -820,9 +820,9 @@ class PlayState extends MusicBeatSubState
       // Reset music properly.
       if (FlxG.sound.music != null)
       {
-        FlxG.sound.music.time = startTimestamp - Conductor.instance.combinedOffset;
-        FlxG.sound.music.pitch = playbackRate;
         FlxG.sound.music.pause();
+        FlxG.sound.music.time = startTimestamp - Conductor.instance.instrumentalOffset;
+        FlxG.sound.music.pitch = playbackRate;
       }
 
       if (!overrideMusic)
@@ -834,7 +834,7 @@ class PlayState extends MusicBeatSubState
         if (vocals.members.length == 0) trace('WARNING: No vocals found for this song.');
       }
       vocals.pause();
-      vocals.time = 0 - Conductor.instance.combinedOffset;
+      vocals.time = -Conductor.instance.instrumentalOffset;
 
       if (FlxG.sound.music != null) FlxG.sound.music.volume = 1;
       vocals.volume = 1;
@@ -2050,7 +2050,8 @@ class PlayState extends MusicBeatSubState
     };
     // A negative instrumental offset means the song skips the first few milliseconds of the track.
     // This just gets added into the startTimestamp behavior so we don't need to do anything extra.
-    FlxG.sound.music.play(true, Math.max(0, startTimestamp - Conductor.instance.combinedOffset));
+    FlxG.sound.music.pause();
+    FlxG.sound.music.time = Math.max(0, startTimestamp - Conductor.instance.instrumentalOffset);
     FlxG.sound.music.pitch = playbackRate;
 
     // Prevent the volume from being wrong.
@@ -2059,13 +2060,12 @@ class PlayState extends MusicBeatSubState
 
     trace('Playing vocals...');
     add(vocals);
-    vocals.play();
     vocals.volume = 1.0;
     vocals.pitch = playbackRate;
     vocals.time = FlxG.sound.music.time;
-    // trace('${FlxG.sound.music.time}');
-    // trace('${vocals.time}');
-    resyncVocals();
+
+    FlxG.sound.music.play();
+    vocals.play();
 
     #if FEATURE_DISCORD_RPC
     // Updating Discord Rich Presence (with Time Left)
@@ -2103,7 +2103,8 @@ class PlayState extends MusicBeatSubState
     // Skip this if the music is paused (GameOver, Pause menu, start-of-song offset, etc.)
     if (!(FlxG.sound.music?.playing ?? false)) return;
 
-    var timeToPlayAt:Float = Math.min(FlxG.sound.music.length, Math.max(0, Conductor.instance.songPosition - Conductor.instance.combinedOffset));
+    var timeToPlayAt:Float = Math.min(FlxG.sound.music.length,
+      Math.max(Math.min(Conductor.instance.combinedOffset, 0), Conductor.instance.songPosition) - Conductor.instance.combinedOffset);
     trace('Resyncing vocals to ${timeToPlayAt}');
     FlxG.sound.music.pause();
     vocals.pause();
@@ -2464,9 +2465,13 @@ class PlayState extends MusicBeatSubState
     var holdNotesInRange:Array<SustainTrail> = playerStrumline.getHoldNotesHitOrMissed();
 
     var notesByDirection:Array<Array<NoteSprite>> = [[], [], [], []];
+    var holdsByDirection:Array<Array<SustainTrail>> = [[], [], [], []]; // For regrabbing released hold notes.
 
     for (note in notesInRange)
       notesByDirection[note.direction].push(note);
+
+    for (holdNote in holdNotesInRange)
+      if (holdNote.regrabTimer > 0) holdsByDirection[holdNote.noteDirection].push(holdNote);
 
     while (inputPressQueue.length > 0)
     {
@@ -2478,11 +2483,22 @@ class PlayState extends MusicBeatSubState
       if (isBotPlayMode) continue;
 
       var notesInDirection:Array<NoteSprite> = notesByDirection[input.noteDirection];
+      var holdsInDirection:Array<SustainTrail> = holdsByDirection[input.noteDirection];
+
+      // Regrab hold notes!!
+      // If there's none to regrab, this just won't run.
+      for (holdNote in holdsInDirection)
+      {
+        // TODO: Replay animations, maybe add a new HitNote event for helds exclusively
+        holdNote.regrabTimer = 0;
+        playerStrumline.hitHoldNote(holdNote);
+        playerStrumline.playNoteHoldCover(holdNote);
+      }
 
       #if FEATURE_GHOST_TAPPING
-      if ((!playerStrumline.mayGhostTap()) && notesInDirection.length == 0)
+      if ((!playerStrumline.mayGhostTap()) && notesInDirection.length == 0 && holdsInDirection.length == 0)
       #else
-      if (notesInDirection.length == 0)
+      if (notesInDirection.length == 0 && holdsInDirection.length == 0)
       #end
       {
         // Pressed a wrong key with no notes nearby.
@@ -2493,14 +2509,16 @@ class PlayState extends MusicBeatSubState
         playerStrumline.playPress(input.noteDirection);
         trace('PENALTY Score: ${songScore}');
       }
-    else if (notesInDirection.length == 0)
-    {
-      // Press a key with no penalty.
+      #if FEATURE_GHOST_TAPPING
+      else if (notesInDirection.length == 0)
+      {
+        // Press a key with no penalty.
 
-      // Play the strumline animation.
-      playerStrumline.playPress(input.noteDirection);
-      trace('NO PENALTY Score: ${songScore}');
-    }
+        // Play the strumline animation.
+        playerStrumline.playPress(input.noteDirection);
+        trace('NO PENALTY Score: ${songScore}');
+      }
+      #end
     else
     {
       // Choose the first note, deprioritizing low priority notes.
