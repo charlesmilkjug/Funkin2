@@ -32,7 +32,6 @@ class ChartEditorContextMenuHandler
       existingDefaultContextMenu.left = xPos;
       existingDefaultContextMenu.top = yPos;
       Screen.instance.addComponent(existingDefaultContextMenu);
-
     }
     else
     {

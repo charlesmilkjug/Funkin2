@@ -41,7 +41,7 @@ class ChartEditorSelectionContextMenu extends ChartEditorBaseContextMenu
     initialize();
   }
 
-  function initialize():Void
+  public function initialize():Void
   {
     // NOTE: Remember to use commands here to ensure undo/redo works properly
     contextmenuUnit.onChange = function(_) {
