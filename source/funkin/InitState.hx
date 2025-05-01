@@ -223,26 +223,11 @@ class InitState extends FlxState
         #end
       }
 
-    final clearCache:Void->Void = () -> {
-      FlxG.bitmap.clearCache();
-
-      final cache = cast(openfl.Assets.cache, openfl.utils.AssetCache);
-      for (key => _ in cache.font)
-        cache.removeFont(key);
-
-      for (key => _ in cache.sound)
-        cache.removeSound(key);
-
-      openfl.Assets.cache.clear();
-    }
-
     FlxG.signals.preStateSwitch.add(() -> {
-      clearCache();
       gc();
     });
 
     FlxG.signals.postStateSwitch.add(() -> {
-      clearCache();
       gc();
     });
 
