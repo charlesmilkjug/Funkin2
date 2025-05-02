@@ -283,6 +283,7 @@ class FreeplayState extends MusicBeatSubState
 
     // Block input until the intro finishes.
     busy = true;
+    letterSort.inputEnabled = false;
 
     // Add a null entry that represents the RANDOM option
     songs.push(null);
@@ -501,7 +502,11 @@ class FreeplayState extends MusicBeatSubState
     // be careful not to "add()" things in here unless it's to a group that's already added to the state
     // otherwise it won't be properly attatched to funnyCamera (relavent code should be at the bottom of create())
     var onDJIntroDone = function() {
-      busy = false;
+      if (capsuleOptionsMenu == null)
+      {
+        busy = false;
+        letterSort.inputEnabled = true;
+      }
 
       // when boyfriend hits dat shiii
 
@@ -672,7 +677,8 @@ class FreeplayState extends MusicBeatSubState
     randomCapsule.initData(null, styleData, 1);
     randomCapsule.y = randomCapsule.intendedY(0) + 10;
     randomCapsule.targetPos.x = randomCapsule.x;
-    randomCapsule.alpha = 0.5;
+    randomCapsule.alpha = 1; // Why doesn't this get set to one as the other capsules do anyway?
+    randomCapsule.bpmText.visible = false;
     randomCapsule.songText.visible = false;
     randomCapsule.favIcon.visible = false;
     randomCapsule.favIconBlurred.visible = false;
@@ -1139,6 +1145,7 @@ class FreeplayState extends MusicBeatSubState
   function enterFromCharSel():Void
   {
     busy = true;
+    letterSort.inputEnabled = false;
     if (_parentState != null) _parentState.persistentDraw = false;
 
     var transitionGradient = new FlxSprite(0, 720).loadGraphic(Paths.image('freeplay/transitionGradient'));
@@ -1192,7 +1199,6 @@ class FreeplayState extends MusicBeatSubState
               {
                 capsule.doLerp = true;
                 fromCharSelect = false;
-                busy = false;
                 albumRoll.applyExitMovers(exitMovers, exitMoversCharSel);
               }
             }
@@ -1599,6 +1605,8 @@ class FreeplayState extends MusicBeatSubState
   override function beatHit():Bool
   {
     backingCard?.beatHit();
+
+    grpCapsules?.members[0]?.randomiseDisplay();
 
     return super.beatHit();
   }
@@ -2235,6 +2243,8 @@ class DifficultySelector extends FlxSprite
   {
     if (flipX && controls.UI_RIGHT_P && !parent.busy) moveShitDown();
     if (!flipX && controls.UI_LEFT_P && !parent.busy) moveShitDown();
+
+    Conductor.instance.update();
 
     super.update(elapsed);
   }
