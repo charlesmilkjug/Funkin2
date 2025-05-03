@@ -1599,6 +1599,7 @@ class FreeplayState extends MusicBeatSubState
 
     if (accepted && !busy) grpCapsules.members[curSelected].onConfirm();
 
+    #if FEATURE_CHART_EDITOR
     if (controls.DEBUG_CHART && !busy)
     {
       busy = true;
@@ -1638,6 +1639,7 @@ class FreeplayState extends MusicBeatSubState
           targetSongId: targetSongID,
         }));
     }
+    #end
   }
 
   override function beatHit():Bool
