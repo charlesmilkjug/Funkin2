@@ -1062,10 +1062,7 @@ class FreeplayState extends MusicBeatSubState
     trace('Is Pico unlocked? ${PlayerRegistry.instance.fetchEntry('pico')?.isUnlocked()}');
     trace('Number of characters: ${PlayerRegistry.instance.countUnlockedCharacters()}');
 
-    if (PlayerRegistry.instance.countUnlockedCharacters() > 1)
-    {
-      trace('Opening character select!');
-    }
+    if (PlayerRegistry.instance.countUnlockedCharacters() > 1) trace('Opening character select!');
     else
     {
       trace('Not enough characters unlocked to open character select!');
@@ -1264,10 +1261,7 @@ class FreeplayState extends MusicBeatSubState
     }
     #end // ^<-- FEATURE_DEBUG_FUNCTIONS
 
-    if (controls.FREEPLAY_CHAR_SELECT && !busy)
-    {
-      tryOpenCharSelect();
-    }
+    if (controls.FREEPLAY_CHAR_SELECT && !busy) tryOpenCharSelect();
 
     if (controls.FREEPLAY_FAVORITE && !busy)
     {
@@ -1327,28 +1321,16 @@ class FreeplayState extends MusicBeatSubState
       }
     }
 
-    if (controls.FREEPLAY_JUMP_TO_TOP && !busy)
-    {
-      changeSelection(-curSelected);
-    }
+    if (controls.FREEPLAY_JUMP_TO_TOP && !busy) changeSelection(-curSelected);
 
-    if (controls.FREEPLAY_JUMP_TO_BOTTOM && !busy)
-    {
-      changeSelection(grpCapsules.countLiving() - curSelected - 1);
-    }
+    if (controls.FREEPLAY_JUMP_TO_BOTTOM && !busy) changeSelection(grpCapsules.countLiving() - curSelected - 1);
 
     lerpScore = MathUtil.smoothLerp(lerpScore, intendedScore, elapsed, 0.5);
     lerpCompletion = MathUtil.smoothLerp(lerpCompletion, intendedCompletion, elapsed, 0.5);
 
-    if (Math.isNaN(lerpScore))
-    {
-      lerpScore = intendedScore;
-    }
+    if (Math.isNaN(lerpScore)) lerpScore = intendedScore;
 
-    if (Math.isNaN(lerpCompletion))
-    {
-      lerpCompletion = intendedCompletion;
-    }
+    if (Math.isNaN(lerpCompletion)) lerpCompletion = intendedCompletion;
 
     fp.updateScore(Std.int(lerpScore));
 
@@ -1370,11 +1352,12 @@ class FreeplayState extends MusicBeatSubState
     handleInputs(elapsed);
 
     if (dj != null) FlxG.watch.addQuick('dj-anim', dj.getCurrentAnimation());
+    if (justClosedCapsuleOptions) justClosedCapsuleOptions = false;
   }
 
   function handleInputs(elapsed:Float):Void
   {
-    if (busy) return;
+    if (busy || justClosedCapsuleOptions) return;
 
     var upP:Bool = controls.UI_UP_P;
     var downP:Bool = controls.UI_DOWN_P;
@@ -1920,6 +1903,13 @@ class FreeplayState extends MusicBeatSubState
     trace('target difficulty: ${targetDifficultyId}');
     trace('target variation: ${targetDifficulty?.variation ?? Constants.DEFAULT_VARIATION}');
 
+    // Open a CapsuleOptionsMenu instead where you decide whether to actually delete the data of the song or not.
+    if (FlxG.keys.pressed.DELETE)
+    {
+      openDeleteSongDataOption(cap, targetSongId);
+      return;
+    }
+
     var baseInstrumentalId:String = targetSong.getBaseInstrumentalId(targetDifficultyId, targetDifficulty?.variation ?? Constants.DEFAULT_VARIATION) ?? '';
     var altInstrumentalIds:Array<String> = targetSong.listAltInstrumentalIds(targetDifficultyId,
       targetDifficulty?.variation ?? Constants.DEFAULT_VARIATION) ?? [];
@@ -1985,9 +1975,40 @@ class FreeplayState extends MusicBeatSubState
       });
   }
 
+  function openDeleteSongDataOption(cap:SongMenuItem, targetSongId:String):Void
+  {
+    capsuleOptionsMenu = new CapsuleOptionsMenu(this, cap.targetPos.x + 175, cap.targetPos.y + 115, ["Funk NO!", "True.."], 'DELETE SONG DATA?');
+    capsuleOptionsMenu.cameras = [funnyCam];
+    capsuleOptionsMenu.zIndex = 10000;
+    add(capsuleOptionsMenu);
+
+    capsuleOptionsMenu.onConfirm = function(targetOption:String) {
+      if (targetOption == "True..") Save.instance.setSongScore(targetSongId, currentDifficulty,
+        {
+          // Zer0.
+          score: 0,
+          tallies:
+            {
+              sick: 0,
+              good: 0,
+              bad: 0,
+              shit: 0,
+              missed: 0,
+              combo: 0,
+              maxCombo: 0,
+              totalNotesHit: 0,
+              totalNotes: 0,
+            },
+        });
+      cleanupCapsuleOptionsMenu();
+      // Refresh the song to update the score.
+      changeSelection();
+    };
+  }
+
   function openInstrumentalList(cap:SongMenuItem, instrumentalIds:Array<String>):Void
   {
-    capsuleOptionsMenu = new CapsuleOptionsMenu(this, cap.targetPos.x + 175, cap.targetPos.y + 115, instrumentalIds);
+    capsuleOptionsMenu = new CapsuleOptionsMenu(this, cap.targetPos.x + 175, cap.targetPos.y + 115, instrumentalIds, 'INSTRUMENTAL');
     capsuleOptionsMenu.cameras = [funnyCam];
     capsuleOptionsMenu.zIndex = 10000;
     add(capsuleOptionsMenu);
@@ -1998,12 +2019,13 @@ class FreeplayState extends MusicBeatSubState
   }
 
   var capsuleOptionsMenu:Null<CapsuleOptionsMenu> = null;
+  var justClosedCapsuleOptions:Bool = false;
 
   public function cleanupCapsuleOptionsMenu():Void
   {
     this.busy = false;
     letterSort.inputEnabled = true;
-
+    justClosedCapsuleOptions = true;
     if (capsuleOptionsMenu != null)
     {
       remove(capsuleOptionsMenu);
