@@ -45,6 +45,7 @@ import funkin.util.MathUtil;
 import funkin.util.SortUtil;
 import openfl.display.BlendMode;
 import funkin.data.freeplay.style.FreeplayStyleRegistry;
+import funkin.ui.debug.charting.ChartEditorState;
 #if FEATURE_DISCORD_RPC
 import funkin.api.discord.DiscordClient;
 #end
@@ -1596,9 +1597,46 @@ class FreeplayState extends MusicBeatSubState
       });
     }
 
-    if (accepted && !busy)
+    if (accepted && !busy) grpCapsules.members[curSelected].onConfirm();
+
+    if (controls.DEBUG_CHART && !busy)
     {
-      grpCapsules.members[curSelected].onConfirm();
+      busy = true;
+      var targetSongID = grpCapsules.members[curSelected]?.freeplayData?.data.id ?? 'unknown';
+      if (targetSongID == 'unknown')
+      {
+        trace('CHART RANDOM SONG');
+        letterSort.inputEnabled = false;
+
+        var availableSongCapsules:Array<SongMenuItem> = grpCapsules.members.filter(function(cap:SongMenuItem) {
+          // Dead capsules are ones which were removed from the list when changing filters.
+          return cap.alive && cap.freeplayData != null;
+        });
+
+        trace('Available songs: ${availableSongCapsules.map(function(cap) {
+      return cap?.freeplayData?.data.songName;
+    })}');
+
+        if (availableSongCapsules.length == 0)
+        {
+          trace('No songs available!');
+          busy = false;
+          letterSort.inputEnabled = true;
+          FunkinSound.playOnce(Paths.sound('cancelMenu'));
+          return;
+        }
+
+        var targetSong:SongMenuItem = FlxG.random.getObject(availableSongCapsules);
+
+        // Seeing if I can do an animation...
+        curSelected = grpCapsules.members.indexOf(targetSong);
+        changeSelection(0);
+        targetSongID = grpCapsules.members[curSelected]?.freeplayData?.data.id ?? 'unknown';
+      }
+      FlxG.switchState(() -> new ChartEditorState(
+        {
+          targetSongId: targetSongID,
+        }));
     }
   }
 
@@ -1706,6 +1744,9 @@ class FreeplayState extends MusicBeatSubState
       if (targetSong == null)
       {
         FlxG.log.warn('WARN: could not find song with id (${daSong.data.id})');
+        intendedScore = 0;
+        intendedCompletion = 0.0;
+        rememberedDifficulty = currentDifficulty;
         return;
       }
 
@@ -2026,15 +2067,10 @@ class FreeplayState extends MusicBeatSubState
           practiceMode: false,
           minimalMode: false,
 
-          #if FEATURE_DEBUG_FUNCTIONS
           botPlayMode: FlxG.keys.pressed.SHIFT,
-          #else
-          botPlayMode: false,
-          #end
           // TODO: Make these an option! It's currently only accessible via chart editor.
           // startTimestamp: 0.0,
           // playbackRate: 0.5,
-          // botPlayMode: true,
         }, true);
     });
   }
@@ -2084,9 +2120,6 @@ class FreeplayState extends MusicBeatSubState
     if (daSongCapsule.freeplayData != null)
     {
       var songScore:Null<SaveScoreData> = Save.instance.getSongScore(daSongCapsule.freeplayData.data.id, currentDifficulty, currentVariation);
-      intendedScore = songScore?.score ?? 0;
-      intendedCompletion = songScore == null ? 0.0 : ((songScore.tallies.sick +
-        songScore.tallies.good - songScore.tallies.missed) / songScore.tallies.totalNotes);
       rememberedSongId = daSongCapsule.freeplayData.data.id;
       changeDiff(0, false, false);
       daSongCapsule.refreshDisplay(false);
@@ -2115,7 +2148,7 @@ class FreeplayState extends MusicBeatSubState
       if (index < curSelected) capsule.targetPos.y -= 100; // another 100 for good measure
     }
 
-    if (grpCapsules.countLiving() > 0 && !prepForNewRank)
+    if (grpCapsules.countLiving() > 0 && !prepForNewRank && !busy)
     {
       if (playPreview)
       {

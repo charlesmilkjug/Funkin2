@@ -53,6 +53,7 @@ import funkin.ui.debug.charting.commands.DeselectAllItemsCommand;
 import funkin.ui.debug.charting.commands.DeselectItemsCommand;
 import funkin.ui.debug.charting.commands.ExtendNoteLengthCommand;
 import funkin.ui.debug.charting.commands.FlipNotesCommand;
+import funkin.ui.debug.charting.commands.MirrorNotesCommand;
 import funkin.ui.debug.charting.commands.InvertSelectedItemsCommand;
 import funkin.ui.debug.charting.commands.MoveEventsCommand;
 import funkin.ui.debug.charting.commands.MoveItemsCommand;
@@ -3455,7 +3456,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     {
       currentScrollEase = scrollPositionInPixels;
 
-      if (FlxG.keys.pressed.ALT)
+      if (FlxG.keys.pressed.ALT && !FlxG.keys.pressed.CONTROL)
       {
         // If middle mouse panning during song playback, we move ONLY the playhead, without scrolling. Neat!
 
@@ -5230,7 +5231,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     playbarHeadLayout.y = FlxG.height - 48 - 8;
 
     var songPos:Float = Conductor.instance.songPosition + Conductor.instance.instrumentalOffset;
-    var songPosMilliseconds:String = Std.string(Math.floor(Math.abs(songPos) % 1000)).lpad('0', 2).substr(0, 2);
+    var songPosMilliseconds:String = Std.string(Math.floor(Math.abs(songPos) % 1000)).lpad('0', 3).substr(0, 2);
     var songPosSeconds:String = Std.string(Math.floor((Math.abs(songPos) / 1000) % 60)).lpad('0', 2);
     var songPosMinutes:String = Std.string(Math.floor((Math.abs(songPos) / 1000) / 60)).lpad('0', 2);
     if (songPos < 0) songPosMinutes = '-' + songPosMinutes;
@@ -5513,7 +5514,11 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   function handleFileKeybinds():Void
   {
     // CTRL + N = New Chart
-    if (pressingControl() && FlxG.keys.justPressed.N && !isHaxeUIDialogOpen)
+    if (pressingControl()
+      && FlxG.keys.justPressed.N
+      && !isHaxeUIDialogOpen
+      && !FlxG.keys.pressed.SHIFT
+      && !FlxG.keys.pressed.ALT)
     {
       this.openWelcomeDialog(true);
     }
@@ -5644,6 +5649,17 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     {
       // Flip selected notes.
       performCommand(new FlipNotesCommand(currentNoteSelection));
+    }
+
+    // CTRL + SHIFT + M = Mirror Notes along X axis
+    if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.M)
+    {
+      performCommand(new MirrorNotesCommand(currentNoteSelection, true, false, true, false));
+    }
+    // CTRL + ALT + M = Mirror Notes along the Y axis
+    else if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.justPressed.M)
+    {
+      performCommand(new MirrorNotesCommand(currentNoteSelection, true, false, false, true));
     }
 
     // CTRL + A = Select All Notes
