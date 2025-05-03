@@ -1559,14 +1559,14 @@ class PlayState extends MusicBeatSubState
     healthBarBG = FunkinSprite.create(0, healthBarYPos, 'healthBar');
     healthBarBG.screenCenter(X);
     healthBarBG.scrollFactor.set(0, 0);
-    healthBarBG.zIndex = 800;
+    healthBarBG.zIndex = 799;
     add(healthBarBG);
 
     healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
       'healthLerp', 0, 2);
     healthBar.scrollFactor.set();
     healthBar.createFilledBar(Constants.COLOR_HEALTH_BAR_RED, Constants.COLOR_HEALTH_BAR_GREEN);
-    healthBar.zIndex = 801;
+    healthBar.zIndex = 800;
     // One division for each pixel of the bar's width ensures maximum bar smoothness.
     // This is better looking, and syncs with the lerped icon movement better.
     // This can be slightly more heavy on the CPU, though, so if lower end device performance options are added, maybe make them affect this?
@@ -1694,7 +1694,7 @@ class PlayState extends MusicBeatSubState
       iconP2 = new HealthIcon('dad', 1);
       iconP2.y = healthBar.y - (iconP2.height / 2);
       dad.initHealthIcon(true); // Apply the character ID here
-      iconP2.zIndex = 850;
+      iconP2.zIndex = 801;
       add(iconP2);
       iconP2.cameras = [camHUD];
 
@@ -1717,7 +1717,7 @@ class PlayState extends MusicBeatSubState
       iconP1 = new HealthIcon('bf', 0);
       iconP1.y = healthBar.y - (iconP1.height / 2);
       boyfriend.initHealthIcon(false); // Apply the character ID here
-      iconP1.zIndex = 850;
+      iconP1.zIndex = 801;
       add(iconP1);
       iconP1.cameras = [camHUD];
     }
