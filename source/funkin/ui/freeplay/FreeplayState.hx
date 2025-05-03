@@ -2159,7 +2159,7 @@ class FreeplayState extends MusicBeatSubState
       }
       grpCapsules.members[curSelected].selected = true;
 
-      switchBackingImage(daSongCapsule.freeplayData);
+      // switchBackingImage(daSongCapsule.freeplayData);
     }
   }
 
