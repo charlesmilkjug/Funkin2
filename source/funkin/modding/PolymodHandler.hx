@@ -359,6 +359,7 @@ class PolymodHandler
     result.push('.git');
     result.push('.gitignore');
     result.push('.gitattributes');
+    result.push('.gitmodules');
     result.push('hxformat.json');
     result.push('CHANGELOG.md');
     result.push('README.md');
@@ -446,10 +447,7 @@ class PolymodHandler
     var enabledMods:Array<ModMetadata> = [];
     for (item in modMetadata)
     {
-      if (modIds.indexOf(item.id) != -1)
-      {
-        enabledMods.push(item);
-      }
+      if (modIds.indexOf(item.id) != -1) enabledMods.push(item);
     }
     return enabledMods;
   }
