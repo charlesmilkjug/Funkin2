@@ -127,12 +127,12 @@ class Constants
   /**
    * The color used by the enemy health bar.
    */
-  public static final COLOR_HEALTH_BAR_RED:FlxColor = 0xFFFF0000;
+  public static var COLOR_HEALTH_BAR_RED:FlxColor = 0xFFFF0000;
 
   /**
    * The color used by the player health bar.
    */
-  public static final COLOR_HEALTH_BAR_GREEN:FlxColor = 0xFF66FF33;
+  public static var COLOR_HEALTH_BAR_GREEN:FlxColor = 0xFF66FF33;
 
   /**
    * The base colors used by notes.
@@ -196,18 +196,18 @@ class Constants
    * Default list of difficulties for charts.
    * Assumes no Erect mode, etc.
    */
-  public static final DEFAULT_DIFFICULTY_LIST:Array<String> = ['easy', 'normal', 'hard'];
+  public static var DEFAULT_DIFFICULTY_LIST:Array<String> = ['easy', 'normal', 'hard'];
 
   /**
    * Default list of difficulties for Erect mode.
    */
-  public static final DEFAULT_DIFFICULTY_LIST_ERECT:Array<String> = ['erect', 'nightmare'];
+  public static var DEFAULT_DIFFICULTY_LIST_ERECT:Array<String> = ['erect', 'nightmare'];
 
   /**
    * List of all difficulties used by the base game.
    * Includes Erect and Nightmare.
    */
-  public static final DEFAULT_DIFFICULTY_LIST_FULL:Array<String> = ['easy', 'normal', 'hard', 'erect', 'nightmare'];
+  public static var DEFAULT_DIFFICULTY_LIST_FULL:Array<String> = ['easy', 'normal', 'hard', 'erect', 'nightmare'];
 
   /**
    * Default player character for charts.
@@ -620,4 +620,10 @@ class Constants
    * 0.04 = 4% of distance per frame.
    */
   public static final DEFAULT_CAMERA_FOLLOW_RATE:Float = 0.04;
+
+  /**
+   * The music used for the menus.
+   * Can be edited by mods.
+   */
+  public static var MENU_MUSIC:String = 'freakyMenu';
 }

@@ -35,14 +35,17 @@ import funkin.api.newgrounds.NewgroundsClient;
  */
 class OptionsState extends MusicBeatState
 {
+  var menuBG:FlxSprite;
+  var hsv:HSVShader;
+
   var optionsCodex:Codex<OptionsMenuPageName>;
 
   override function create():Void
   {
     persistentUpdate = true;
 
-    var menuBG = new FlxSprite().loadGraphic(Paths.image('menuBG'));
-    var hsv = new HSVShader(-0.6, 0.9, 3.6);
+    menuBG = new FlxSprite().loadGraphic(Paths.image('menuBG'));
+    hsv = new HSVShader(-0.6, 0.9, 3.6);
     menuBG.shader = hsv;
     menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
     menuBG.updateHitbox();

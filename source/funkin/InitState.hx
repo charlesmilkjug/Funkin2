@@ -337,7 +337,7 @@ class InitState extends FlxState
     }
     else
     {
-      FlxG.sound.cache(Paths.music('freakyMenu/freakyMenu'));
+      FlxG.sound.cache(Paths.music('${Constants.MENU_MUSIC}/${Constants.MENU_MUSIC}'));
       FlxG.switchState(() -> new TitleState());
     }
   }
