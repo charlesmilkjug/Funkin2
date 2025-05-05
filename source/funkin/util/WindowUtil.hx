@@ -31,21 +31,12 @@ class WindowUtil
   public static function sanitizeURL(targetUrl:String):String
   {
     targetUrl = (targetUrl ?? '').trim();
-    if (targetUrl == '')
-    {
-      return '';
-    }
+    if (targetUrl == '') return '';
 
     final lowerUrl:String = targetUrl.toLowerCase();
-    if (!lowerUrl.startsWith('http:') && !lowerUrl.startsWith('https:'))
-    {
-      targetUrl = 'http://' + targetUrl;
-    }
+    if (!lowerUrl.startsWith('http:') && !lowerUrl.startsWith('https:')) targetUrl = 'http://' + targetUrl;
 
-    if (URL_REGEX.match(targetUrl))
-    {
-      return URL_REGEX.matched(0);
-    }
+    if (URL_REGEX.match(targetUrl)) return URL_REGEX.matched(0);
 
     return '';
   }
@@ -126,7 +117,7 @@ class WindowUtil
     // onUpdate is called every frame just before rendering.
 
     // onExit is called when the game window is closed.
-    openfl.Lib.current.stage.application.onExit.add(function(exitCode:Int) {
+    openfl.Lib.current.stage.application.onExit.add((exitCode:Int) -> {
       windowExit.dispatch(exitCode);
     });
 
@@ -140,16 +131,10 @@ class WindowUtil
         // (annoying when tying "FlxG" in console... lol)
         #if FLX_DEBUG
         @:privateAccess
-        if (FlxG.game.debugger.visible)
-        {
-          return;
-        }
+        if (FlxG.game.debugger.visible) return;
         #end
 
-        if (e.keyCode == key)
-        {
-          openfl.Lib.application.window.fullscreen = !openfl.Lib.application.window.fullscreen;
-        }
+        if (e.keyCode == key) openfl.Lib.application.window.fullscreen = !openfl.Lib.application.window.fullscreen;
       }
     });
   }
