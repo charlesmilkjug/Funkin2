@@ -700,7 +700,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
 
     if (audioPreviewTracks.playing)
     {
-      trace('Playback time: ${audioPreviewTracks.time}');
+      // trace('Playback time: ${audioPreviewTracks.time}');
 
       var targetScrollPos:Float = waveformInstrumental.waveform.waveformData?.secondsToIndex(audioPreviewTracks.time / Constants.MS_PER_SEC) / (waveformScale / BASE_SCALE * waveformMagicFactor);
       // waveformScrollview.hscrollPos = targetScrollPos;

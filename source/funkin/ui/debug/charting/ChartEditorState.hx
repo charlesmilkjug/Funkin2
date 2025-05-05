@@ -3152,7 +3152,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
   function setupContextMenu():Void
   {
-    Screen.instance.registerEvent(MouseEvent.RIGHT_MOUSE_UP, function(e:MouseEvent) {
+    Screen.instance.registerEvent(MouseEvent.RIGHT_MOUSE_UP, (e:MouseEvent) -> {
       var xPos = e.screenX;
       var yPos = e.screenY;
       onContextMenu(xPos, yPos);
@@ -3161,7 +3161,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
   function onContextMenu(xPos:Float, yPos:Float)
   {
-    trace('User right clicked to open menu at (${xPos}, ${yPos})');
+    // trace('User right clicked to open menu at (${xPos}, ${yPos})');
     // this.openDefaultContextMenu(xPos, yPos);
   }
 
@@ -3175,10 +3175,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     var timeOffset:Null<Int> = currentNoteSelection.length > 0 ? Std.int(currentNoteSelection[0].time) : null;
     if (currentEventSelection.length > 0)
     {
-      if (timeOffset == null || currentEventSelection[0].time < timeOffset)
-      {
-        timeOffset = Std.int(currentEventSelection[0].time);
-      }
+      if (timeOffset == null || currentEventSelection[0].time < timeOffset) timeOffset = Std.int(currentEventSelection[0].time);
     }
 
     SongDataUtils.writeItemsToClipboard(
@@ -3314,8 +3311,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
   function onWindowCrash(message:String):Void
   {
-    trace('Chart editor intercepted crash:');
-    trace('${message}');
+    trace('Chart editor intercepted crash: \n${message}');
 
     trace('Should save chart? $saveDataDirty');
 
@@ -3323,10 +3319,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     writePreferences(needsAutoSave);
 
-    if (needsAutoSave)
-    {
-      this.exportAllSongData(true, null);
-    }
+    if (needsAutoSave) this.exportAllSongData(true, null);
   }
 
   function cleanupAutoSave():Void
@@ -3479,16 +3472,10 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
           oldTime = audioInstTrack.time;
         }
         else
-        {
           Conductor.instance.update(oldTime);
-          trace('oldTime was used! audioInstTrack.time ${audioInstTrack.time} < oldTime ${oldTime}');
-        }
         handleHitsounds(oldSongPosition, Conductor.instance.songPosition + Conductor.instance.instrumentalOffset);
         // Resync vocals.
-        if (Math.abs(audioInstTrack.time - audioVocalTrackGroup.time) > 100)
-        {
-          audioVocalTrackGroup.time = audioInstTrack.time;
-        }
+        if (Math.abs(audioInstTrack.time - audioVocalTrackGroup.time) > 100) audioVocalTrackGroup.time = audioInstTrack.time;
         var diffStepTime:Float;
         if ((Conductor.instance.currentStepTime - oldStepTime) < 0) diffStepTime = oldStepTime - Conductor.instance.currentStepTime;
         else
@@ -3510,17 +3497,11 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
           oldTime = audioInstTrack.time;
         }
         else
-        {
           Conductor.instance.update(oldTime);
-          trace('oldTime was used! audioInstTrack.time ${audioInstTrack.time} < oldTime ${oldTime}');
-        }
 
         handleHitsounds(oldSongPosition, Conductor.instance.songPosition + Conductor.instance.instrumentalOffset);
         // Resync vocals.
-        if (Math.abs(audioInstTrack.time - audioVocalTrackGroup.time) > 100)
-        {
-          audioVocalTrackGroup.time = audioInstTrack.time;
-        }
+        if (Math.abs(audioInstTrack.time - audioVocalTrackGroup.time) > 100) audioVocalTrackGroup.time = audioInstTrack.time;
 
         // We need time in fractional steps here to allow the song to actually play.
         // Also account for a potentially offset playhead.
@@ -3676,10 +3657,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         // Check if we are outside a broad range around the view area.
         if (noteData.time < viewAreaTopMs || noteData.time > viewAreaBottomMs) continue;
 
-        if (displayedNoteData.fastContains(noteData))
-        {
-          continue;
-        }
+        if (displayedNoteData.fastContains(noteData)) continue;
 
         if (!ChartEditorNoteSprite.wouldNoteBeVisible(viewAreaBottomPixels, viewAreaTopPixels, noteData,
           renderedNotes)) continue; // Else, this note is visible and we need to render it!
@@ -3723,7 +3701,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
           holdNoteSprite.updateHoldNotePosition(renderedHoldNotes);
 
-          trace(holdNoteSprite.x + ', ' + holdNoteSprite.y + ', ' + holdNoteSprite.width + ', ' + holdNoteSprite.height);
+          // trace(holdNoteSprite.x + ', ' + holdNoteSprite.y + ', ' + holdNoteSprite.width + ', ' + holdNoteSprite.height);
         }
       }
 
@@ -3731,10 +3709,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       for (eventData in currentSongChartEventData)
       {
         // Remember if we are already displaying this event.
-        if (displayedEventData.indexOf(eventData) != -1)
-        {
-          continue;
-        }
+        if (displayedEventData.indexOf(eventData) != -1) continue;
 
         if (!ChartEditorEventSprite.wouldEventBeVisible(viewAreaBottomPixels, viewAreaTopPixels, eventData, renderedNotes)) continue;
 
@@ -3745,7 +3720,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         // If a new event is needed, call buildEventSprite.
         var eventSprite:ChartEditorEventSprite = renderedEvents.recycle(() -> new ChartEditorEventSprite(this), false, true);
         eventSprite.parentState = this;
-        trace('Creating new Event... (${renderedEvents.members.length})');
+        // trace('Creating new Event... (${renderedEvents.members.length})');
 
         // The event sprite handles animation playback and positioning.
         eventSprite.eventData = eventData;
@@ -4327,7 +4302,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         else if (overlapsSelection)
         {
           // Do nothing
-          trace('Clicked on a selected note!');
+          // trace('Clicked on a selected note!');
         }
       }
 
@@ -5302,14 +5277,14 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     if (notesAtPos.length == 0 && !removeNoteInstead)
     {
-      trace('Placing note. ${column}');
+      // trace('Placing note. ${column}');
       var newNoteData:SongNoteData = new SongNoteData(playheadPosSnappedMs, column, 0, noteKindToPlace, ChartEditorState.cloneNoteParams(noteParamsToPlace));
       performCommand(new AddNotesCommand([newNoteData], pressingControl()));
       currentLiveInputPlaceNoteData[column] = newNoteData;
     }
     else if (removeNoteInstead)
     {
-      trace('Removing existing note at position. ${column}');
+      // trace('Removing existing note at position. ${column}');
       performCommand(new RemoveNotesCommand(notesAtPos));
     }
     else
@@ -5335,7 +5310,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     if (eventsAtPos.length == 0 && !removeEventInstead)
     {
-      trace('Placing event ${isOpponent}');
+      // trace('Placing event ${isOpponent}');
       var newEventData:SongEventData = new SongEventData(playheadPosSnappedMs, 'FocusCamera',
         {
           char: isOpponent ? 1 : 0,
@@ -5344,7 +5319,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     }
     else if (removeEventInstead)
     {
-      trace('Removing existing event at position.');
+      // trace('Removing existing event at position.');
       performCommand(new RemoveEventsCommand(eventsAtPos));
     }
     else
@@ -5407,7 +5382,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       var playheadPosSnappedMs:Float = playheadPosStep * Conductor.instance.stepLengthMs * noteSnapRatio;
 
       var newNoteLength:Float = playheadPosSnappedMs - ghostHold.noteData.time;
-      trace('newNoteLength: ${newNoteLength}');
+      // trace('newNoteLength: ${newNoteLength}');
 
       if (newNoteLength > 0)
       {
@@ -5426,8 +5401,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         ghostHold.alpha = 0.6;
         ghostHold.setHeightDirectly(targetNoteLengthPixels, true);
         ghostHold.updateHoldNotePosition(renderedHoldNotes);
-        trace('lerpLength: ${ghostHold.fullSustainLength}');
-        trace('position: ${ghostHold.x}, ${ghostHold.y}');
+        // trace('lerpLength: ${ghostHold.fullSustainLength}');
+        // trace('position: ${ghostHold.x}, ${ghostHold.y}');
       }
       else
       {
@@ -5449,19 +5424,19 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     var playheadPosSnappedMs:Float = playheadPosStep * Conductor.instance.stepLengthMs * noteSnapRatio;
 
     var newNoteLength:Float = playheadPosSnappedMs - currentLiveInputPlaceNoteData[column].time;
-    trace('finishPlace newNoteLength: ${newNoteLength}');
+    // trace('finishPlace newNoteLength: ${newNoteLength}');
 
     if (newNoteLength < Conductor.instance.stepLengthMs)
     {
       // Don't extend the note if it's too short.
-      trace('Not extending note. ${column}');
+      // trace('Not extending note. ${column}');
       currentLiveInputPlaceNoteData[column] = null;
       gridPlayheadGhostHoldNotes[column].noteData = null;
     }
     else
     {
       // Extend the note to the playhead position.
-      trace('Extending note. ${column}');
+      // trace('Extending note. ${column}');
       this.playSound(Paths.sound('chartingSounds/stretchSNAP_UI'));
       performCommand(new ExtendNoteLengthCommand(currentLiveInputPlaceNoteData[column], newNoteLength));
       currentLiveInputPlaceNoteData[column] = null;
