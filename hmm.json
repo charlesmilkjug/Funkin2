@@ -98,8 +98,8 @@
       "name": "hxdiscord_rpc",
       "type": "git",
       "dir": null,
-      "ref": "2d32b2e2a6a9db2ebffca34fe5becbbae3a9fa47",
-      "url": "https://github.com/charlesisfeline/hxdiscord_rpc"
+      "ref": "82c47ecc1a454b7dd644e4fcac7e91155f176dec",
+      "url": "https://github.com/FunkinCrew/hxdiscord_rpc"
     },
     {
       "name": "hxjsonast",

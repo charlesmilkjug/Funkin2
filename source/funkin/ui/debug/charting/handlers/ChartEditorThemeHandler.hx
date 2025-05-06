@@ -295,45 +295,6 @@ class ChartEditorThemeHandler
   }
 
   /**
-   * Vertical measure ticks.
-   */
-  static function updateMeasureTicks(state:ChartEditorState):Void
-  {
-    var measureTickWidth:Int = 6;
-    var beatTickWidth:Int = 4;
-    var stepTickWidth:Int = 2;
-
-    // Draw the measure ticks.
-    var ticksWidth:Int = Std.int(ChartEditorState.GRID_SIZE); // 1 grid squares wide.
-    var ticksHeight:Int = Std.int(ChartEditorState.GRID_SIZE * Conductor.instance.stepsPerMeasure); // 1 measure tall.
-    state.measureTickBitmap = new BitmapData(ticksWidth, ticksHeight, true);
-    state.measureTickBitmap.fillRect(new Rectangle(0, 0, ticksWidth, ticksHeight), GRID_BEAT_DIVIDER_COLOR_DARK);
-
-    // Draw the measure ticks.
-    state.measureTickBitmap.fillRect(new Rectangle(0, 0, state.measureTickBitmap.width, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-    var bottomTickY:Float = state.measureTickBitmap.height - (measureTickWidth / 2);
-    state.measureTickBitmap.fillRect(new Rectangle(0, bottomTickY, state.measureTickBitmap.width, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-
-    // Draw the beat and step ticks. No need for two seperate loops thankfully.
-    // This'll be fun to update when beat tuplets become functional.
-    for (i in 1...(Conductor.instance.stepsPerMeasure))
-    {
-      if ((i % Constants.STEPS_PER_BEAT) == 0) // If we're on a beat, draw a beat tick.
-      {
-        var beatTickY:Float = state.measureTickBitmap.height * i / Conductor.instance.stepsPerMeasure - (beatTickWidth / 2);
-        var beatTickLength:Float = state.measureTickBitmap.width * 2 / 3;
-        state.measureTickBitmap.fillRect(new Rectangle(0, beatTickY, beatTickLength, beatTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-      }
-      else // Else, draw a step tick.
-      {
-        var stepTickY:Float = state.measureTickBitmap.height * i / Conductor.instance.stepsPerMeasure - (stepTickWidth / 2);
-        var stepTickLength:Float = state.measureTickBitmap.width * 1 / 3;
-        state.measureTickBitmap.fillRect(new Rectangle(0, stepTickY, stepTickLength, stepTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-      }
-    }
-  }
-
-  /**
    * Horizontal offset ticks.
    */
   static function updateOffsetTicks(state:ChartEditorState):Void
