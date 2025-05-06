@@ -3748,7 +3748,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         if (!ChartEditorHoldNoteSprite.wouldHoldNoteBeVisible(viewAreaBottomPixels, viewAreaTopPixels, noteData, renderedHoldNotes)) continue;
 
         // Hold note should be rendered.
-        var holdNoteFactory = function() {
+        var holdNoteFactory = () -> {
           // TODO: Print some kind of warning if `renderedHoldNotes.members` is too high?
           return new ChartEditorHoldNoteSprite(this);
         }
@@ -5130,10 +5130,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
       if (currentSongMetadata.playData.characters.player != charPlayer.charId)
       {
-        if (healthIconBF != null)
-        {
-          healthIconBF.characterId = currentSongMetadata.playData.characters.player;
-        }
+        if (healthIconBF != null) healthIconBF.characterId = currentSongMetadata.playData.characters.player;
 
         charPlayer.loadCharacter(currentSongMetadata.playData.characters.player);
         charPlayer.characterType = CharacterType.BF;
@@ -5310,22 +5307,15 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     if (eventsAtPos.length == 0 && !removeEventInstead)
     {
-      // trace('Placing event ${isOpponent}');
       var newEventData:SongEventData = new SongEventData(playheadPosSnappedMs, 'FocusCamera',
         {
           char: isOpponent ? 1 : 0,
         });
       performCommand(new AddEventsCommand([newEventData], pressingControl()));
     }
-    else if (removeEventInstead)
-    {
-      // trace('Removing existing event at position.');
-      performCommand(new RemoveEventsCommand(eventsAtPos));
-    }
+    else if (removeEventInstead) performCommand(new RemoveEventsCommand(eventsAtPos));
     else
-    {
       trace('Already an event there.');
-    }
   }
 
   function updatePlayheadGhostHoldNotes():Void
@@ -5459,19 +5449,13 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         healthIconBF.size *= 0.5; // Make the icon smaller in Chart Editor.
         healthIconBF.flipX = !healthIconBF.flipX; // BF faces the other way.
       }
-      if (buttonSelectPlayer != null)
-      {
-        buttonSelectPlayer.text = charDataBF?.name ?? 'Player';
-      }
+      if (buttonSelectPlayer != null) buttonSelectPlayer.text = charDataBF?.name ?? 'Player';
       if (healthIconDad != null)
       {
         healthIconDad.configure(charDataDad?.healthIcon);
         healthIconDad.size *= 0.5; // Make the icon smaller in Chart Editor.
       }
-      if (buttonSelectOpponent != null)
-      {
-        buttonSelectOpponent.text = charDataDad?.name ?? 'Opponent';
-      }
+      if (buttonSelectOpponent != null) buttonSelectOpponent.text = charDataDad?.name ?? 'Opponent';
       healthIconsDirty = false;
     }
 
@@ -5511,22 +5495,20 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     }
 
     // CTRL + O = Open Chart
-    if (pressingControl() && FlxG.keys.justPressed.O && !isHaxeUIDialogOpen)
-    {
-      this.openBrowseFNFC(true);
-    }
+    if (pressingControl() && FlxG.keys.justPressed.O && !isHaxeUIDialogOpen) this.openBrowseFNFC(true);
 
     if (pressingControl() && FlxG.keys.justPressed.S && !isHaxeUIDialogOpen)
     {
       if (currentWorkingFilePath == null || FlxG.keys.pressed.SHIFT)
       {
         // CTRL + SHIFT + S = Save As
-        this.exportAllSongData(false, null, function(path:String) {
+        this.exportAllSongData(false, null, (path:String) -> {
           // CTRL + SHIFT + S Successful
           this.success('Saved Chart', 'Chart saved successfully to ${path}.');
-        }, function() {
-          // CTRL + SHIFT + S Cancelled
-        });
+        }, () ->
+          {
+            // CTRL + SHIFT + S Cancelled
+          });
       }
       else
       {
@@ -5537,10 +5519,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     }
 
     // CTRL + Q = Quit to Menu
-    if (pressingControl() && FlxG.keys.justPressed.Q)
-    {
-      quitChartEditor();
-    }
+    if (pressingControl() && FlxG.keys.justPressed.Q) quitChartEditor();
   }
 
   @:nullSafety(Off)
@@ -6562,7 +6541,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     if (audioInstTrack != null)
     {
       // Prevent the time from skipping back to 0 when the song ends.
-      audioInstTrack.onComplete = function() {
+      audioInstTrack.onComplete = () -> {
         if (audioInstTrack != null)
         {
           audioInstTrack.pause();
@@ -6573,9 +6552,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       };
     }
     else
-    {
       trace('ERROR: Instrumental track is null!');
-    }
 
     Conductor.instance.mapTimeChanges(this.currentSongMetadata.timeChanges);
     updateTimeSignature();

@@ -45,9 +45,7 @@ class NumberPreferenceItem extends TextMenuItem
   public function new(x:Float, y:Float, name:String, defaultValue:Float, min:Float, max:Float, step:Float, precision:Int, stepPrecise:Float,
       ?callback:Float->Void, ?valueFormatter:Float->String):Void
   {
-    super(x, y, name, function() {
-      callback(this.currentValue);
-    });
+    super(x, y, name, () -> callback(this.currentValue));
     lefthandText = new AtlasText(15, y, formatted(defaultValue), AtlasFont.DEFAULT);
 
     updateHitbox();

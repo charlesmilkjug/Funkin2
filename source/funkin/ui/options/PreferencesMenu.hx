@@ -64,7 +64,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     menuCamera.deadzone.set(0, margin, menuCamera.width, menuCamera.height - margin * 2);
     menuCamera.minScrollY = 0;
 
-    items.onChange.add(function(selected) {
+    items.onChange.add((selected) -> {
       camFollow.y = selected.y;
       itemDesc.text = preferenceDesc[items.selectedIndex];
     });
@@ -173,7 +173,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     super.update(elapsed);
 
     // Indent the selected item.
-    items.forEach(function(daItem:TextMenuItem) {
+    items.forEach((daItem:TextMenuItem) -> {
       var thyOffset:Int = 0;
       // Initializing thy text width (if thou text present)
       var thyTextWidth:Int = 0;
@@ -192,14 +192,9 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
           // Huh?
       }
 
-      if (items.selectedItem == daItem)
-      {
-        thyOffset += 150;
-      }
+      if (items.selectedItem == daItem) thyOffset += 150;
       else
-      {
         thyOffset += 120;
-      }
 
       daItem.x = thyOffset;
     });
@@ -217,7 +212,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
   {
     var checkbox:CheckboxPreferenceItem = new CheckboxPreferenceItem(0, 120 * (items.length + headers.length), defaultValue);
 
-    items.createItem(0, (120 * (items.length + headers.length)) + 30, prefName, AtlasFont.BOLD, function() {
+    items.createItem(0, (120 * (items.length + headers.length)) + 30, prefName, AtlasFont.BOLD, () -> {
       var value = !checkbox.currentValue;
       onChange(value);
       checkbox.currentValue = value;
@@ -256,12 +251,8 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
    */
   function createPrefItemPercentage(prefName:String, prefDesc:String, onChange:Int->Void, defaultValue:Int, min:Int = 0, max:Int = 100):Void
   {
-    var newCallback = function(value:Float) {
-      onChange(Std.int(value));
-    };
-    var formatter = function(value:Float) {
-      return '${value}%';
-    };
+    var newCallback = (value:Float) -> onChange(Std.int(value));
+    var formatter = (value:Float) -> return '${value}%';
     var item = new NumberPreferenceItem(0, (120 * (items.length + headers.length)) + 30, prefName, defaultValue, min, max, 10, 0, 1, newCallback, formatter);
     items.addItem(prefName, item);
     preferenceItems.add(item.lefthandText);

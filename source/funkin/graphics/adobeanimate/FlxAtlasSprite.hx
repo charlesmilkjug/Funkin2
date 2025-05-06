@@ -48,23 +48,14 @@ class FlxAtlasSprite extends FlxAnimate
   {
     if (settings == null) settings = SETTINGS;
 
-    if (path == null)
-    {
-      throw 'Null path specified for FlxAtlasSprite!';
-    }
+    if (path == null) throw 'Null path specified for FlxAtlasSprite!';
 
     // Validate asset path.
-    if (!Assets.exists('${path}/Animation.json'))
-    {
-      throw 'FlxAtlasSprite does not have an Animation.json file at the specified path (${path})';
-    }
+    if (!Assets.exists('${path}/Animation.json')) throw 'FlxAtlasSprite does not have an Animation.json file at the specified path (${path})';
 
     super(x, y, path, settings);
 
-    if (this.anim.stageInstance == null)
-    {
-      throw 'FlxAtlasSprite not initialized properly. Are you sure the path (${path}) exists?';
-    }
+    if (this.anim.stageInstance == null) throw 'FlxAtlasSprite not initialized properly. Are you sure the path (${path}) exists?';
 
     onAnimationComplete.add(cleanupAnimation);
 
@@ -175,9 +166,7 @@ class FlxAtlasSprite extends FlxAnimate
 
     this.currentAnimation = id;
     anim.onComplete.removeAll();
-    anim.onComplete.add(function() {
-      _onAnimationComplete();
-    });
+    anim.onComplete.add(() -> _onAnimationComplete());
 
     looping = loop;
 
@@ -327,26 +316,16 @@ class FlxAtlasSprite extends FlxAnimate
 
   function _onAnimationComplete():Void
   {
-    if (currentAnimation != null)
-    {
-      onAnimationComplete.dispatch(currentAnimation);
-    }
+    if (currentAnimation != null) onAnimationComplete.dispatch(currentAnimation);
     else
-    {
       onAnimationComplete.dispatch('');
-    }
   }
 
   function _onAnimationLoop():Void
   {
-    if (currentAnimation != null)
-    {
-      onAnimationLoop.dispatch(currentAnimation);
-    }
+    if (currentAnimation != null) onAnimationLoop.dispatch(currentAnimation);
     else
-    {
       onAnimationLoop.dispatch('');
-    }
   }
 
   var prevFrames:Map<Int, FlxFrame> = [];
@@ -406,9 +385,7 @@ class FlxAtlasSprite extends FlxAnimate
   public override function destroy():Void
   {
     for (prevFrameId in prevFrames.keys())
-    {
       replaceFrameGraphic(prevFrameId, null);
-    }
 
     super.destroy();
   }

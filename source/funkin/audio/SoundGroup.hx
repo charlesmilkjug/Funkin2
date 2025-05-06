@@ -83,9 +83,7 @@ class SoundGroup extends FlxTypedGroup<FunkinSound>
     // result.pause();
     result.time = this.time;
 
-    result.onComplete = function() {
-      this.onComplete();
-    }
+    result.onComplete = () -> this.onComplete();
 
     // Apply parameters to the new sound.
     result.pitch = this.pitch;

@@ -1243,15 +1243,16 @@ class StageEditorState extends UIState
           this.unpackShitFromZip(FileUtil.readBytesFromPath(currentFile));
 
           reloadRecentFiles();
-        }, function() {
-          // This function does nothing, it's there for crash prevention.
-        });
+        }, () ->
+          {
+            // This function does nothing, it's there for crash prevention.
+          });
 
       case "exit":
         if (!saved)
         {
           Dialogs.messageBox("You are about to leave the Editor without Saving.\n\nAre you sure? ", "Leave Editor", MessageBoxType.TYPE_YESNO, true,
-            function(btn:DialogButton) {
+            (btn:DialogButton) -> {
               if (btn == DialogButton.YES)
               {
                 saved = true;
@@ -1279,10 +1280,7 @@ class StageEditorState extends UIState
         selectedSprite?.selectedShader.setAmount((moveMode == "assets" ? 1 : 0));
 
       case "switch focus":
-        if (testingMode)
-        {
-          curTestChar++;
-        }
+        if (testingMode) curTestChar++;
         else
         {
           if (moveMode == "chars")

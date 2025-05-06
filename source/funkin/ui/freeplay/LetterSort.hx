@@ -204,9 +204,7 @@ class FreeplayLetter extends FlxAtlasSprite
       this.anim.play(animLetters[letterInd] + " move");
       this.anim.pause();
       curLetter = letterInd;
-      this.anim.onComplete.add(function() {
-        this.anim.play(animLetters[curLetter] + " move");
-      });
+      this.anim.onComplete.add(() -> this.anim.play(animLetters[curLetter] + " move"));
     }
   }
 

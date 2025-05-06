@@ -922,7 +922,7 @@ class PlayState extends MusicBeatSubState
     var androidPause:Bool = false;
 
     #if android
-    androidPause = FlxG.android.justPressed.BACK;
+    androidPause = FlxG.android.justReleased.BACK;
     #end
 
     // Attempt to pause the game.
@@ -2029,10 +2029,7 @@ class PlayState extends MusicBeatSubState
   {
     startingSong = false;
 
-    if (!overrideMusic && !isGamePaused && currentChart != null)
-    {
-      currentChart.playInst(1.0, currentInstrumental, false);
-    }
+    if (!overrideMusic && !isGamePaused && currentChart != null) currentChart.playInst(1.0, currentInstrumental, false);
 
     if (FlxG.sound.music == null)
     {
@@ -2040,7 +2037,7 @@ class PlayState extends MusicBeatSubState
       return;
     }
 
-    FlxG.sound.music.onComplete = function() {
+    FlxG.sound.music.onComplete = () -> {
       if (mayPauseGame) endSong(skipEndingTransition);
     };
     // A negative instrumental offset means the song skips the first few milliseconds of the track.
@@ -2117,10 +2114,7 @@ class PlayState extends MusicBeatSubState
   function updateScoreText():Void
   {
     // TODO: Add functionality for modules to update the score text.
-    if (isBotPlayMode)
-    {
-      scoreText.text = 'Bot Play Enabled';
-    }
+    if (isBotPlayMode) scoreText.text = 'Bot Play Enabled';
     else
     {
       // TODO: Add an option for this maybe?
@@ -2134,14 +2128,9 @@ class PlayState extends MusicBeatSubState
      */
   function updateHealthBar():Void
   {
-    if (isBotPlayMode)
-    {
-      healthLerp = Constants.HEALTH_MAX;
-    }
+    if (isBotPlayMode) healthLerp = Constants.HEALTH_MAX;
     else
-    {
       healthLerp = FlxMath.lerp(healthLerp, health, 0.15);
-    }
   }
 
   /**
@@ -2825,6 +2814,12 @@ class PlayState extends MusicBeatSubState
   {
     if (isGamePaused) return;
 
+    var androidPause:Bool = false;
+
+    #if android
+    androidPause = FlxG.android.justPressed.BACK;
+    #end
+
     if (currentConversation != null)
     {
       // Pause/unpause may conflict with advancing the conversation!
@@ -2832,7 +2827,7 @@ class PlayState extends MusicBeatSubState
       {
         currentConversation.advanceConversation();
       }
-      else if (controls.PAUSE && !justUnpaused)
+      else if ((controls.PAUSE || androidPause) && !justUnpaused)
       {
         currentConversation.pauseMusic();
 
@@ -2848,7 +2843,7 @@ class PlayState extends MusicBeatSubState
     else if (VideoCutscene.isPlaying())
     {
       // This is a video cutscene.
-      if (controls.PAUSE && !justUnpaused)
+      if ((controls.PAUSE || androidPause) && !justUnpaused)
       {
         VideoCutscene.pauseVideo();
 
@@ -3033,21 +3028,7 @@ class PlayState extends MusicBeatSubState
           }
         }
 
-        if (isSubState)
-        {
-          this.close();
-        }
-        else
-        {
-          if (rightGoddamnNow)
-          {
-            moveToResultsScreen(isNewHighscore);
-          }
-          else
-          {
-            zoomIntoResultsScreen(isNewHighscore);
-          }
-        }
+        isSubState ? this.close() : (rightGoddamnNow ? moveToResultsScreen(isNewHighscore) : zoomIntoResultsScreen(isNewHighscore));
       }
       else
       {
@@ -3071,7 +3052,7 @@ class PlayState extends MusicBeatSubState
           camHUD.visible = false;
           isInCutscene = true;
 
-          FunkinSound.playOnce(Paths.sound('Lights_Shut_off'), function() {
+          FunkinSound.playOnce(Paths.sound('Lights_Shut_off'), () -> {
             // no camFollow so it centers on horror tree
             var targetSong:Song = SongRegistry.instance.fetchEntry(targetSongId);
             var targetVariation:String = currentVariation;

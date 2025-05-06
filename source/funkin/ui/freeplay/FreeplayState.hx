@@ -174,6 +174,9 @@ class FreeplayState extends MusicBeatSubState
 
   var allDifficulties:Array<String> = Constants.DEFAULT_DIFFICULTY_LIST_FULL;
 
+  var diffSelLeft:DifficultySelector;
+  var diffSelRight:DifficultySelector;
+
   var funnyCam:FunkinCamera;
   var rankCamera:FunkinCamera;
   var rankBg:FunkinSprite;
@@ -480,8 +483,8 @@ class FreeplayState extends MusicBeatSubState
     addToExitMovers([fp, txtCompletion, fnfHighscoreSpr, clearBoxSprite], FlxG.width, null, 0.3, null);
     addToExitMoversCharSel([fp, txtCompletion, fnfHighscoreSpr, clearBoxSprite], null, -270, 0.8, 0.1);
 
-    var diffSelLeft:DifficultySelector = new DifficultySelector(this, 20, grpDifficulties.y - 10, false, controls, styleData);
-    var diffSelRight:DifficultySelector = new DifficultySelector(this, 325, grpDifficulties.y - 10, true, controls, styleData);
+    diffSelLeft = new DifficultySelector(this, 20, grpDifficulties.y - 10, false, controls, styleData);
+    diffSelRight = new DifficultySelector(this, 325, grpDifficulties.y - 10, true, controls, styleData);
     diffSelLeft.visible = false;
     diffSelRight.visible = false;
     add(diffSelLeft);
@@ -577,7 +580,7 @@ class FreeplayState extends MusicBeatSubState
     add(rankVignette);
     rankVignette.alpha = 0;
 
-    forEach(function(bs) {
+    forEach((bs) -> {
       bs.cameras = [funnyCam];
     });
 
@@ -667,9 +670,7 @@ class FreeplayState extends MusicBeatSubState
     randomCapsule.favIcon.visible = false;
     randomCapsule.favIconBlurred.visible = false;
     randomCapsule.ranking.visible = false;
-    randomCapsule.onConfirm = function() {
-      capsuleOnConfirmRandom(randomCapsule);
-    };
+    randomCapsule.onConfirm = () -> capsuleOnConfirmRandom(randomCapsule);
 
     if (fromCharSelect) randomCapsule.forcePosition();
     else
@@ -688,9 +689,7 @@ class FreeplayState extends MusicBeatSubState
 
       funnyMenu.initPosition(FlxG.width, 0);
       funnyMenu.initData(tempSong, styleData, i + 1);
-      funnyMenu.onConfirm = function() {
-        capsuleOnOpenDefault(funnyMenu);
-      };
+      funnyMenu.onConfirm = () -> capsuleOnOpenDefault(funnyMenu);
       funnyMenu.y = funnyMenu.intendedY(i + 1) + 10;
       funnyMenu.targetPos.x = funnyMenu.x;
       funnyMenu.ID = i;
@@ -2208,7 +2207,7 @@ class FreeplayState extends MusicBeatSubState
               start: 0,
               end: 0.2
             },
-          onLoad: function() {
+          onLoad: () -> {
             FlxG.sound.music.fadeIn(2, 0, 0.4);
           }
         });

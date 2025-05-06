@@ -72,11 +72,9 @@ class StickerSubState extends MusicBeatSubState
 
     // TODO: Make this tied to the sticker pack more closely.
     var assetsInList = Assets.list();
-    var soundFilterFunc = function(a:String) {
-      return a.startsWith('assets/shared/sounds/stickersounds/');
-    };
+    var soundFilterFunc = (a:String) -> return a.startsWith('assets/shared/sounds/stickersounds/');
     soundSelections = assetsInList.filter(soundFilterFunc);
-    soundSelections = soundSelections.map(function(a:String) {
+    soundSelections = soundSelections.map((a:String) -> {
       return a.replace('assets/shared/sounds/stickersounds/', '').split('/')[0];
     });
 
@@ -87,17 +85,13 @@ class StickerSubState extends MusicBeatSubState
     for (i in soundSelections)
     {
       while (soundSelections.contains(i))
-      {
         soundSelections.remove(i);
-      }
       soundSelections.push(i);
     }
 
     soundSelection = FlxG.random.getObject(soundSelections);
 
-    var filterFunc = function(a:String) {
-      return a.startsWith('assets/shared/sounds/stickersounds/' + soundSelection + '/');
-    };
+    var filterFunc = (a:String) -> return a.startsWith('assets/shared/sounds/stickersounds/' + soundSelection + '/');
     var assetsInList3 = Assets.list();
     sounds = assetsInList3.filter(filterFunc);
     for (i in 0...sounds.length)
@@ -113,16 +107,12 @@ class StickerSubState extends MusicBeatSubState
     if (params.oldStickers != null)
     {
       for (sticker in params.oldStickers)
-      {
         grpStickers.add(sticker);
-      }
 
       degenStickers();
     }
     else
-    {
       regenStickers();
-    }
   }
 
   public function degenStickers():Void
@@ -162,10 +152,7 @@ class StickerSubState extends MusicBeatSubState
 
   function regenStickers():Void
   {
-    if (grpStickers.members.length > 0)
-    {
-      grpStickers.clear();
-    }
+    if (grpStickers.members.length > 0) grpStickers.clear();
 
     // Initialize stickers at each point on the screen, then shuffle up the order they will get placed.
     // This ensures stickers consistently cover the screen.

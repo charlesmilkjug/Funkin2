@@ -90,9 +90,7 @@ class InitState extends FlxState
 
     // Disable the lime/openfl log crashing the game and redirect the error printing.
     lime.utils.Log.throwErrors = false;
-    lime.utils.Log.onError.add((error:String) -> {
-      lime.app.Application.current.window.alert(error, "Assets Error!");
-    });
+    lime.utils.Log.onError.add((error:String) -> lime.app.Application.current.window.alert(error, "Assets Error!"));
 
     #if FEATURE_DEBUG_TRACY
     funkin.util.WindowUtil.initTracy();
@@ -152,9 +150,7 @@ class InitState extends FlxState
     #if FEATURE_DISCORD_RPC
     DiscordClient.instance.init();
 
-    lime.app.Application.current.onExit.add((exitCode) -> {
-      DiscordClient.instance.shutdown();
-    });
+    lime.app.Application.current.onExit.add((exitCode) -> DiscordClient.instance.shutdown());
     #end
 
     //
@@ -223,13 +219,9 @@ class InitState extends FlxState
         #end
       }
 
-    FlxG.signals.preStateSwitch.add(() -> {
-      gc();
-    });
+    FlxG.signals.preStateSwitch.add(() -> gc());
 
-    FlxG.signals.postStateSwitch.add(() -> {
-      gc();
-    });
+    FlxG.signals.postStateSwitch.add(() -> gc());
 
     funkin.input.Cursor.hide();
 
@@ -460,7 +452,7 @@ class InitState extends FlxState
     // Adds an additional Close Debugger button.
     // This big obnoxious white button is for MOBILE, so that you can press it
     // easily with your finger when debug bullshit pops up during testing lol!
-    FlxG.debugger.addButton(LEFT, new BitmapData(200, 200), function() {
+    FlxG.debugger.addButton(LEFT, new BitmapData(200, 200), () -> {
       FlxG.debugger.visible = false;
 
       // Make errors and warnings less annoying.
@@ -473,15 +465,13 @@ class InitState extends FlxState
 
     // Adds a red button to the debugger.
     // This pauses the game AND the music! This ensures the Conductor stops.
-    FlxG.debugger.addButton(CENTER, new BitmapData(20, 20, true, 0xFFCC2233), function() {
+    FlxG.debugger.addButton(CENTER, new BitmapData(20, 20, true, 0xFFCC2233), () -> {
       if (FlxG.vcr.paused)
       {
         FlxG.vcr.resume();
 
         for (snd in FlxG.sound.list)
-        {
           snd.resume();
-        }
 
         FlxG.sound.music.resume();
       }
@@ -490,9 +480,7 @@ class InitState extends FlxState
         FlxG.vcr.pause();
 
         for (snd in FlxG.sound.list)
-        {
           snd.pause();
-        }
 
         FlxG.sound.music.pause();
       }
@@ -500,7 +488,7 @@ class InitState extends FlxState
 
     // Adds a blue button to the debugger.
     // This skips forward in the song.
-    FlxG.debugger.addButton(CENTER, new BitmapData(20, 20, true, 0xFF2222CC), function() {
+    FlxG.debugger.addButton(CENTER, new BitmapData(20, 20, true, 0xFF2222CC), () -> {
       FlxG.game.debugger.vcr.onStep();
 
       for (snd in FlxG.sound.list)

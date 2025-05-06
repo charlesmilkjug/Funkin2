@@ -113,49 +113,48 @@ class OptionsMenu extends Page<OptionsMenuPageName>
 
     add(items = new TextMenuList());
 
-    createItem("PREFERENCES", function() codex.switchPage(Preferences));
-    createItem("CONTROLS", function() codex.switchPage(Controls));
-    createItem("INPUT OFFSETS", function() {
-      #if web
-      LoadingState.transitionToState(() -> new LatencyState());
-      #else
-      FlxG.state.openSubState(new LatencyState());
-      #end
-    });
+    createItem("PREFERENCES", () -> codex.switchPage(Preferences));
+    createItem("CONTROLS", () -> codex.switchPage(Controls));
+    createItem("INPUT OFFSETS", () ->
+      {
+        #if web
+        LoadingState.transitionToState(() -> new LatencyState());
+        #else
+        FlxG.state.openSubState(new LatencyState());
+        #end
+      });
 
     #if FEATURE_NEWGROUNDS
     if (NewgroundsClient.instance.isLoggedIn())
     {
-      createItem("LOGOUT OF NG", function() {
-        NewgroundsClient.instance.logout(function() {
+      createItem("LOGOUT OF NG", () -> {
+        NewgroundsClient.instance.logout(() -> {
           // Reset the options menu when logout succeeds.
           // This means the login option will be displayed.
           FlxG.resetState();
-        }, function() {
+        }, () -> {
           FlxG.log.warn("Newgrounds logout failed!");
         });
       });
     }
     else
     {
-      createItem("LOGIN TO NG", function() {
-        NewgroundsClient.instance.login(function() {
+      createItem("LOGIN TO NG", () -> {
+        NewgroundsClient.instance.login(() -> {
           // Reset the options menu when login succeeds.
           // This means the logout option will be displayed.
 
           // NOTE: If the user presses login and opens the browser,
           // then navigates the UI
           promptRegisterScore();
-        }, function() {
+        }, () -> {
           FlxG.log.warn("Newgrounds login failed!");
         });
       });
     }
     #end
 
-    createItem("CLEAR SAVE DATA", function() {
-      promptClearSaveData();
-    });
+    createItem("CLEAR SAVE DATA", () -> promptClearSaveData());
 
     createItem("EXIT", exit);
 
@@ -223,14 +222,14 @@ class OptionsMenu extends Page<OptionsMenuPageName>
     prompt.back.scrollFactor.set(0, 0);
     add(prompt);
 
-    prompt.onYes = function() {
+    prompt.onYes = () -> {
       // Clear the save data.
       funkin.save.Save.clearData();
 
       FlxG.switchState(() -> new funkin.InitState());
     }
 
-    prompt.onNo = function() {
+    prompt.onNo = () -> {
       prompt.close();
       prompt.destroy();
       prompt = null;
@@ -251,7 +250,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
     prompt.back.scrollFactor.set(0, 0);
     add(prompt);
 
-    prompt.onYes = function() {
+    prompt.onYes = () -> {
       #if FEATURE_NEWGROUNDS
       registerAllProgress();
       #end
@@ -259,7 +258,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
       FlxG.resetState();
     }
 
-    prompt.onNo = function() {
+    prompt.onNo = () -> {
       prompt.close();
       prompt.destroy();
       prompt = null;

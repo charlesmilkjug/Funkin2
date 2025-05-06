@@ -294,10 +294,7 @@ class GameOverSubState extends MusicBeatSubState
         var targetState:funkin.ui.transition.stickers.StickerSubState->FlxState = (PlayStatePlaylist.isStoryMode) ? (sticker) ->
           new StoryMenuState(sticker) : (sticker) -> FreeplayState.build(sticker);
 
-        if (PlayStatePlaylist.isStoryMode)
-        {
-          PlayStatePlaylist.reset();
-        }
+        PlayStatePlaylist.reset();
 
         var stickerPackId:Null<String> = PlayState.instance.currentChart.stickerPack;
 
@@ -306,10 +303,7 @@ class GameOverSubState extends MusicBeatSubState
           var playerCharacterId = PlayerRegistry.instance.getCharacterOwnerId(PlayState.instance.currentChart.characters.player);
           var playerCharacter = PlayerRegistry.instance.fetchEntry(playerCharacterId ?? Constants.DEFAULT_CHARACTER);
 
-          if (playerCharacter != null)
-          {
-            stickerPackId = playerCharacter.getStickerPackID();
-          }
+          if (playerCharacter != null) stickerPackId = playerCharacter.getStickerPackID();
         }
 
         openSubState(new funkin.ui.transition.stickers.StickerSubState({targetState: targetState, stickerPack: stickerPackId}));
@@ -374,12 +368,9 @@ class GameOverSubState extends MusicBeatSubState
     // Start music at lower volume
     startDeathMusic(0.2, false);
     boyfriend.playAnimation('deathLoop' + animationSuffix);
-    deathQuoteSound = FunkinSound.playOnce(deathQuote, function() {
+    deathQuoteSound = FunkinSound.playOnce(deathQuote, () -> {
       // Once the quote ends, fade in the game over music.
-      if (!isEnding && gameOverMusic != null)
-      {
-        gameOverMusic.fadeIn(4, 0.2, 1);
-      }
+      if (!isEnding && gameOverMusic != null) gameOverMusic.fadeIn(4, 0.2, 1);
     });
   }
 
@@ -404,9 +395,7 @@ class GameOverSubState extends MusicBeatSubState
 
       if (PlayState.instance.isMinimalMode || boyfriend == null) {}
       else
-      {
         boyfriend.playAnimation('deathConfirm' + animationSuffix, true);
-      }
 
       // After the animation finishes...
       new FlxTimer().start(0.7, function(tmr:FlxTimer) {
@@ -445,9 +434,7 @@ class GameOverSubState extends MusicBeatSubState
         }
         else
         {
-          FlxG.camera.fade(FlxColor.BLACK, 2, false, function() {
-            resetPlaying();
-          });
+          FlxG.camera.fade(FlxColor.BLACK, 2, false, () -> resetPlaying());
         }
       });
     }
@@ -501,7 +488,7 @@ class GameOverSubState extends MusicBeatSubState
       }
       else
       {
-        onComplete = function() {
+        onComplete = () -> {
           isStarting = true;
           // We need to force to ensure that the non-starting music plays.
           startDeathMusic(1.0, true);

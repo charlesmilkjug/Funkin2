@@ -111,7 +111,7 @@ class CrashHandler
     logErrorMessage(generateErrorMessage(error));
   }
 
-  static function logErrorMessage(message:String, critical:Bool = false):Void
+  public static function logErrorMessage(message:String, critical:Bool = false):Void
   {
     FileUtil.createDirIfNotExists(LOG_FOLDER);
 

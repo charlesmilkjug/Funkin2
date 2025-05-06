@@ -45,7 +45,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     if (_onVolumeChanged == null)
     {
       _onVolumeChanged = new FlxTypedSignal<Float->Void>();
-      FlxG.sound.volumeHandler = function(volume:Float) {
+      FlxG.sound.volumeHandler = (volume:Float) -> {
         _onVolumeChanged.dispatch(volume);
       }
     }
@@ -83,16 +83,12 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
   public var paused(get, never):Bool;
 
   function get_paused():Bool
-  {
     return this._paused;
-  }
 
   public var isPlaying(get, never):Bool;
 
   function get_isPlaying():Bool
-  {
     return this.playing || this._shouldPlay;
-  }
 
   /**
    * Waveform data for this sound.
@@ -157,24 +153,17 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
 
       @:privateAccess
       {
-        if (important && _channel != null && !SoundMixer.__soundChannels.contains(_channel))
-        {
-          SoundMixer.__soundChannels.push(_channel);
-        }
+        if (important && _channel != null && !SoundMixer.__soundChannels.contains(_channel)) SoundMixer.__soundChannels.push(_channel);
       }
     }
   }
 
   public function togglePlayback():FunkinSound
   {
-    if (playing)
-    {
-      pause();
-    }
+    if (playing) pause();
     else
-    {
       resume();
-    }
+
     return this;
   }
 
@@ -182,14 +171,8 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
   {
     if (!exists) return this;
 
-    if (forceRestart)
-    {
-      cleanup(false, true);
-    }
-    else if (playing)
-    {
-      return this;
-    }
+    if (forceRestart) cleanup(false, true);
+    else if (playing) return this;
 
     if (startTime < 0)
     {
@@ -201,14 +184,9 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     }
     else
     {
-      if (_paused)
-      {
-        resume();
-      }
+      if (_paused) resume();
       else
-      {
         startSound(startTime);
-      }
 
       this.endTime = endTime;
       return this;
@@ -226,9 +204,8 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
       active = false;
     }
     else
-    {
       super.pause();
-    }
+
     return this;
   }
 
@@ -240,15 +217,8 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     // Flixel can sometimes toss spurious `onFocus` events, e.g. if the Flixel debugger is toggled
     // on and off. We only want to resume the sound if we actually lost focus, and if we weren't
     // already paused before we lost focus.
-    if (_lostFocus && !_alreadyPaused)
-    {
-      // trace('Resuming audio (${this._label}) on focus!');
-      resume();
-    }
-    else
-    {
-      // trace('Not resuming audio (${this._label}) on focus!');
-    }
+    if (_lostFocus && !_alreadyPaused) resume();
+
     _lostFocus = false;
   }
 
@@ -257,7 +227,6 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
    */
   override function onFocusLost():Void
   {
-    // trace('Focus lost, pausing audio!');
     _lostFocus = true;
     _alreadyPaused = _paused;
     pause();
@@ -273,9 +242,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
       active = true;
     }
     else
-    {
       super.resume();
-    }
     return this;
   }
 
@@ -291,10 +258,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
         (group != null ? group.volume : 1) * _volume * _volumeAdjust;
     }
 
-    if (_channel != null)
-    {
-      _channel.soundTransform = _transform;
-    }
+    if (_channel != null) _channel.soundTransform = _transform;
   }
 
   public function clone():FunkinSound
@@ -343,10 +307,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
       {
         var existingSound:FunkinSound = cast FlxG.sound.music;
         // Stop here if we would play a matching music track.
-        if (existingSound._label == pathToUse)
-        {
-          return false;
-        }
+        if (existingSound._label == pathToUse) return false;
       }
     }
 
@@ -368,9 +329,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
         if (songMusicData.looped != null && params.loop == null) params.loop = songMusicData.looped;
       }
       else
-      {
         FlxG.log.warn('Tried and failed to find music metadata for $key');
-      }
     }
 
     var shouldLoadPartial = params.partialParams?.loadPartial ?? false;
@@ -390,7 +349,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
         partialQueue.push(music);
 
         @:nullSafety(Off)
-        music.future.onComplete(function(partialMusic:Null<FunkinSound>) {
+        music.future.onComplete((partialMusic:Null<FunkinSound>) -> {
           FlxG.sound.music = partialMusic;
           FlxG.sound.list.remove(FlxG.sound.music);
 
@@ -400,9 +359,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
         return true;
       }
       else
-      {
         return false;
-      }
     }
     else
     {
@@ -419,9 +376,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
         return true;
       }
       else
-      {
         return false;
-      }
     }
   }
 

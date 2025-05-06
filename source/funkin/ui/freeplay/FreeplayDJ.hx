@@ -40,17 +40,11 @@ class FreeplayDJ extends FlxAtlasSprite
 
     super(x, y, playableCharData.getAtlasPath());
 
-    onAnimationFrame.add(function(name, number) {
+    onAnimationFrame.add((name, number) -> {
       if (name == playableCharData.getAnimationPrefix('cartoon'))
       {
-        if (number == playableCharData.getCartoonSoundClickFrame())
-        {
-          FunkinSound.playOnce(Paths.sound('remote_click'));
-        }
-        if (number == playableCharData.getCartoonSoundCartoonFrame())
-        {
-          runTvLogic();
-        }
+        if (number == playableCharData.getCartoonSoundClickFrame()) FunkinSound.playOnce(Paths.sound('remote_click'));
+        if (number == playableCharData.getCartoonSoundCartoonFrame()) runTvLogic();
       }
     });
 
@@ -60,7 +54,7 @@ class FreeplayDJ extends FlxAtlasSprite
     onAnimationComplete.add(onFinishAnim);
     onAnimationLoop.add(onFinishAnim);
 
-    FlxG.console.registerFunction("freeplayCartoon", function() {
+    FlxG.console.registerFunction("freeplayCartoon", () -> {
       currentState = Cartoon;
     });
   }
@@ -292,14 +286,12 @@ class FreeplayDJ extends FlxAtlasSprite
     if (cartoonSnd == null)
     {
       // tv is OFF, but getting turned on
-      FunkinSound.playOnce(Paths.sound('tv_on'), 1.0, function() {
-        loadCartoon();
-      });
+      FunkinSound.playOnce(Paths.sound('tv_on'), 1.0, () -> loadCartoon());
     }
     else
     {
       // plays it smidge after the click
-      FunkinSound.playOnce(Paths.sound('channel_switch'), 1.0, function() {
+      FunkinSound.playOnce(Paths.sound('channel_switch'), 1.0, () -> {
         cartoonSnd.destroy();
         loadCartoon();
       });
@@ -310,9 +302,8 @@ class FreeplayDJ extends FlxAtlasSprite
 
   function loadCartoon()
   {
-    cartoonSnd = FunkinSound.load(Paths.sound(getRandomFlashToon()), 1.0, false, true, true, function() {
-      playFlashAnimation(playableCharData.getAnimationPrefix('cartoon'), true, false, false, 60);
-    });
+    cartoonSnd = FunkinSound.load(Paths.sound(getRandomFlashToon()), 1.0, false, true, true,
+      () -> playFlashAnimation(playableCharData.getAnimationPrefix('cartoon'), true, false, false, 60));
 
     // Fade out music to 40% volume over 1 second.
     // This helps make the TV a bit more audible.

@@ -202,8 +202,6 @@ class StageEditorObjectAnimsToolbox extends StageEditorDefaultToolbox
     updateAnimList();
 
     // Stop the animation after a certain time.
-    flixel.util.FlxTimer.wait(StageEditorState.TIME_BEFORE_ANIM_STOP, function() {
-      if (linkedObj?.animation?.curAnim != null) linkedObj.animation.stop();
-    });
+    flixel.util.FlxTimer.wait(StageEditorState.TIME_BEFORE_ANIM_STOP, () -> if (linkedObj?.animation?.curAnim != null) linkedObj.animation.stop());
   }
 }

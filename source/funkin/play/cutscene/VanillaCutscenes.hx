@@ -41,7 +41,7 @@ class VanillaCutscenes
       FlxG.camera.zoom = 2.5;
 
       // Play the Sound effect.
-      FunkinSound.playOnce(Paths.sound('Lights_Turn_On'), function() {
+      FunkinSound.playOnce(Paths.sound('Lights_Turn_On'), () -> {
         // Fade in the HUD.
         trace('SFX done...');
         PlayState.instance.camHUD.visible = true;

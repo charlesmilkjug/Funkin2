@@ -217,13 +217,11 @@ class LoadingState extends MusicBeatSubState
     stageDirectory = daStage?._data?.directory ?? "shared";
     Paths.setCurrentLevel(stageDirectory);
 
-    var playStateCtor:() -> PlayState = function() {
-      return new PlayState(params);
-    };
+    var playStateCtor:() -> PlayState = () -> return new PlayState(params);
 
     if (onConstruct != null)
     {
-      playStateCtor = function() {
+      playStateCtor = () -> {
         var result = new PlayState(params);
         onConstruct(result);
         return result;
@@ -232,20 +230,16 @@ class LoadingState extends MusicBeatSubState
 
     #if NO_PRELOAD_ALL
     // Switch to loading state while we load assets (default on HTML5 target).
-    var loadStateCtor = function() {
+    var loadStateCtor = () -> {
       var result = new LoadingState(playStateCtor, shouldStopMusic, params);
       @:privateAccess
       result.asSubState = asSubState;
       return result;
     }
-    if (asSubState)
-    {
-      FlxG.state.openSubState(cast loadStateCtor());
-    }
+
+    if (asSubState) FlxG.state.openSubState(cast loadStateCtor());
     else
-    {
       FlxG.switchState(loadStateCtor);
-    }
     #else
     // All assets preloaded, switch directly to play state (defualt on other targets).
     if (shouldStopMusic && FlxG.sound.music != null)
@@ -256,23 +250,15 @@ class LoadingState extends MusicBeatSubState
 
     // Load and cache the song's charts.
     // Don't do this if we already provided the music and charts.
-    if (params?.targetSong != null && !params.overrideMusic)
-    {
-      params.targetSong.cacheCharts(true);
-    }
+    if (params?.targetSong != null && !params.overrideMusic) params.targetSong.cacheCharts(true);
 
     var shouldPreloadLevelAssets:Bool = !(params?.minimalMode ?? false);
 
     if (shouldPreloadLevelAssets) preloadLevelAssets();
 
-    if (asSubState)
-    {
-      FlxG.state.openSubState(cast playStateCtor());
-    }
+    if (asSubState) FlxG.state.openSubState(cast playStateCtor());
     else
-    {
       FlxG.switchState(playStateCtor);
-    }
     #end
   }
 
@@ -361,7 +347,7 @@ class LoadingState extends MusicBeatSubState
       // I will fix this properly later I swear -eric
       if (!path.endsWith('.png')) continue;
 
-      new Future<String>(function() {
+      new Future<String>(() -> {
         FunkinSprite.cacheTexture(path);
         // Another dumb hack: FlxAnimate fetches from OpenFL's BitmapData cache directly and skips the FlxGraphic cache.
         // Since FlxGraphic tells OpenFL to not cache it, we have to do it manually.
@@ -487,7 +473,7 @@ class MultiCallback
     length++;
     numRemaining++;
     var func:Void->Void = null;
-    func = function() {
+    func = () -> {
       if (unfired.exists(id))
       {
         unfired.remove(id);

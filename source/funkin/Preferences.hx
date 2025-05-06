@@ -252,9 +252,7 @@ class Preferences
   {
     var currTime = Date.now().getTime();
     var timeToCall = 0;
-    var id = js.Browser.window.setTimeout(function() {
-      callback(currTime + timeToCall);
-    }, timeToCall);
+    var id = js.Browser.window.setTimeout(() -> callback(currTime + timeToCall), timeToCall);
     return id;
   }
 

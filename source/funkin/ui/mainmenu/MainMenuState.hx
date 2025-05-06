@@ -92,13 +92,13 @@ class MainMenuState extends MusicBeatState
     if (Preferences.flashingLights) add(magenta);
     add(menuItems);
     menuItems.onChange.add(onMenuItemChange);
-    menuItems.onAcceptPress.add(function(_) {
+    menuItems.onAcceptPress.add((_) -> {
       FlxFlicker.flicker(magenta, 1.1, 0.15, false, true);
     });
 
     menuItems.enabled = true; // can move on intro
-    createMenuItem('storymode', 'mainmenu/storymode', function() startExitState(() -> new StoryMenuState()));
-    createMenuItem('freeplay', 'mainmenu/freeplay', function() {
+    createMenuItem('storymode', 'mainmenu/storymode', () -> startExitState(() -> new StoryMenuState()));
+    createMenuItem('freeplay', 'mainmenu/freeplay', () -> {
       persistentDraw = true;
       persistentUpdate = false;
       rememberedSelectedIndex = menuItems.selectedIndex;
@@ -127,13 +127,9 @@ class MainMenuState extends MusicBeatState
     createMenuItem('merch', 'mainmenu/merch', selectMerch, hasPopupBlocker);
     #end
 
-    createMenuItem('options', 'mainmenu/options', function() {
-      startExitState(() -> new funkin.ui.options.OptionsState());
-    });
+    createMenuItem('options', 'mainmenu/options', () -> startExitState(() -> new funkin.ui.options.OptionsState()));
 
-    createMenuItem('credits', 'mainmenu/credits', function() {
-      startExitState(() -> new funkin.ui.credits.CreditsState());
-    });
+    createMenuItem('credits', 'mainmenu/credits', () -> startExitState(() -> new funkin.ui.credits.CreditsState()));
 
     // Reset position of menu items.
     var spacing = 160;
@@ -251,7 +247,7 @@ class MainMenuState extends MusicBeatState
     menuItems.enabled = false;
     persistentUpdate = false;
 
-    prompt.closeCallback = function() {
+    prompt.closeCallback = () -> {
       menuItems.enabled = true;
       if (onClose != null) onClose();
     }
@@ -265,18 +261,13 @@ class MainMenuState extends MusicBeatState
     rememberedSelectedIndex = menuItems.selectedIndex;
 
     var duration = 0.4;
-    menuItems.forEach(function(item) {
-      if (menuItems.selectedIndex != item.ID)
-      {
-        FlxTween.tween(item, {alpha: 0}, duration, {ease: FlxEase.quadOut});
-      }
+    menuItems.forEach((item) -> {
+      if (menuItems.selectedIndex != item.ID) FlxTween.tween(item, {alpha: 0}, duration, {ease: FlxEase.quadOut});
       else
-      {
         item.visible = false;
-      }
     });
 
-    new FlxTimer().start(duration, function(_) FlxG.switchState(state));
+    new FlxTimer().start(duration, (_) -> FlxG.switchState(state));
   }
 
   override function update(elapsed:Float):Void
@@ -321,10 +312,8 @@ class MainMenuState extends MusicBeatState
     // Ctrl+Alt+Shift+E = Dump save data
     // Ctrl+Alt+Shift+L = Force crash and create a log dump
 
-    if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.P)
-    {
-      FlxG.switchState(() -> new funkin.ui.charSelect.CharacterUnlockState('pico'));
-    }
+    if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.P) FlxG.switchState(() ->
+      new funkin.ui.charSelect.CharacterUnlockState('pico'));
 
     if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.W)
     {
@@ -406,16 +395,10 @@ class MainMenuState extends MusicBeatState
       }
     }
 
-    if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.E)
-    {
-      funkin.save.Save.instance.debug_dumpSave();
-    }
+    if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.E) funkin.save.Save.instance.debug_dumpSave();
     #end
 
-    if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.8)
-    {
-      FlxG.sound.music.volume += 0.5 * elapsed;
-    }
+    if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.8) FlxG.sound.music.volume += 0.5 * elapsed;
 
     if (_exiting) menuItems.enabled = false;
 

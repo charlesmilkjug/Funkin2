@@ -71,9 +71,7 @@ class Prompt extends flixel.FlxSubState
   {
     // destroy previous buttons
     while (buttons.members.length > 0)
-    {
       buttons.remove(buttons.members[0], true).destroy();
-    }
 
     switch (style)
     {
@@ -92,7 +90,7 @@ class Prompt extends flixel.FlxSubState
   {
     buttons.exists = true;
     // pass anonymous functions rather than the current callbacks, in case they change later
-    var yesButton = buttons.createItem(yes, function() {
+    var yesButton = buttons.createItem(yes, () -> {
       if (onYes != null) onYes();
       else
         FlxG.log.warn("onYes function was called without being set");
@@ -105,7 +103,7 @@ class Prompt extends flixel.FlxSubState
       // place right
       yesButton.x = FlxG.width - yesButton.width - MARGIN;
 
-      var noButton = buttons.createItem(no, function() if (onNo != null) onNo());
+      var noButton = buttons.createItem(no, () -> if (onNo != null) onNo());
       noButton.x = MARGIN;
       noButton.y = FlxG.height - noButton.height - MARGIN;
       noButton.scrollFactor.set(0, 0);
