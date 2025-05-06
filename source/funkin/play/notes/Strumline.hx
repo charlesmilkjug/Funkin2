@@ -28,8 +28,8 @@ class Strumline extends FlxSpriteGroup
   static final INITIAL_OFFSET:Float = -0.275 * STRUMLINE_SIZE;
   static final NUDGE:Float = 2.0;
 
-  static final KEY_COUNT:Int = 4;
-  static final NOTE_SPLASH_CAP:Int = 6;
+  static var KEY_COUNT:Int = 4;
+  static var NOTE_SPLASH_CAP:Int = 6;
 
   var renderDistanceMs(get, never):Float;
 
@@ -193,9 +193,7 @@ class Strumline extends FlxSpriteGroup
     }
 
     for (i in 0...KEY_COUNT)
-    {
       heldKeys.push(false);
-    }
 
     // This MUST be true for children to update!
     this.active = true;
@@ -248,15 +246,9 @@ class Strumline extends FlxSpriteGroup
   public function mayGhostTap():Bool
   {
     // Any notes in range of the strumline.
-    if (getNotesMayHit().length > 0)
-    {
-      return false;
-    }
+    if (getNotesMayHit().length > 0) return false;
     // Any hold notes in range of the strumline.
-    if (getHoldNotesHitOrMissed().length > 0)
-    {
-      return false;
-    }
+    if (getHoldNotesHitOrMissed().length > 0) return false;
 
     // Note has been hit recently.
     if (ghostTapTimer > 0.0) return false;

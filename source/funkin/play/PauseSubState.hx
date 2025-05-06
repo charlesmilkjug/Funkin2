@@ -329,14 +329,9 @@ class PauseSubState extends MusicBeatSubState
     metadata.add(metadataPractice);
 
     metadataBot = new FlxText(20, metadataPractice.y + 32, FlxG.width - 40, '');
-    if (metadataPractice.visible)
-    {
-      metadataBot = new FlxText(20, metadataPractice.y + 32, FlxG.width - 40, 'BOTPLAY ENABLED');
-    }
+    if (metadataPractice.visible) metadataBot = new FlxText(20, metadataPractice.y + 32, FlxG.width - 40, 'BOTPLAY ENABLED');
     else
-    {
       metadataBot = new FlxText(20, metadataDeaths.y + 32, FlxG.width - 40, 'BOTPLAY ENABLED');
-    }
     metadataBot.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, FlxTextAlign.RIGHT);
     metadataBot.visible = PlayState.instance?.isBotPlayMode ?? false;
     metadataBot.scrollFactor.set(0, 0);
@@ -354,14 +349,9 @@ class PauseSubState extends MusicBeatSubState
         startDelay: CHARTER_FADE_DELAY,
         ease: FlxEase.quartOut,
         onComplete: (_) -> {
-          if (PlayState.instance?.currentChart != null)
-          {
-            metadataArtist.text = 'Charter: ${PlayState.instance.currentChart.charter ?? 'Unknown'}';
-          }
+          if (PlayState.instance?.currentChart != null) metadataArtist.text = 'Charter: ${PlayState.instance.currentChart.charter ?? 'Unknown'}';
           else
-          {
             metadataArtist.text = 'Charter: ${Constants.DEFAULT_CHARTER}';
-          }
 
           FlxTween.tween(metadataArtist, {alpha: 1.0}, CHARTER_FADE_DURATION,
             {
@@ -381,14 +371,9 @@ class PauseSubState extends MusicBeatSubState
         startDelay: CHARTER_FADE_DELAY,
         ease: FlxEase.quartOut,
         onComplete: (_) -> {
-          if (PlayState.instance?.currentChart != null)
-          {
-            metadataArtist.text = 'Artist: ${PlayState.instance.currentChart.songArtist}';
-          }
+          if (PlayState.instance?.currentChart != null) metadataArtist.text = 'Artist: ${PlayState.instance.currentChart.songArtist}';
           else
-          {
             metadataArtist.text = 'Artist: ${Constants.DEFAULT_ARTIST}';
-          }
 
           FlxTween.tween(metadataArtist, {alpha: 1.0}, CHARTER_FADE_DURATION,
             {
@@ -412,6 +397,7 @@ class PauseSubState extends MusicBeatSubState
     var delay:Float = 0.1;
     for (child in metadata.members)
     {
+      child.alpha = 0;
       FlxTween.tween(child, {alpha: 1, y: child.y + 5}, 1.8, {ease: FlxEase.quartOut, startDelay: delay});
       delay += 0.1;
     }
@@ -428,23 +414,11 @@ class PauseSubState extends MusicBeatSubState
   {
     if (!allowInput) return;
 
-    if (controls.UI_UP_P)
-    {
-      changeSelection(-1);
-    }
-    if (controls.UI_DOWN_P)
-    {
-      changeSelection(1);
-    }
+    if (controls.UI_UP_P) changeSelection(-1);
+    if (controls.UI_DOWN_P) changeSelection(1);
 
-    if (controls.ACCEPT && !justOpened)
-    {
-      currentMenuEntries[currentEntry].callback(this);
-    }
-    else if (controls.PAUSE && !justOpened)
-    {
-      resume(this);
-    }
+    if (controls.ACCEPT && !justOpened) currentMenuEntries[currentEntry].callback(this);
+    else if (controls.PAUSE && !justOpened) resume(this);
 
     // we only want justOpened to be true for 1 single frame, when we first get into the pause menu substate
     justOpened = false;
@@ -600,9 +574,7 @@ class PauseSubState extends MusicBeatSubState
       }
     }
     for (entry in toRemove)
-    {
       currentMenuEntries.remove(entry);
-    }
   }
 
   // ===============
