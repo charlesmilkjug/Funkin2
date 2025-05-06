@@ -155,14 +155,8 @@ class BaseCharacter extends Bopper
     ignoreExclusionPref = ["sing"];
 
     _data = CharacterDataParser.fetchCharacterData(this.characterId);
-    if (_data == null)
-    {
-      throw 'Could not find character data for characterId: $characterId';
-    }
-    else if (_data.renderType != renderType)
-    {
-      throw 'Render type mismatch for character ($characterId): expected ${renderType}, got ${_data.renderType}';
-    }
+    if (_data == null) throw 'Could not find character data for characterId: $characterId';
+    else if (_data.renderType != renderType) throw 'Render type mismatch for character ($characterId): expected ${renderType}, got ${_data.renderType}';
     else
     {
       this.characterName = _data.name;
@@ -216,10 +210,7 @@ class BaseCharacter extends Bopper
       if (anim.startsWith(prefix))
       {
         var comboNum:Null<Int> = Std.parseInt(anim.substring(prefix.length));
-        if (comboNum != null)
-        {
-          result.push(comboNum);
-        }
+        if (comboNum != null) result.push(comboNum);
       }
     }
 
@@ -351,10 +342,7 @@ class BaseCharacter extends Bopper
     super.onUpdate(event);
 
     // Reset hold timer for each note pressed.
-    if (justPressedNote() && this.characterType == BF)
-    {
-      holdTimer = 0;
-    }
+    if (justPressedNote() && this.characterType == BF) holdTimer = 0;
 
     if (isDead)
     {
@@ -370,10 +358,7 @@ class BaseCharacter extends Bopper
 
     if (isAnimationFinished()
       && !getCurrentAnimation().endsWith(Constants.ANIMATION_HOLD_SUFFIX)
-      && hasAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX))
-    {
-      playAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX);
-    }
+      && hasAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX)) playAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX);
     else
     {
       if (isAnimationFinished())
@@ -414,7 +399,7 @@ class BaseCharacter extends Bopper
         if (hasAnimation(endAnimation))
         {
           // Play the '-end' animation, if one exists.
-          trace('${characterId}: playing ${endAnimation}');
+          #if debug trace('${characterId}: playing ${endAnimation}'); #end
           playAnimation(endAnimation);
         }
         else
@@ -561,10 +546,7 @@ class BaseCharacter extends Bopper
       // If the note is from the same strumline, play the miss animation.
       if (event.note.playSingAnimation) this.playSingAnimation(event.note.noteData.getDirection(), true);
     }
-    else if (event.note.noteData.getMustHitNote() && characterType == GF)
-    {
-      playComboDropAnimation(event.comboCount);
-    }
+    else if (event.note.noteData.getMustHitNote() && characterType == GF) playComboDropAnimation(event.comboCount);
   }
 
   public override function onNoteHoldDrop(event:HoldNoteScriptEvent)
@@ -584,10 +566,9 @@ class BaseCharacter extends Bopper
       // If the note is from the same strumline, play the miss animation.
       if (event.note.playSingAnimation) this.playSingAnimation(event.holdNote.noteData.getDirection(), true);
     }
-    else if (event.holdNote.noteData.getMustHitNote() && event.isComboBreak && characterType == GF)
-    {
-      playComboDropAnimation(event.comboCount);
-    }
+    else if (event.holdNote.noteData.getMustHitNote()
+      && event.isComboBreak
+      && characterType == GF) playComboDropAnimation(event.comboCount);
   }
 
   function playComboAnimation(comboCount:Int):Void
@@ -595,7 +576,7 @@ class BaseCharacter extends Bopper
     var comboAnim = 'combo${comboCount}';
     if (hasAnimation(comboAnim))
     {
-      trace('Playing GF combo animation: ${comboAnim}');
+      // trace('Playing GF combo animation: ${comboAnim}');
       this.playAnimation(comboAnim, true, true);
     }
   }
@@ -609,15 +590,12 @@ class BaseCharacter extends Bopper
     // If the combo count is too low, no animation will be played.
     for (count in dropNoteCounts)
     {
-      if (comboCount >= count)
-      {
-        dropAnim = 'drop${count}';
-      }
+      if (comboCount >= count) dropAnim = 'drop${count}';
     }
 
     if (dropAnim != null)
     {
-      trace('Playing GF combo drop animation: ${dropAnim}');
+      // trace('Playing GF combo drop animation: ${dropAnim}');
       this.playAnimation(dropAnim, true, true);
     }
   }

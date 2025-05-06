@@ -9,7 +9,6 @@ import funkin.data.song.SongData.SongTimeChange;
 import funkin.data.song.importer.FNFLegacyData;
 import funkin.data.song.importer.FNFLegacyData.LegacyNoteSection;
 
-@:nullSafety
 class FNFLegacyImporter
 {
   public static function parseLegacyDataRaw(input:String, fileName:String = 'raw'):Null<FNFLegacyData>

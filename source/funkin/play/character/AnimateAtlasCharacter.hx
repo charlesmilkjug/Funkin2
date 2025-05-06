@@ -150,14 +150,11 @@ class AnimateAtlasCharacter extends BaseCharacter
     super.onAnimationFinished(prefix);
 
     if (!getCurrentAnimation().endsWith(Constants.ANIMATION_HOLD_SUFFIX)
-      && hasAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX))
-    {
-      playAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX);
-    }
+      && hasAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX)) playAnimation(getCurrentAnimation() + Constants.ANIMATION_HOLD_SUFFIX);
 
     if (getAnimationData() != null && getAnimationData().looped)
     {
-      if (StringTools.endsWith(prefix, "-hold")) trace(prefix);
+      #if debug if (StringTools.endsWith(prefix, "-hold")) trace(prefix); #end
       playAnimation(prefix, true, false);
     }
     else

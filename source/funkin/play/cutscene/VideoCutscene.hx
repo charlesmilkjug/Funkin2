@@ -127,9 +127,7 @@ class VideoCutscene
       onVideoStarted.dispatch();
     }
     else
-    {
       trace('ALERT: Video is null! Could not play cutscene!');
-    }
   }
   #end
 
@@ -165,9 +163,7 @@ class VideoCutscene
       onVideoStarted.dispatch();
     }
     else
-    {
       trace('ALERT: Video is null! Could not play cutscene!');
-    }
   }
   #end
 
@@ -280,15 +276,12 @@ class VideoCutscene
    */
   public static function finishVideo(?transitionTime:Float = 0.5):Void
   {
-    trace('ALERT: Finish video cutscene called!');
+    #if debug trace('ALERT: Finish video cutscene called!'); #end
 
     var cutsceneType:CutsceneType = VideoCutscene.cutsceneType;
 
     #if html5
-    if (vid != null)
-    {
-      PlayState.instance.remove(vid);
-    }
+    if (vid != null) PlayState.instance.remove(vid);
     #end
 
     #if hxvlc
@@ -309,7 +302,7 @@ class VideoCutscene
     FlxTween.tween(blackScreen, {alpha: 0}, transitionTime,
       {
         ease: FlxEase.quadInOut,
-        onComplete: function(twn:FlxTween) {
+        onComplete: (twn:FlxTween) -> {
           PlayState.instance.remove(blackScreen);
           blackScreen = null;
         }
@@ -317,7 +310,7 @@ class VideoCutscene
     FlxTween.tween(FlxG.camera, {zoom: PlayState.instance.stageZoom}, transitionTime,
       {
         ease: FlxEase.quadInOut,
-        onComplete: function(twn:FlxTween) {
+        onComplete: (twn:FlxTween) -> {
           onVideoEnded.dispatch();
           onCutsceneFinish(cutsceneType);
         }

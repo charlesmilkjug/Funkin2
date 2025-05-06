@@ -30,13 +30,13 @@ class PlayAnimationSongEvent extends SongEvent
     switch (targetName)
     {
       case 'boyfriend' | 'bf' | 'player':
-        trace('Playing animation $anim on boyfriend.');
+        #if debug trace('Playing animation $anim on boyfriend.'); #end
         target = PlayState.instance.currentStage.getBoyfriend();
       case 'dad' | 'opponent':
-        trace('Playing animation $anim on dad.');
+        #if debug trace('Playing animation $anim on dad.'); #end
         target = PlayState.instance.currentStage.getDad();
       case 'girlfriend' | 'gf':
-        trace('Playing animation $anim on girlfriend.');
+        #if debug trace('Playing animation $anim on girlfriend.'); #end
         target = PlayState.instance.currentStage.getGirlfriend();
       default:
         target = PlayState.instance.currentStage.getNamedProp(targetName);
