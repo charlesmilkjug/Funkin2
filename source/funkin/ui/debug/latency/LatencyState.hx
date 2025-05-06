@@ -1,5 +1,6 @@
 package funkin.ui.debug.latency;
 
+import funkin.play.notes.NoteDirection;
 import funkin.data.notestyle.NoteStyleRegistry;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -168,7 +169,7 @@ class LatencyState extends MusicBeatSubState
 
   function preciseInputPressed(event:PreciseInputEvent)
   {
-    generateBeatStuff(event);
+    if (event.noteDirection == NoteDirection.UP || event.noteDirection == NoteDirection.DOWN) generateBeatStuff(event);
     strumLine.pressKey(event.noteDirection);
     strumLine.playPress(event.noteDirection);
   }
@@ -190,10 +191,7 @@ class LatencyState extends MusicBeatSubState
     PreciseInputManager.instance.onInputPressed.remove(preciseInputPressed);
     PreciseInputManager.instance.onInputReleased.remove(preciseInputReleased);
 
-    if (FlxG.sound.music != null)
-    {
-      FlxG.sound.music.volume = previousVolume;
-    }
+    if (FlxG.sound.music != null) FlxG.sound.music.volume = previousVolume;
 
     swagSong.stop();
     FlxG.sound.list.remove(swagSong);
@@ -217,33 +215,22 @@ class LatencyState extends MusicBeatSubState
 
   override function stepHit():Bool
   {
-    if (localConductor.currentStep % 4 == 2)
-    {
-      blocks.members[((localConductor.currentBeat % 8) + 1) % 8].alpha = 0.5;
-    }
+    if (localConductor.currentStep % 4 == 2) blocks.members[((localConductor.currentBeat % 8) + 1) % 8].alpha = 0.5;
 
     return super.stepHit();
   }
 
   override function beatHit():Bool
   {
-    if (localConductor.currentBeat % 8 == 0) blocks.forEach(blok -> {
-      blok.alpha = 0.1;
-    });
+    if (localConductor.currentBeat % 8 == 0) blocks.forEach(blok -> blok.alpha = 0.1);
 
     blocks.members[localConductor.currentBeat % 8].alpha = 1;
-    // block.visible = !block.visible;
 
     return super.beatHit();
   }
 
   override function update(elapsed:Float)
   {
-    /* trace("1: " + swagSong.frfrTime);
-      @:privateAccess
-      trace(FlxG.sound.music._channel.position);
-     */
-
     localConductor.update(swagSong.time, false);
 
     // localConductor.songPosition += (Timer.stamp() * 1000) - FlxG.sound.music.prevTimestamp;
@@ -271,7 +258,9 @@ class LatencyState extends MusicBeatSubState
 
     avgOffsetInput /= loopInd;
 
-    offsetText.text += "\n\nEstimated average input offset needed: " + avgOffsetInput;
+    offsetText.text += "\n\nEstimated average input offset needed: " + (Math.isNaN(avgOffsetInput) ? "" : Std.string(avgOffsetInput));
+    offsetText.text += "\n\nPress TAB to apply this offset.";
+    offsetText.text += "\n\nYou can press R to reset your inputs.";
 
     var multiply:Int = 10;
 
@@ -279,35 +268,30 @@ class LatencyState extends MusicBeatSubState
 
     if (FlxG.keys.pressed.CONTROL || FlxG.keys.pressed.SPACE)
     {
-      if (FlxG.keys.justPressed.RIGHT)
-      {
-        localConductor.audioVisualOffset += 1 * multiply;
-      }
+      if (FlxG.keys.justPressed.RIGHT) localConductor.audioVisualOffset += 1 * multiply;
 
-      if (FlxG.keys.justPressed.LEFT)
-      {
-        localConductor.audioVisualOffset -= 1 * multiply;
-      }
+      if (FlxG.keys.justPressed.LEFT) localConductor.audioVisualOffset -= 1 * multiply;
     }
     else
     {
       if (FlxG.keys.anyJustPressed([LEFT, RIGHT]))
       {
-        if (FlxG.keys.justPressed.RIGHT)
-        {
-          localConductor.inputOffset += 1 * multiply;
-        }
+        if (FlxG.keys.justPressed.RIGHT) localConductor.inputOffset += 1 * multiply;
 
-        if (FlxG.keys.justPressed.LEFT)
-        {
-          localConductor.inputOffset -= 1 * multiply;
-        }
-
-        // reset the average, so you don't need to wait a full loop to start getting averages
-        // also reset each text member
-        offsetsPerBeat = [];
-        diffGrp.forEach(memb -> memb.text = "");
+        if (FlxG.keys.justPressed.LEFT) localConductor.inputOffset -= 1 * multiply;
       }
+    }
+
+    if (FlxG.keys.justPressed.TAB)
+    {
+      offsetsPerBeat = [];
+      diffGrp.forEach(memb -> memb.text = "");
+      localConductor.inputOffset = Std.int(avgOffsetInput);
+    }
+    if (FlxG.keys.justPressed.R)
+    {
+      offsetsPerBeat = [];
+      diffGrp.forEach(memb -> memb.text = "");
     }
 
     if (controls.BACK)
