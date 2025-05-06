@@ -5,6 +5,7 @@ import flixel.addons.display.FlxSliceSprite;
 import flixel.FlxSprite;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
+import funkin.data.song.SongData.SongTimeChange;
 import funkin.ui.debug.charting.ChartEditorState.ChartEditorTheme;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
@@ -72,6 +73,9 @@ class ChartEditorThemeHandler
   static final NOTE_PREVIEW_VIEWPORT_FILL_COLOR_DARK = 0x80F8A657;
 
   static final TOTAL_COLUMN_COUNT:Int = ChartEditorState.STRUMLINE_SIZE * 2 + 1;
+
+  // Used for checking in updateMeasureTicks() so we don't have to redraw it everytime if the current measure is the same as before.
+  static var previousMeasure:Int = -69;
 
   /**
    * When the theme is changed, this function updates all of the UI elements to match the new theme.
@@ -174,44 +178,101 @@ class ChartEditorThemeHandler
       ChartEditorState.GRID_SELECTION_BORDER_WIDTH, state.gridBitmap.height),
       selectionBorderColor);
 
-    // Draw horizontal dividers between the measures.
-
-    var gridMeasureDividerColor:FlxColor = switch (state.currentTheme)
+    if (state.gridTiledSprite != null)
     {
-      case Light: GRID_MEASURE_DIVIDER_COLOR_LIGHT;
-      case Dark: GRID_MEASURE_DIVIDER_COLOR_DARK;
-      default: GRID_MEASURE_DIVIDER_COLOR_LIGHT;
-    };
-
-    // Divider at top
-    state.gridBitmap.fillRect(new Rectangle(0, 0, state.gridBitmap.width, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
-    // Divider at bottom
-    var dividerLineBY:Float = state.gridBitmap.height - (GRID_MEASURE_DIVIDER_WIDTH / 2);
-    state.gridBitmap.fillRect(new Rectangle(0, dividerLineBY, state.gridBitmap.width, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
-
-    // Draw horizontal dividers between the beats.
-
-    var gridBeatDividerColor:FlxColor = switch (state.currentTheme)
-    {
-      case Light: GRID_BEAT_DIVIDER_COLOR_LIGHT;
-      case Dark: GRID_BEAT_DIVIDER_COLOR_DARK;
-      default: GRID_BEAT_DIVIDER_COLOR_LIGHT;
-    };
-
-    // Selection borders horizontally in the middle.
-    for (i in 1...(Conductor.instance.stepsPerMeasure))
-    {
-      // There may be a different number of beats per measure, but there's always 4 steps per beat.
-      if ((i % Constants.STEPS_PER_BEAT) == 0)
-      {
-        state.gridBitmap.fillRect(new Rectangle(0, (ChartEditorState.GRID_SIZE * i) - (GRID_BEAT_DIVIDER_WIDTH / 2), state.gridBitmap.width,
-          GRID_BEAT_DIVIDER_WIDTH),
-          gridBeatDividerColor);
-      }
+      state.gridTiledSprite.loadGraphic(state.gridBitmap);
     }
+    // Else, gridTiledSprite will be built later.
+  }
 
-    // Draw vertical dividers between the strumlines.
+  /**
+   * Draw the measure ticks left of the grid. This also includes the horizontal beat and measure dividers as well as the vertical strumline dividers.
+   */
+  public static function updateMeasureTicks(state:ChartEditorState, force:Bool = false):Void
+  {
+    var measureTickWidth:Int = 6;
+    var beatTickWidth:Int = 4;
+    var stepTickWidth:Int = 2;
+    var measuresToCheck:Int = 5;
 
+    var currentMeasure:Int = Math.floor(Conductor.instance.getTimeInMeasures(state.scrollPositionInMs));
+    if (previousMeasure == currentMeasure && !force) return;
+    if (currentMeasure < 0) currentMeasure = previousMeasure = 0;
+
+    // Make the bitmap.
+    var ticksWidth:Int = Std.int(ChartEditorState.GRID_SIZE);
+    var linesWidth:Int = Std.int(ChartEditorState.GRID_SIZE * TOTAL_COLUMN_COUNT);
+    state.measureTickBitmap = new BitmapData(ticksWidth + linesWidth, 4096, true, 0x00FFFFFF);
+
+    // Draw the vertical grey sidebar.
+    state.measureTickBitmap.fillRect(new Rectangle(0, 0, ticksWidth, 4096), GRID_BEAT_DIVIDER_COLOR_DARK);
+
+    // Then draw the ticks and dividers themselves.
+    var totalTicksHeight:Int = 0;
+    var measureLengthsInPixels:Array<Int> = [];
+    for (measure in 0...measuresToCheck)
+    {
+      var currentTimeInMs:Float = Conductor.instance.getMeasureTimeInMs(currentMeasure + measure)
+        + 10; // Manual adjustment as it can get the wrong time change without this.
+      var currentTimeChange:SongTimeChange = Conductor.instance.getTimeChange(currentTimeInMs);
+      var stepsPerMeasure:Int = Constants.STEPS_PER_BEAT * currentTimeChange.timeSignatureNum;
+      var ticksHeight:Int = Std.int(ChartEditorState.GRID_SIZE * stepsPerMeasure);
+
+      // Draw horizontal dividers between the measures.
+      var gridMeasureDividerColor:FlxColor = switch (state.currentTheme)
+      {
+        case Light: GRID_MEASURE_DIVIDER_COLOR_LIGHT;
+        case Dark: GRID_MEASURE_DIVIDER_COLOR_DARK;
+        default: GRID_MEASURE_DIVIDER_COLOR_LIGHT;
+      };
+
+      // Divider at top
+      state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
+      // Divider at bottom
+      var dividerLineBY:Float = ticksHeight - (GRID_MEASURE_DIVIDER_WIDTH / 2);
+      state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight + dividerLineBY, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2),
+        gridMeasureDividerColor);
+
+      // Measure ticks.
+      state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+      var bottomTickY:Float = ticksHeight - (measureTickWidth / 2);
+      state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight + bottomTickY, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+
+      // Draw horizontal dividers between the beats, this is done inside the following loop.
+      var gridBeatDividerColor:FlxColor = switch (state.currentTheme)
+      {
+        case Light: GRID_BEAT_DIVIDER_COLOR_LIGHT;
+        case Dark: GRID_BEAT_DIVIDER_COLOR_DARK;
+        default: GRID_BEAT_DIVIDER_COLOR_LIGHT;
+      };
+
+      // Draw the beat ticks and dividers, and step ticks. No need for two seperate loops thankfully.
+      for (i in 1...stepsPerMeasure)
+      {
+        if ((i % Constants.STEPS_PER_BEAT) == 0) // If we're on a beat, draw a beat tick and divider.
+        {
+          var beatTickY:Float = totalTicksHeight + ChartEditorState.GRID_SIZE * i - (beatTickWidth / 2);
+          var beatTickLength:Float = ticksWidth * 2 / 3;
+          state.measureTickBitmap.fillRect(new Rectangle(0, beatTickY, beatTickLength, beatTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+
+          // Horizontal divider.
+          state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight + (ChartEditorState.GRID_SIZE * i) - (GRID_BEAT_DIVIDER_WIDTH / 2),
+            linesWidth, GRID_BEAT_DIVIDER_WIDTH),
+            gridBeatDividerColor);
+        }
+        else // Else, draw a step tick.
+        {
+          var stepTickY:Float = totalTicksHeight + ChartEditorState.GRID_SIZE * i - (stepTickWidth / 2);
+          var stepTickLength:Float = ticksWidth * 1 / 3;
+          state.measureTickBitmap.fillRect(new Rectangle(0, stepTickY, stepTickLength, stepTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+        }
+      }
+      measureLengthsInPixels.push(totalTicksHeight);
+      totalTicksHeight += ticksHeight;
+    }
+    previousMeasure = currentMeasure;
+
+    // Finally, draw vertical dividers between the strumlines.
     var gridStrumlineDividerColor:FlxColor = switch (state.currentTheme)
     {
       case Light: GRID_STRUMLINE_DIVIDER_COLOR_LIGHT;
@@ -220,17 +281,17 @@ class ChartEditorThemeHandler
     };
 
     // Divider at 1 * (Strumline Size)
-    var dividerLineAX:Float = ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
-    state.gridBitmap.fillRect(new Rectangle(dividerLineAX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.gridBitmap.height), gridStrumlineDividerColor);
+    var dividerLineAX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
+    state.measureTickBitmap.fillRect(new Rectangle(dividerLineAX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.measureTickBitmap.height), gridStrumlineDividerColor);
     // Divider at 2 * (Strumline Size)
-    var dividerLineBX:Float = ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE * 2) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
-    state.gridBitmap.fillRect(new Rectangle(dividerLineBX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.gridBitmap.height), gridStrumlineDividerColor);
+    var dividerLineBX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE * 2) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
+    state.measureTickBitmap.fillRect(new Rectangle(dividerLineBX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.measureTickBitmap.height), gridStrumlineDividerColor);
 
-    if (state.gridTiledSprite != null)
+    if (state.measureTicks != null)
     {
-      state.gridTiledSprite.loadGraphic(state.gridBitmap);
+      state.measureTicks.measureLengthsInPixels = measureLengthsInPixels;
+      state.measureTicks.reloadTickBitmap();
     }
-    // Else, gridTiledSprite will be built later.
   }
 
   /**
@@ -297,10 +358,7 @@ class ChartEditorThemeHandler
     // Draw the minor ticks.
     for (i in 1...11)
     {
-      if (i % 5 == 0)
-      {
-        continue;
-      }
+      if (i % 5 == 0) continue;
       var minorTickX:Float = state.offsetTickBitmap.width * i / 10 - (minorTickWidth / 2);
       var minorTickLength:Float = state.offsetTickBitmap.height * 1 / 3;
       state.offsetTickBitmap.fillRect(new Rectangle(minorTickX, 0, minorTickWidth, minorTickLength), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
@@ -380,10 +438,7 @@ class ChartEditorThemeHandler
       ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2), ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2)),
       viewportFillColor);
 
-    if (state.notePreviewViewport != null)
-    {
-      state.notePreviewViewport.loadGraphic(state.notePreviewViewportBitmap);
-    }
+    if (state.notePreviewViewport != null) state.notePreviewViewport.loadGraphic(state.notePreviewViewportBitmap);
     else
     {
       state.notePreviewViewport = new FlxSliceSprite(state.notePreviewViewportBitmap,

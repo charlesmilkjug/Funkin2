@@ -31,7 +31,7 @@ class VanillaCutscenes
     blackScreen.zIndex = 1000000;
     PlayState.instance.add(blackScreen);
 
-    new FlxTimer().start(0.1, function(_) {
+    new FlxTimer().start(0.1, (_) -> {
       trace('Playing horrorland cutscene...');
       PlayState.instance.remove(blackScreen);
 
@@ -43,14 +43,11 @@ class VanillaCutscenes
       // Play the Sound effect.
       FunkinSound.playOnce(Paths.sound('Lights_Turn_On'), () -> {
         // Fade in the HUD.
-        trace('SFX done...');
         PlayState.instance.camHUD.visible = true;
         PlayState.instance.camHUD.alpha = 0.0; // Use alpha rather than visible to let us fade it in.
         FlxTween.tween(PlayState.instance.camHUD, {alpha: 1.0}, TWEEN_DURATION, {ease: FlxEase.quadInOut});
 
         // Start the countdown.
-        trace('Zoom out done...');
-        trace('Begin countdown (ends cutscene)');
         PlayState.instance.startCountdown();
       });
     });

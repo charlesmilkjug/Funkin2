@@ -1451,12 +1451,12 @@ class PlayState extends MusicBeatSubState
       {
         @:privateAccess // todo: maybe make the groups public :thinking:
         {
-          vocals.playerVoices.forEachAlive(function(voice:FunkinSound) {
+          vocals.playerVoices.forEachAlive((voice:FunkinSound) -> {
             var currentRawVoiceTime:Float = voice.time + vocals.playerVoicesOffset;
             if (Math.abs(currentRawVoiceTime - correctSync) > Math.abs(playerVoicesError)) playerVoicesError = currentRawVoiceTime - correctSync;
           });
 
-          vocals.opponentVoices.forEachAlive(function(voice:FunkinSound) {
+          vocals.opponentVoices.forEachAlive((voice:FunkinSound) -> {
             var currentRawVoiceTime:Float = voice.time + vocals.opponentVoicesOffset;
             if (Math.abs(currentRawVoiceTime - correctSync) > Math.abs(opponentVoicesError)) opponentVoicesError = currentRawVoiceTime - correctSync;
           });
@@ -1469,13 +1469,10 @@ class PlayState extends MusicBeatSubState
           || Math.abs(opponentVoicesError) > 100))
       {
         trace("VOCALS NEED RESYNC");
-        if (vocals != null)
-        {
-          trace(playerVoicesError);
-          trace(opponentVoicesError);
-        }
-        trace(FlxG.sound.music.time);
-        trace(correctSync);
+
+        if (vocals != null) trace(playerVoicesError + " " + opponentVoicesError);
+        trace(FlxG.sound.music.time + " " + correctSync);
+
         resyncVocals();
       }
     }

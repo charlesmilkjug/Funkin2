@@ -4,8 +4,8 @@
       "name": "FlxPartialSound",
       "type": "git",
       "dir": null,
-      "ref": "41f35ddb1eb9d10bc742e6f8b5bcc62f9ef8ad84",
-      "url": "https://github.com/FunkinCrew/FlxPartialSound.git"
+      "ref": "600cc2c777d818aaee1eea193ea67f3d05257a6b",
+      "url": "https://github.com/charlesisfeline/FlxPartialSound.git"
     },
     {
       "name": "flixel",
@@ -63,8 +63,8 @@
       "name": "haxeui-core",
       "type": "git",
       "dir": null,
-      "ref": "07fc7aa8098deaea633b0726d01f83eb4ef8a832",
-      "url": "https://github.com/haxeui/haxeui-core"
+      "ref": "a3ef67e1bb1f343cbb5933b6d2217fd61909a8e8",
+      "url": "https://github.com/charlesmilkjug/haxeui-core"
     },
     {
       "name": "haxeui-flixel",
@@ -98,8 +98,8 @@
       "name": "hxdiscord_rpc",
       "type": "git",
       "dir": null,
-      "ref": "82c47ecc1a454b7dd644e4fcac7e91155f176dec",
-      "url": "https://github.com/FunkinCrew/hxdiscord_rpc"
+      "ref": "2d32b2e2a6a9db2ebffca34fe5becbbae3a9fa47",
+      "url": "https://github.com/charlesisfeline/hxdiscord_rpc"
     },
     {
       "name": "hxjsonast",
@@ -199,7 +199,7 @@
       "name": "thx.core",
       "type": "git",
       "dir": null,
-      "ref": "76d87418fadd92eb8e1b61f004cff27d656e53dd",
+      "ref": "2bf2b992e06159510f595554e6b952e47922f128",
       "url": "https://github.com/fponticelli/thx.core"
     },
     {

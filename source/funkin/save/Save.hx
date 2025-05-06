@@ -792,10 +792,7 @@ class Save
     // 'default' variations are left with no suffix ('easy', 'normal', 'hard'),
     // along with 'erect' variations ('erect', 'nightmare')
     // otherwise, we want to add a suffix of our current variation to get the save data.
-    if (variation != null && variation != '' && variation != 'default' && variation != 'erect')
-    {
-      difficultyId = '${difficultyId}-${variation}';
-    }
+    if (variation != null && variation != '' && variation != 'default' && variation != 'erect') difficultyId = '${difficultyId}-${variation}';
 
     return song.get(difficultyId);
   }
