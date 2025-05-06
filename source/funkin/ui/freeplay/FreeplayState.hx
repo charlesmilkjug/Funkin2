@@ -174,9 +174,6 @@ class FreeplayState extends MusicBeatSubState
 
   var allDifficulties:Array<String> = Constants.DEFAULT_DIFFICULTY_LIST_FULL;
 
-  var diffSelLeft:DifficultySelector;
-  var diffSelRight:DifficultySelector;
-
   var funnyCam:FunkinCamera;
   var rankCamera:FunkinCamera;
   var rankBg:FunkinSprite;
@@ -483,8 +480,8 @@ class FreeplayState extends MusicBeatSubState
     addToExitMovers([fp, txtCompletion, fnfHighscoreSpr, clearBoxSprite], FlxG.width, null, 0.3, null);
     addToExitMoversCharSel([fp, txtCompletion, fnfHighscoreSpr, clearBoxSprite], null, -270, 0.8, 0.1);
 
-    diffSelLeft = new DifficultySelector(this, 20, grpDifficulties.y - 10, false, controls, styleData);
-    diffSelRight = new DifficultySelector(this, 325, grpDifficulties.y - 10, true, controls, styleData);
+    var diffSelLeft:DifficultySelector = new DifficultySelector(this, 20, grpDifficulties.y - 10, false, controls, styleData);
+    var diffSelRight:DifficultySelector = new DifficultySelector(this, 325, grpDifficulties.y - 10, true, controls, styleData);
     diffSelLeft.visible = false;
     diffSelRight.visible = false;
     add(diffSelLeft);

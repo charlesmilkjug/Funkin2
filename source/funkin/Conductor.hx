@@ -552,7 +552,7 @@ class Conductor
    * @param ms The time in milliseconds.
    * @return The time in measures.
    */
-  public function getTimeInMeasures(ms:Float):Float
+  public function getTimeInMeasures(ms:Float = 0):Float
   {
     if (timeChanges.length == 0)
     {
