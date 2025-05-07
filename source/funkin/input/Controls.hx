@@ -585,10 +585,10 @@ class Controls extends FlxActionSet
     switch (device)
     {
       case Keys:
-        forEachBound(control, function(action, state) replaceKey(action, toAdd, toRemove, state));
+        forEachBound(control, (action, state) -> replaceKey(action, toAdd, toRemove, state));
 
       case Gamepad(id):
-        forEachBound(control, function(action, state) replaceButton(action, id, toAdd, toRemove, state));
+        forEachBound(control, (action, state) -> replaceButton(action, id, toAdd, toRemove, state));
     }
   }
 
@@ -631,16 +631,11 @@ class Controls extends FlxActionSet
           action.inputs.remove(input);
         }
         else
-        {
           hasReplaced = true;
-        }
       }
     }
 
-    if (!hasReplaced)
-    {
-      addKeys(action, [toAdd], state);
-    }
+    if (!hasReplaced) addKeys(action, [toAdd], state);
   }
 
   function replaceButton(action:FlxActionDigital, deviceID:Int, toAdd:FlxGamepadInputID, toRemove:FlxGamepadInputID, state:FlxInputState)
@@ -665,10 +660,7 @@ class Controls extends FlxActionSet
       }
     }
 
-    if (!hasReplaced)
-    {
-      addButtons(action, [toAdd], state, deviceID);
-    }
+    if (!hasReplaced) addButtons(action, [toAdd], state, deviceID);
   }
 
   public function copyFrom(controls:Controls, ?device:Device)
@@ -722,23 +714,17 @@ class Controls extends FlxActionSet
    * If binder is a literal you can inline this
    */
   public function bindKeys(control:Control, keys:Array<FlxKey>)
-  {
-    forEachBound(control, function(action, state) addKeys(action, keys, state));
-  }
+    forEachBound(control, (action, state) -> addKeys(action, keys, state));
 
   public function bindSwipe(control:Control, swipeDir:FlxDirectionFlags = FlxDirectionFlags.UP, ?swpLength:Float = 90)
-  {
-    forEachBound(control, function(action, press) action.add(new FlxActionInputDigitalMobileSwipeGameplay(swipeDir, press, swpLength)));
-  }
+    forEachBound(control, (action, press) -> action.add(new FlxActionInputDigitalMobileSwipeGameplay(swipeDir, press, swpLength)));
 
   /**
    * Sets all actions that pertain to the binder to trigger when the supplied keys are used.
    * If binder is a literal you can inline this
    */
   public function unbindKeys(control:Control, keys:Array<FlxKey>)
-  {
-    forEachBound(control, function(action, _) removeKeys(action, keys));
-  }
+    forEachBound(control, (action, _) -> removeKeys(action, keys));
 
   static function addKeys(action:FlxActionDigital, keys:Array<FlxKey>, state:FlxInputState)
   {
@@ -924,9 +910,7 @@ class Controls extends FlxActionSet
     #end
 
     #if android
-    forEachBound(Control.BACK, function(action, pres) {
-      action.add(new FlxActionInputDigitalAndroid(FlxAndroidKey.BACK, JUST_PRESSED));
-    });
+    forEachBound(Control.BACK, (action, pres) -> action.add(new FlxActionInputDigitalAndroid(FlxAndroidKey.BACK, JUST_PRESSED)));
     #end
   }
 
@@ -1097,15 +1081,14 @@ class Controls extends FlxActionSet
    * If binder is a literal you can inline this
    */
   public function bindButtons(control:Control, id, buttons)
-  {
-    forEachBound(control, function(action, state) addButtons(action, buttons, state, id));
-  }
+    forEachBound(control, (action, state) -> addButtons(action, buttons, state, id));
 
   public function touchShit(control:Control, id)
   {
-    forEachBound(control, function(action, state) {
-      // action
-    });
+    forEachBound(control, (action, state) ->
+      {
+        // action
+      });
   }
 
   /**
@@ -1113,9 +1096,7 @@ class Controls extends FlxActionSet
    * If binder is a literal you can inline this
    */
   public function unbindButtons(control:Control, gamepadID:Int, buttons)
-  {
-    forEachBound(control, function(action, _) removeButtons(action, gamepadID, buttons));
-  }
+    forEachBound(control, (action, _) -> removeButtons(action, gamepadID, buttons));
 
   inline static function addButtons(action:FlxActionDigital, buttons:Array<FlxGamepadInputID>, state, id)
   {
@@ -1144,14 +1125,10 @@ class Controls extends FlxActionSet
     {
       case Keys:
         for (input in getActionFromControl(control).inputs)
-        {
           if (input.device == KEYBOARD) list.push(input.inputID);
-        }
       case Gamepad(id):
         for (input in getActionFromControl(control).inputs)
-        {
           if (isGamepad(input, id)) list.push(input.inputID);
-        }
     }
     return list;
   }
@@ -1191,10 +1168,7 @@ class Controls extends FlxActionSet
               bindButtons(control, id, getDefaultGamepadBinds(control));
           }
         }
-        else if (inputs == [FlxKey.NONE])
-        {
-          trace('Control ${control} is unbound, leaving it be.');
-        }
+        else if (inputs == [FlxKey.NONE]) trace('Control ${control} is unbound, leaving it be.');
         else
         {
           switch (device)
@@ -1234,14 +1208,9 @@ class Controls extends FlxActionSet
       var inputs = getInputsFor(control, device);
       isEmpty = isEmpty && inputs.length == 0;
 
-      if (inputs.length == 0)
-      {
-        inputs = [FlxKey.NONE];
-      }
+      if (inputs.length == 0) inputs = [FlxKey.NONE];
       else
-      {
         inputs = inputs.distinct();
-      }
 
       Reflect.setField(data, control.getName(), inputs);
     }
@@ -1259,9 +1228,7 @@ class Controls extends FlxActionSet
   }
 
   inline static function isGamepad(input:FlxActionInput, deviceID:Int)
-  {
     return input.device == GAMEPAD && (deviceID == FlxInputDeviceID.ALL || input.deviceID == deviceID);
-  }
 }
 
 typedef SaveInputLists =
@@ -1384,22 +1351,11 @@ class FunkinAction extends FlxActionDigital
     // Perform checkFiltered for each combination.
     for (i in filterTriggers)
     {
-      if (filterDevices.length == 0)
-      {
-        if (checkFiltered(i))
-        {
-          return true;
-        }
-      }
+      if (filterDevices.length == 0) if (checkFiltered(i)) return true;
       else
       {
         for (j in filterDevices)
-        {
-          if (checkFiltered(i, j))
-          {
-            return true;
-          }
-        }
+          if (checkFiltered(i, j)) return true;
       }
     }
     return false;
@@ -1444,22 +1400,13 @@ class FunkinAction extends FlxActionDigital
       input.update();
 
       // Check whether the input is the right trigger.
-      if (filterTrigger != null && input.trigger != filterTrigger)
-      {
-        continue;
-      }
+      if (filterTrigger != null && input.trigger != filterTrigger) continue;
 
       // Check whether the input is the right device.
-      if (filterDevice != null && input.device != filterDevice)
-      {
-        continue;
-      }
+      if (filterDevice != null && input.device != filterDevice) continue;
 
       // Check whether the input has triggered.
-      if (input.check(this))
-      {
-        result = true;
-      }
+      if (input.check(this)) result = true;
     }
 
     // We need to cache this result.
@@ -1535,10 +1482,7 @@ class FlxActionInputDigitalMobileSwipeGameplay extends FlxActionInputDigital
         }
       }
 
-      if (touch.justReleased)
-      {
-        touchMap.remove(touch.touchPointID);
-      }
+      if (touch.justReleased) touchMap.remove(touch.touchPointID);
 
       /* switch (inputID)
         {
@@ -1562,22 +1506,10 @@ class FlxActionInputDigitalMobileSwipeGameplay extends FlxActionInputDigital
         case JUST_PRESSED:
           if (swp.touchLength >= activateLength)
           {
-            if (inputID == FlxDirectionFlags.UP.toInt())
-            {
-              if (degAngle >= 45 && degAngle <= 90 + 45) return properTouch(swp);
-            }
-            else if (inputID == FlxDirectionFlags.DOWN.toInt())
-            {
-              if (-degAngle >= 45 && -degAngle <= 90 + 45) return properTouch(swp);
-            }
-            else if (inputID == FlxDirectionFlags.LEFT.toInt())
-            {
-              if (degAngle <= 45 && -degAngle <= 45) return properTouch(swp);
-            }
-            else if (inputID == FlxDirectionFlags.RIGHT.toInt())
-            {
-              if (degAngle >= 90 + 45 && degAngle <= -90 + -45) return properTouch(swp);
-            }
+            if (inputID == FlxDirectionFlags.UP.toInt()) if (degAngle >= 45 && degAngle <= 90 + 45) return properTouch(swp);
+            else if (inputID == FlxDirectionFlags.DOWN.toInt()) if (-degAngle >= 45 && -degAngle <= 90 + 45) return properTouch(swp);
+            else if (inputID == FlxDirectionFlags.LEFT.toInt()) if (degAngle <= 45 && -degAngle <= 45) return properTouch(swp);
+            else if (inputID == FlxDirectionFlags.RIGHT.toInt()) if (degAngle >= 90 + 45 && degAngle <= -90 + -45) return properTouch(swp);
           }
         default:
       }

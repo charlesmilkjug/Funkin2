@@ -90,7 +90,7 @@ class ChartEditorWelcomeDialog extends ChartEditorBaseDialog
     linkRecentChart.tooltip += "\n" + lastModified;
     #end
 
-    linkRecentChart.onClick = function(_event) {
+    linkRecentChart.onClick = (_event) -> {
       linkRecentChart.hide();
 
       this.hideDialog(DialogButton.CANCEL);
@@ -103,9 +103,7 @@ class ChartEditorWelcomeDialog extends ChartEditorBaseDialog
           result.length == 0 ? 'Loaded chart (${chartPath.toString()})' : 'Loaded chart (${chartPath.toString()})\n${result.join("\n")}');
       }
       else
-      {
         chartEditorState.error('Failed to Load Chart', 'Failed to load chart (${chartPath.toString()})');
-      }
     }
 
     if (!FileUtil.fileExists(chartPath))

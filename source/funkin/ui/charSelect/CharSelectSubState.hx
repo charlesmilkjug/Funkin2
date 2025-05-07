@@ -412,9 +412,7 @@ class CharSelectSubState extends MusicBeatSubState
 
   function checkNewChar():Void
   {
-    if (nonLocks.length > 0) selectTimer.start(2, (_) -> {
-      unLock();
-    });
+    if (nonLocks.length > 0) selectTimer.start(2, (_) -> unLock());
     else
     {
       #if FEATURE_NEWGROUNDS
@@ -674,7 +672,7 @@ class CharSelectSubState extends MusicBeatSubState
     FlxTween.tween(camFollow, {y: camFollow.y - 150}, 0.8,
       {
         ease: FlxEase.backIn,
-        onComplete: function(_) {
+        onComplete: (_) -> {
           FlxG.switchState(() -> FreeplayState.build(
             {
               {
@@ -733,9 +731,7 @@ class CharSelectSubState extends MusicBeatSubState
         playerChill.playAnimation("select");
         gfChill.playAnimation("confirm", true, false, true);
         pressedSelect = true;
-        selectTimer.start(1.5, (_) -> {
-          goToFreeplay();
-        });
+        selectTimer.start(1.5, (_) -> goToFreeplay());
       }
 
       if (allowInput && pressedSelect && controls.BACK)
@@ -777,9 +773,7 @@ class CharSelectSubState extends MusicBeatSubState
         lockedSound.play(true);
 
         cursorDenied.animation.play("idle", true);
-        cursorDenied.animation.finishCallback = (_) -> {
-          cursorDenied.visible = false;
-        };
+        cursorDenied.animation.finishCallback = (_) -> cursorDenied.visible = false;
       }
     }
 
@@ -983,9 +977,7 @@ class CharSelectSubState extends MusicBeatSubState
             }
           }
           else
-          {
             lock.playAnimation("idle");
-          }
         case 0:
           var memb:PixelatedIcon = cast member;
 

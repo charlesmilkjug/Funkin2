@@ -57,10 +57,7 @@ class Countdown
   {
     countdownStep = BEFORE;
     var cancelled:Bool = propagateCountdownEvent(countdownStep);
-    if (cancelled)
-    {
-      return false;
-    }
+    if (cancelled) return false;
 
     // Stop any existing countdown.
     stopCountdown();
@@ -74,7 +71,7 @@ class Countdown
     // The timer function gets called based on the beat of the song.
     countdownTimer = new FlxTimer();
 
-    countdownTimer.start(Conductor.instance.beatLengthMs / 1000, function(tmr:FlxTimer) {
+    countdownTimer.start(Conductor.instance.beatLengthMs / 1000, (tmr:FlxTimer) -> {
       if (PlayState.instance == null)
       {
         tmr.cancel();
@@ -112,15 +109,9 @@ class Countdown
       // Event handling bullshit.
       var cancelled:Bool = propagateCountdownEvent(countdownStep);
 
-      if (cancelled)
-      {
-        pauseCountdown();
-      }
+      if (cancelled) pauseCountdown();
 
-      if (countdownStep == AFTER)
-      {
-        stopCountdown();
-      }
+      if (countdownStep == AFTER) stopCountdown();
     }, 5); // Before, 3, 2, 1, GO!, After
 
     return true;
@@ -159,10 +150,7 @@ class Countdown
    */
   public static function pauseCountdown():Void
   {
-    if (countdownTimer != null && !countdownTimer.finished)
-    {
-      countdownTimer.active = false;
-    }
+    if (countdownTimer != null && !countdownTimer.finished) countdownTimer.active = false;
   }
 
   /**
@@ -172,10 +160,7 @@ class Countdown
    */
   public static function resumeCountdown():Void
   {
-    if (countdownTimer != null && !countdownTimer.finished)
-    {
-      countdownTimer.active = true;
-    }
+    if (countdownTimer != null && !countdownTimer.finished) countdownTimer.active = true;
   }
 
   /**
@@ -220,19 +205,14 @@ class Countdown
    */
   public static function resetCountdown()
   {
-    if (countdownTimer != null)
-    {
-      countdownTimer.reset();
-    }
+    if (countdownTimer != null) countdownTimer.reset();
   }
 
   /**
    * Reset the countdown configuration to the default.
    */
   public static function reset()
-  {
     noteStyle = null;
-  }
 
   /**
    * Retrieve the note style data (if we haven't already)
@@ -266,7 +246,7 @@ class Countdown
     FlxTween.tween(countdownSprite, {alpha: 0}, Conductor.instance.beatLengthMs / 1000,
       {
         ease: fadeEase,
-        onComplete: function(twn:FlxTween) {
+        onComplete: (twn:FlxTween) -> {
           countdownSprite.destroy();
         }
       });

@@ -112,9 +112,7 @@ class AlbumRoll extends FlxSpriteGroup
   }
 
   public function refresh():Void
-  {
     sort(SortUtil.byZIndex, FlxSort.ASCENDING);
-  }
 
   /**
    * Apply exit movers for the album roll.
@@ -122,25 +120,15 @@ class AlbumRoll extends FlxSpriteGroup
    */
   public function applyExitMovers(?exitMovers:FreeplayState.ExitMoverData, ?exitMoversCharSel:FreeplayState.ExitMoverData):Void
   {
-    if (exitMovers == null)
-    {
-      exitMovers = _exitMovers;
-    }
+    if (exitMovers == null) exitMovers = _exitMovers;
     else
-    {
       _exitMovers = exitMovers;
-    }
 
     if (exitMovers == null) return;
 
-    if (exitMoversCharSel == null)
-    {
-      exitMoversCharSel = _exitMoversCharSel;
-    }
+    if (exitMoversCharSel == null) exitMoversCharSel = _exitMoversCharSel;
     else
-    {
       _exitMoversCharSel = exitMoversCharSel;
-    }
 
     if (exitMoversCharSel == null) return;
 
@@ -171,7 +159,7 @@ class AlbumRoll extends FlxSpriteGroup
     newAlbumArt.playAnimation('intro', true);
 
     difficultyStars.visible = false;
-    new FlxTimer().start(0.75, function(_) {
+    new FlxTimer().start(0.75, (_) -> {
       showTitle();
       showStars();
       albumTitle.animation.play('switch');
@@ -186,9 +174,7 @@ class AlbumRoll extends FlxSpriteGroup
   }
 
   public function showTitle():Void
-  {
     albumTitle.visible = true;
-  }
 
   public function buildAlbumTitle(assetKey:String, ?titleOffsets:Null<Array<Float>>):Void
   {
@@ -198,10 +184,7 @@ class AlbumRoll extends FlxSpriteGroup
       albumTitle = null;
     }
 
-    if (titleOffsets == null)
-    {
-      titleOffsets = [0, 0];
-    }
+    if (titleOffsets == null) titleOffsets = [0, 0];
 
     albumTitle = FunkinSprite.createSparrow(925, 500, assetKey);
     albumTitle.visible = albumTitle.frames != null && newAlbumArt.visible;
@@ -209,7 +192,7 @@ class AlbumRoll extends FlxSpriteGroup
     albumTitle.animation.addByPrefix('switch', 'switch0', 24, false);
     add(albumTitle);
 
-    albumTitle.animation.onFinish.add(function(name) {
+    albumTitle.animation.onFinish.add((name) -> {
       if (name == 'switch') albumTitle.animation.play('idle');
     });
     albumTitle.animation.play('idle');

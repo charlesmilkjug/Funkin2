@@ -118,9 +118,7 @@ class MusicBeatSubState extends FlxSubState implements IEventHandler
    * It does this based on the `zIndex` of each prop.
    */
   public function refresh()
-  {
     sort(SortUtil.byZIndex, FlxSort.ASCENDING);
-  }
 
   /**
    * Called when a step is hit in the current song.
@@ -194,10 +192,7 @@ class MusicBeatSubState extends FlxSubState implements IEventHandler
 
     dispatchEvent(event);
 
-    if (event.eventCanceled)
-    {
-      return;
-    }
+    if (event.eventCanceled) return;
     else
     {
       FunkinSound.stopAllAudio();

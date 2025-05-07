@@ -33,16 +33,12 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
   public var stageName(get, never):String;
 
   function get_stageName():String
-  {
     return _data?.name ?? 'Unknown';
-  }
 
   public var camZoom(get, never):Float;
 
   function get_camZoom():Float
-  {
     return _data?.cameraZoom ?? 1.0;
-  }
 
   var frameBufferMan:FrameBufferManager;
 
@@ -69,10 +65,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
     this.id = id;
     _data = _fetchData(id);
 
-    if (_data == null)
-    {
-      throw 'Could not find stage data for stage id: $id';
-    }
+    if (_data == null) throw 'Could not find stage data for stage id: $id';
   }
 
   /**
@@ -107,9 +100,8 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
       getBoyfriend().cameraFocusPoint.y += stageCharData.cameraOffsets[1];
     }
     else
-    {
       trace('STAGE RESET: No boyfriend found.');
-    }
+
     if (getGirlfriend() != null)
     {
       getGirlfriend().resetCharacter(true);
@@ -167,14 +159,9 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
       var isAnimated = dataProp.animations.length > 0;
 
       var propSprite:StageProp;
-      if (dataProp.danceEvery != 0)
-      {
-        propSprite = new Bopper(dataProp.danceEvery);
-      }
+      if (dataProp.danceEvery != 0) propSprite = new Bopper(dataProp.danceEvery);
       else
-      {
         propSprite = new StageProp();
-      }
 
       if (isAnimated)
       {
@@ -263,28 +250,21 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
           {
             propSprite.animation.add(propAnim.name, propAnim.frameIndices);
 
-            if (Std.isOfType(propSprite, Bopper))
-            {
-              cast(propSprite, Bopper).setAnimationOffsets(propAnim.name, propAnim.offsets[0], propAnim.offsets[1]);
-            }
+            if (Std.isOfType(propSprite, Bopper)) cast(propSprite, Bopper).setAnimationOffsets(propAnim.name, propAnim.offsets[0], propAnim.offsets[1]);
           }
         default: // 'sparrow'
           FlxAnimationUtil.addAtlasAnimations(propSprite, dataProp.animations);
           if (Std.isOfType(propSprite, Bopper))
           {
             for (propAnim in dataProp.animations)
-            {
               cast(propSprite, Bopper).setAnimationOffsets(propAnim.name, propAnim.offsets[0], propAnim.offsets[1]);
-            }
           }
       }
 
       if (Std.isOfType(propSprite, Bopper))
       {
         for (propAnim in dataProp.animations)
-        {
           cast(propSprite, Bopper).setAnimationOffsets(propAnim.name, propAnim.offsets[0], propAnim.offsets[1]);
-        }
 
         if (!Std.isOfType(propSprite, BaseCharacter))
         {
@@ -293,23 +273,15 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
         }
       }
 
-      if (dataProp.startingAnimation != null)
-      {
-        propSprite.animation.play(dataProp.startingAnimation);
-      }
+      if (dataProp.startingAnimation != null) propSprite.animation.play(dataProp.startingAnimation);
 
       if (Std.isOfType(propSprite, BaseCharacter))
       {
         // Character stuff.
       }
-      else if (Std.isOfType(propSprite, Bopper))
-      {
-        addBopper(cast propSprite, dataProp.name);
-      }
+      else if (Std.isOfType(propSprite, Bopper)) addBopper(cast propSprite, dataProp.name);
       else
-      {
         addProp(propSprite, dataProp.name);
-      }
     }
   }
 
@@ -344,20 +316,14 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
    * It does this based on the `zIndex` of each prop.
    */
   public function refresh():Void
-  {
     sort(SortUtil.byZIndex, FlxSort.ASCENDING);
-  }
 
   /**
    * Sets a shader for each prop in the stage
    * @param shader The shader to apply to each prop
    */
   public function setShader(shader:FlxShader):Void
-  {
-    forEachAlive(function(prop:FlxSprite) {
-      prop.shader = shader;
-    });
-  }
+    forEachAlive((prop:FlxSprite) -> prop.shader = shader);
 
   /**
    * Adjusts the position and other properties of the soon-to-be child of this sprite group.
@@ -486,35 +452,27 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
    * @return An FlxPoint position.
    */
   public inline function getGirlfriendPosition():FlxPoint
-  {
     return new FlxPoint(_data.characters.gf.position[0], _data.characters.gf.position[1]);
-  }
 
   /**
    * Get the position of the boyfriend character, as defined in the stage data.
    * @return An FlxPoint position.
    */
   public inline function getBoyfriendPosition():FlxPoint
-  {
     return new FlxPoint(_data.characters.bf.position[0], _data.characters.bf.position[1]);
-  }
 
   /**
    * Get the position of the dad character, as defined in the stage data.
    * @return An FlxPoint position.
    */
   public inline function getDadPosition():FlxPoint
-  {
     return new FlxPoint(_data.characters.dad.position[0], _data.characters.dad.position[1]);
-  }
 
   /**
    * Retrieves a given character from the stage.
    */
   public function getCharacter(id:String):BaseCharacter
-  {
     return this.characters.get(id);
-  }
 
   /**
    * Retrieve the Boyfriend character.
@@ -534,9 +492,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
       return boyfriend;
     }
     else
-    {
       return getCharacter('bf');
-    }
   }
 
   /**
@@ -545,9 +501,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
    * @return The player/Boyfriend character.
    */
   public function getPlayer(pop:Bool = false):BaseCharacter
-  {
     return getBoyfriend(pop);
-  }
 
   /**
    * Retrieve the Girlfriend character.
@@ -567,9 +521,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
       return girlfriend;
     }
     else
-    {
       return getCharacter('gf');
-    }
   }
 
   /**
@@ -590,9 +542,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
       return dad;
     }
     else
-    {
       return getCharacter('dad');
-    }
   }
 
   /**
@@ -611,29 +561,19 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
    * @return The corresponding FlxSprite.
    */
   public function getNamedProp(name:String):StageProp
-  {
     return this.namedProps.get(name);
-  }
 
   /**
    * Pause the animations of ALL sprites in this group.
    */
   public function pause():Void
-  {
-    forEachAlive(function(prop:FlxSprite) {
-      if (prop.animation != null) prop.animation.pause();
-    });
-  }
+    forEachAlive((prop:FlxSprite) -> if (prop.animation != null) prop.animation.pause());
 
   /**
    * Resume the animations of ALL sprites in this group.
    */
   public function resume():Void
-  {
-    forEachAlive(function(prop:FlxSprite) {
-      if (prop.animation != null) prop.animation.resume();
-    });
-  }
+    forEachAlive((prop:FlxSprite) -> if (prop.animation != null) prop.animation.resume());
 
   /**
    * Retrieve a list of all the asset paths required to load the stage.
@@ -645,9 +585,8 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
   {
     var result:Array<String> = [];
     for (dataProp in _data.props)
-    {
       result.push(Paths.image(dataProp.assetPath));
-    }
+
     return result;
   }
 
@@ -681,9 +620,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
 
     // Then the rest of the characters, if any.
     for (characterId in charList)
-    {
       dispatchToCharacter(characterId, event);
-    }
   }
 
   /**
@@ -694,10 +631,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
   public function dispatchToCharacter(characterId:String, event:ScriptEvent):Void
   {
     var character:BaseCharacter = getCharacter(characterId);
-    if (character != null)
-    {
-      ScriptEventDispatcher.callEvent(character, event);
-    }
+    if (character != null) ScriptEventDispatcher.callEvent(character, event);
   }
 
   /**
@@ -757,19 +691,11 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
       group.clear();
     }
 
-    if (debugIconGroup != null && debugIconGroup.group != null)
-    {
-      debugIconGroup.kill();
-    }
+    if (debugIconGroup != null && debugIconGroup.group != null) debugIconGroup.kill();
     else
-    {
       debugIconGroup = null;
-    }
 
-    if (frameBufferMan != null)
-    {
-      frameBufferMan.dispose();
-    }
+    if (frameBufferMan != null) frameBufferMan.dispose();
   }
 
   /**
@@ -810,15 +736,11 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
 
   override function draw():Void
   {
-    if (frameBufferMan != null)
-    {
-      frameBufferMan.lock();
-    }
+    if (frameBufferMan != null) frameBufferMan.lock();
+
     super.draw();
-    if (frameBufferMan != null)
-    {
-      frameBufferMan.unlock();
-    }
+    if (frameBufferMan != null) frameBufferMan.unlock();
+
     frameBuffersUpdated();
   }
 

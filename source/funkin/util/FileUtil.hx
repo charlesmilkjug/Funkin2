@@ -118,15 +118,9 @@ class FileUtil
   public static function browseForBinaryFile(dialogTitle:String, ?typeFilter:Array<FileDialogExtensionInfo>, onSelect:(SelectedFileInfo) -> Void,
       ?onCancel:() -> Void)
   {
-    var onComplete = function(button, selectedFiles) {
-      if (button == DialogButton.OK && selectedFiles.length > 0)
-      {
-        onSelect(selectedFiles[0]);
-      }
-      else if (onCancel != null)
-      {
-        onCancel();
-      }
+    var onComplete = (button, selectedFiles) -> {
+      if (button == DialogButton.OK && selectedFiles.length > 0) onSelect(selectedFiles[0]);
+      else if (onCancel != null) onCancel();
     };
 
     Dialogs.openFile(onComplete,
@@ -151,15 +145,9 @@ class FileUtil
   public static function browseForTextFile(dialogTitle:String, ?typeFilter:Array<FileDialogExtensionInfo>, onSelect:(SelectedFileInfo) -> Void,
       ?onCancel:() -> Void):Void
   {
-    var onComplete = function(button, selectedFiles) {
-      if (button == DialogButton.OK && selectedFiles.length > 0)
-      {
-        onSelect(selectedFiles[0]);
-      }
-      else if (onCancel != null)
-      {
-        onCancel();
-      }
+    var onComplete = (button, selectedFiles) -> {
+      if (button == DialogButton.OK && selectedFiles.length > 0) onSelect(selectedFiles[0]);
+      else if (onCancel != null) onCancel();
     };
 
     Dialogs.openFile(onComplete,
@@ -373,10 +361,7 @@ class FileUtil
         paths.push(filePath);
       }
 
-      if (onSaveAll != null)
-      {
-        onSaveAll(paths);
-      }
+      if (onSaveAll != null) onSaveAll(paths);
     }
 
     trace('Browsing for directory to save individual files to...');
@@ -395,10 +380,7 @@ class FileUtil
     #else
     trace('WARNING: saveMultipleFiles not implemented for this platform');
 
-    if (onCancel != null)
-    {
-      onCancel();
-    }
+    if (onCancel != null) onCancel();
 
     return false;
     #end
@@ -412,13 +394,10 @@ class FileUtil
   {
     // Create a ZIP file.
     var zipBytes:Bytes = createZIPFromEntries(resources);
-    var onSave:(String) -> Void = function(path:String) {
+    var onSave:(String) -> Void = (path:String) -> {
       trace('Saved ${resources.length} files to ZIP at "$path"');
 
-      if (onSave != null)
-      {
-        onSave([path]);
-      }
+      if (onSave != null) onSave([path]);
     };
 
     // Prompt the user to save the ZIP file.
@@ -434,13 +413,10 @@ class FileUtil
   {
     // Create a ZIP file.
     var zipBytes:Bytes = createZIPFromEntries(resources);
-    var onSave:(String) -> Void = function(path:String) {
+    var onSave:(String) -> Void = (path:String) -> {
       trace('Saved FNFC file to "$path"');
 
-      if (onSave != null)
-      {
-        onSave([path]);
-      }
+      if (onSave != null) onSave([path]);
     };
     // Prompt the user to save the ZIP file.
     saveFile(zipBytes, [FILE_FILTER_FNFC], onSave, onCancel, defaultPath, 'Save chart as FNFC...');
@@ -507,11 +483,11 @@ class FileUtil
   public static function browseFileReference(callback:(FileReference) -> Void):Void
   {
     var file = new FileReference();
-    file.addEventListener(Event.SELECT, function(e) {
+    file.addEventListener(Event.SELECT, (e) -> {
       var selectedFileRef:FileReference = e.target;
       trace('Selected file: ' + selectedFileRef.name);
 
-      selectedFileRef.addEventListener(Event.COMPLETE, function(e) {
+      selectedFileRef.addEventListener(Event.COMPLETE, (e) -> {
         var loadedFileRef:FileReference = e.target;
         trace('Loaded file: ' + loadedFileRef.name);
 
@@ -531,17 +507,11 @@ class FileUtil
   {
     var file = new FileReference();
 
-    file.addEventListener(Event.COMPLETE, function(e:Event) {
-      trace('Successfully wrote file: "$path"');
-    });
+    file.addEventListener(Event.COMPLETE, (e:Event) -> trace('Successfully wrote file: "$path"'));
 
-    file.addEventListener(Event.CANCEL, function(e:Event) {
-      trace('Cancelled writing file: "$path"');
-    });
+    file.addEventListener(Event.CANCEL, (e:Event) -> trace('Cancelled writing file: "$path"'));
 
-    file.addEventListener(IOErrorEvent.IO_ERROR, function(e:IOErrorEvent) {
-      trace('IO error writing file: "$path"');
-    });
+    file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> trace('IO error writing file: "$path"'));
 
     file.save(data, path);
   }

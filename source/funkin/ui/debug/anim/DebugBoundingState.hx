@@ -61,9 +61,7 @@ class DebugBoundingState extends FlxState
   var currentAnimationName(get, never):String;
 
   function get_currentAnimationName():String
-  {
     return offsetAnimationDropdown?.value?.id ?? "idle";
-  }
 
   function get_haxeUIFocused():Bool
   {
@@ -88,13 +86,11 @@ class DebugBoundingState extends FlxState
     var str = Paths.xml('ui/animation-editor/offset-editor-view');
     offsetEditorDialog = cast RuntimeComponentBuilder.fromAsset(str);
 
-    // offsetEditorDialog.findComponent("btnViewSpriteSheet").onClick = _ -> curView = SPRITESHEET;
     var viewDropdown:DropDown = offsetEditorDialog.findComponent("swapper", DropDown);
-    viewDropdown.onChange = function(e:UIEvent) {
+    viewDropdown.onChange = (e:UIEvent) -> {
       trace(e.type);
       curView = cast e.data.curView;
       trace(e.data);
-      // trace(e.data);
     };
 
     offsetAnimationDropdown = offsetEditorDialog.findComponent("animationDropdown", DropDown);
@@ -129,7 +125,6 @@ class DebugBoundingState extends FlxState
     add(spriteSheetView);
 
     var tex = Paths.getSparrowAtlas('characters/BOYFRIEND');
-    // tex.frames[0].uv
 
     bf = new FlxSprite();
     bf.loadGraphic(tex.parent);
@@ -152,8 +147,6 @@ class DebugBoundingState extends FlxState
 
   function generateOutlines(frameShit:Array<FlxFrame>):Void
   {
-    // swagOutlines.width = frameShit[0].parent.width;
-    // swagOutlines.height = frameShit[0].parent.height;
     swagOutlines.pixels.fillRect(new Rectangle(0, 0, swagOutlines.width, swagOutlines.height), 0x00000000);
 
     for (i in frameShit)
@@ -163,10 +156,7 @@ class DebugBoundingState extends FlxState
       var uvW:Float = (i.uv.width * i.parent.width) - (i.uv.x * i.parent.width);
       var uvH:Float = (i.uv.height * i.parent.height) - (i.uv.y * i.parent.height);
 
-      // trace(Std.int(i.uv.width * i.parent.width));
       swagOutlines.drawRect(i.uv.x * i.parent.width, i.uv.y * i.parent.height, uvW, uvH, FlxColor.TRANSPARENT, lineStyle);
-      // swagGraphic.setPosition(, );
-      // trace(uvH);
     }
   }
 
@@ -186,7 +176,7 @@ class DebugBoundingState extends FlxState
     offsetView.add(txtOffsetShit);
 
     var characters:Array<String> = CharacterDataParser.listCharacterIds();
-    characters = characters.filter(function(charId:String) {
+    characters = characters.filter((charId:String) -> {
       var char = CharacterDataParser.fetchCharacterData(charId);
       return char.renderType != AnimateAtlas;
     });
@@ -194,13 +184,9 @@ class DebugBoundingState extends FlxState
 
     var charDropdown:DropDown = offsetEditorDialog.findComponent('characterDropdown', DropDown);
     for (char in characters)
-    {
       charDropdown.dataSource.add({text: char});
-    }
 
-    charDropdown.onChange = function(e:UIEvent) {
-      loadAnimShit(e.data.text);
-    };
+    charDropdown.onChange = (e:UIEvent) -> loadAnimShit(e.data.text);
   }
 
   public var mouseOffset:FlxPoint = FlxPoint.get(0, 0);
@@ -229,15 +215,9 @@ class DebugBoundingState extends FlxState
         txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
       }
 
-      if (FlxG.mouse.justReleased)
-      {
-        movingCharacter = false;
-      }
+      if (FlxG.mouse.justReleased) movingCharacter = false;
 
-      if (FlxG.mouse.justReleased)
-      {
-        movingCharacter = false;
-      }
+      if (FlxG.mouse.justReleased) movingCharacter = false;
     }
   }
 
@@ -248,18 +228,14 @@ class DebugBoundingState extends FlxState
     swagText.scrollFactor.set();
 
     for (text in txtGrp.members)
-    {
       text.y -= swagText.height;
-    }
     txtGrp.add(swagText);
 
     swagText.text = str + ": " + Std.string(value);
   }
 
   function clearInfo()
-  {
     txtGrp.clear();
-  }
 
   function checkLibrary(library:String)
   {
@@ -270,7 +246,7 @@ class DebugBoundingState extends FlxState
       if (!LimeAssets.libraryPaths.exists(library)) throw "Missing library: " + library;
 
       // var callback = callbacks.add("library:" + library);
-      Assets.loadLibrary(library).onComplete(function(_) {
+      Assets.loadLibrary(library).onComplete((_) -> {
         trace('LOADED... awesomeness...');
         // callback();
       });
@@ -333,284 +309,263 @@ class DebugBoundingState extends FlxState
   {
     if (FlxG.keys.justPressed.RBRACKET || FlxG.keys.justPressed.E)
     {
-      if (offsetAnimationDropdown.selectedIndex + 1 <= offsetAnimationDropdown.dataSource.size)
-      {
-        offsetAnimationDropdown.selectedIndex += 1;
-      }
+      if (offsetAnimationDropdown.selectedIndex + 1 <= offsetAnimationDropdown.dataSource.size) offsetAnimationDropdown.selectedIndex += 1;
       else
       {
         offsetAnimationDropdown.selectedIndex = 0;
-      }
-      trace(offsetAnimationDropdown.selectedIndex);
-      trace(offsetAnimationDropdown.dataSource.size);
-      trace(offsetAnimationDropdown.value);
-      trace(currentAnimationName);
-      playCharacterAnimation(currentAnimationName, true);
-    }
-    if (FlxG.keys.justPressed.LBRACKET || FlxG.keys.justPressed.Q)
-    {
-      if (offsetAnimationDropdown.selectedIndex - 1 >= 0)
-      {
-        offsetAnimationDropdown.selectedIndex -= 1;
-      }
-      else
-      {
-        offsetAnimationDropdown.selectedIndex = offsetAnimationDropdown.dataSource.size - 1;
-      }
-      playCharacterAnimation(currentAnimationName, true);
-    }
-
-    // Keyboards controls for general WASD "movement"
-    // modifies the animDrooffsetAnimationDropdownpDownMenu so that it's properly updated and shit
-    // and then it's just played and updated from the offsetAnimationDropdown callback, which is set in the loadAnimShit() function probabbly
-    if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.S || FlxG.keys.justPressed.D || FlxG.keys.justPressed.A)
-    {
-      var suffix:String = '';
-      var targetLabel:String = '';
-
-      if (FlxG.keys.pressed.SHIFT) suffix = 'miss';
-
-      if (FlxG.keys.justPressed.W) targetLabel = 'singUP$suffix';
-      if (FlxG.keys.justPressed.S) targetLabel = 'singDOWN$suffix';
-      if (FlxG.keys.justPressed.A) targetLabel = 'singLEFT$suffix';
-      if (FlxG.keys.justPressed.D) targetLabel = 'singRIGHT$suffix';
-
-      if (targetLabel != currentAnimationName)
-      {
-        offsetAnimationDropdown.value = {id: targetLabel, text: targetLabel};
-
-        // Play the new animation if the IDs are the different.
-        // Override the onion skin.
+        trace(offsetAnimationDropdown.selectedIndex
+          + " "
+          + offsetAnimationDropdown.dataSource.
+            + " "
+            + offsetAnimationDropdown.value
+            + " "
+            + currentAnimationName);
         playCharacterAnimation(currentAnimationName, true);
       }
-      else
+      if (FlxG.keys.justPressed.LBRACKET || FlxG.keys.justPressed.Q)
       {
-        // Replay the current animation if the IDs are the same.
-        // Don't override the onion skin.
-        playCharacterAnimation(currentAnimationName, false);
+        if (offsetAnimationDropdown.selectedIndex - 1 >= 0) offsetAnimationDropdown.selectedIndex -= 1;
+        else
+          offsetAnimationDropdown.selectedIndex = offsetAnimationDropdown.dataSource.size - 1;
+        playCharacterAnimation(currentAnimationName, true);
+      }
+
+      // Keyboards controls for general WASD "movement"
+      // modifies the animDrooffsetAnimationDropdownpDownMenu so that it's properly updated and shit
+      // and then it's just played and updated from the offsetAnimationDropdown callback, which is set in the loadAnimShit() function probabbly
+      if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.S || FlxG.keys.justPressed.D || FlxG.keys.justPressed.A)
+      {
+        var suffix:String = '';
+        var targetLabel:String = '';
+
+        if (FlxG.keys.pressed.SHIFT) suffix = 'miss';
+
+        if (FlxG.keys.justPressed.W) targetLabel = 'singUP$suffix';
+        if (FlxG.keys.justPressed.S) targetLabel = 'singDOWN$suffix';
+        if (FlxG.keys.justPressed.A) targetLabel = 'singLEFT$suffix';
+        if (FlxG.keys.justPressed.D) targetLabel = 'singRIGHT$suffix';
+
+        if (targetLabel != currentAnimationName)
+        {
+          offsetAnimationDropdown.value = {id: targetLabel, text: targetLabel};
+
+          // Play the new animation if the IDs are the different.
+          // Override the onion skin.
+          playCharacterAnimation(currentAnimationName, true);
+        }
+        else
+        {
+          // Replay the current animation if the IDs are the same.
+          // Don't override the onion skin.
+          playCharacterAnimation(currentAnimationName, false);
+        }
+      }
+
+      if (FlxG.keys.justPressed.F) onionSkinChar.visible = !onionSkinChar.visible;
+
+      if (FlxG.keys.justPressed.G) swagChar.flipX = !swagChar.flipX;
+
+      // Plays the idle animation.
+      if (FlxG.keys.justPressed.SPACE)
+      {
+        offsetAnimationDropdown.value = {id: 'idle', text: 'idle'};
+
+        playCharacterAnimation(currentAnimationName, true);
+      }
+
+      // Playback the animation.
+      if (FlxG.keys.justPressed.ENTER) playCharacterAnimation(currentAnimationName, false);
+
+      if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN)
+      {
+        var animName = currentAnimationName;
+        var coolValues:Array<Float> = swagChar.animationOffsets.get(animName).copy();
+
+        var multiplier:Int = 5;
+
+        if (FlxG.keys.pressed.CONTROL) multiplier = 1;
+
+        if (FlxG.keys.pressed.SHIFT) multiplier = 10;
+
+        if (FlxG.keys.justPressed.RIGHT) coolValues[0] -= 1 * multiplier;
+        else if (FlxG.keys.justPressed.LEFT) coolValues[0] += 1 * multiplier;
+        else if (FlxG.keys.justPressed.UP) coolValues[1] += 1 * multiplier;
+        else if (FlxG.keys.justPressed.DOWN) coolValues[1] -= 1 * multiplier;
+
+        swagChar.animationOffsets.set(currentAnimationName, coolValues);
+        swagChar.playAnimation(animName);
+
+        txtOffsetShit.text = 'Offset: ' + coolValues;
+        txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
+
+        trace(animName);
+      }
+
+      if (FlxG.keys.justPressed.ESCAPE)
+      {
+        var outputString = FlxG.keys.pressed.CONTROL ? buildOutputStringOld() : buildOutputStringNew();
+        saveOffsets(outputString, FlxG.keys.pressed.CONTROL ? swagChar.characterId + "Offsets.txt" : swagChar.characterId + ".json");
       }
     }
 
-    if (FlxG.keys.justPressed.F)
+    function buildOutputStringOld():String
     {
-      onionSkinChar.visible = !onionSkinChar.visible;
+      var outputString:String = "";
+
+      for (i in swagChar.animationOffsets.keys())
+        outputString += i + " " + swagChar.animationOffsets.get(i)[0] + " " + swagChar.animationOffsets.get(i)[1] + "\n";
+
+      outputString.trim();
+
+      return outputString;
     }
 
-    if (FlxG.keys.justPressed.G)
+    function buildOutputStringNew():String
     {
-      swagChar.flipX = !swagChar.flipX;
+      var charData:CharacterData = Reflect.copy(swagChar._data);
+
+      for (charDataAnim in charData.animations)
+      {
+        var animName:String = charDataAnim.name;
+        charDataAnim.offsets = swagChar.animationOffsets.get(animName);
+      }
+
+      return SerializerUtil.toJSON(charData, true);
     }
 
-    // Plays the idle animation
-    if (FlxG.keys.justPressed.SPACE)
+    var swagChar:BaseCharacter;
+
+    /*
+      Called when animation dropdown is changed!
+     */
+    function loadAnimShit(char:String)
     {
-      offsetAnimationDropdown.value = {id: 'idle', text: 'idle'};
+      if (swagChar != null)
+      {
+        offsetView.remove(swagChar);
+        swagChar.destroy();
+      }
 
-      playCharacterAnimation(currentAnimationName, true);
-    }
+      swagChar = CharacterDataParser.fetchCharacter(char);
+      swagChar.x = 100;
+      swagChar.y = 100;
+      swagChar.debug = true;
+      offsetView.add(swagChar);
 
-    // Playback the animation
-    if (FlxG.keys.justPressed.ENTER)
-    {
-      playCharacterAnimation(currentAnimationName, false);
-    }
+      if (swagChar == null || swagChar.frames == null) trace('ERROR: Failed to load character ${char}!');
 
-    if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN)
-    {
-      var animName = currentAnimationName;
-      var coolValues:Array<Float> = swagChar.animationOffsets.get(animName).copy();
+      generateOutlines(swagChar.frames.frames);
+      bf.pixels = swagChar.pixels;
 
-      var multiplier:Int = 5;
+      clearInfo();
+      addInfo(swagChar._data.assetPath, "");
+      addInfo('Width', bf.width);
+      addInfo('Height', bf.height);
 
-      if (FlxG.keys.pressed.CONTROL) multiplier = 1;
+      characterAnimNames = [];
 
-      if (FlxG.keys.pressed.SHIFT) multiplier = 10;
+      for (i in swagChar.animationOffsets.keys())
+      {
+        characterAnimNames.push(i);
+        trace(i + " " + swagChar.animationOffsets[i]);
+      }
 
-      if (FlxG.keys.justPressed.RIGHT) coolValues[0] -= 1 * multiplier;
-      else if (FlxG.keys.justPressed.LEFT) coolValues[0] += 1 * multiplier;
-      else if (FlxG.keys.justPressed.UP) coolValues[1] += 1 * multiplier;
-      else if (FlxG.keys.justPressed.DOWN) coolValues[1] -= 1 * multiplier;
+      offsetAnimationDropdown.dataSource.clear();
 
-      swagChar.animationOffsets.set(currentAnimationName, coolValues);
-      swagChar.playAnimation(animName);
+      for (charAnim in characterAnimNames)
+      {
+        trace('Adding ${charAnim} to HaxeUI dropdown');
+        offsetAnimationDropdown.dataSource.add({id: charAnim, text: charAnim});
+      }
 
-      txtOffsetShit.text = 'Offset: ' + coolValues;
+      offsetAnimationDropdown.selectedIndex = 0;
+
+      trace('Added ${offsetAnimationDropdown.dataSource.size} to HaxeUI dropdown');
+
+      offsetAnimationDropdown.onChange = (event:UIEvent) -> {
+        if (event.data != null)
+        {
+          trace('Selected animation ${event.data.id}');
+          playCharacterAnimation(event.data.id, true);
+        }
+      }
+
+      txtOffsetShit.text = 'Offset: ' + swagChar.animOffsets;
       txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
-
-      trace(animName);
+      dropDownSetup = true;
     }
 
-    if (FlxG.keys.justPressed.ESCAPE)
+    private var characterAnimNames:Array<String>;
+
+    function playCharacterAnimation(str:String, setOnionSkin:Bool = true)
     {
-      var outputString = FlxG.keys.pressed.CONTROL ? buildOutputStringOld() : buildOutputStringNew();
-      saveOffsets(outputString, FlxG.keys.pressed.CONTROL ? swagChar.characterId + "Offsets.txt" : swagChar.characterId + ".json");
-    }
-  }
-
-  function buildOutputStringOld():String
-  {
-    var outputString:String = "";
-
-    for (i in swagChar.animationOffsets.keys())
-    {
-      outputString += i + " " + swagChar.animationOffsets.get(i)[0] + " " + swagChar.animationOffsets.get(i)[1] + "\n";
-    }
-
-    outputString.trim();
-
-    return outputString;
-  }
-
-  function buildOutputStringNew():String
-  {
-    var charData:CharacterData = Reflect.copy(swagChar._data);
-
-    for (charDataAnim in charData.animations)
-    {
-      var animName:String = charDataAnim.name;
-      charDataAnim.offsets = swagChar.animationOffsets.get(animName);
-    }
-
-    return SerializerUtil.toJSON(charData, true);
-  }
-
-  var swagChar:BaseCharacter;
-
-  /*
-    Called when animation dropdown is changed!
-   */
-  function loadAnimShit(char:String)
-  {
-    if (swagChar != null)
-    {
-      offsetView.remove(swagChar);
-      swagChar.destroy();
-    }
-
-    swagChar = CharacterDataParser.fetchCharacter(char);
-    swagChar.x = 100;
-    swagChar.y = 100;
-    swagChar.debug = true;
-    offsetView.add(swagChar);
-
-    if (swagChar == null || swagChar.frames == null)
-    {
-      trace('ERROR: Failed to load character ${char}!');
-    }
-
-    generateOutlines(swagChar.frames.frames);
-    bf.pixels = swagChar.pixels;
-
-    clearInfo();
-    addInfo(swagChar._data.assetPath, "");
-    addInfo('Width', bf.width);
-    addInfo('Height', bf.height);
-
-    characterAnimNames = [];
-
-    for (i in swagChar.animationOffsets.keys())
-    {
-      characterAnimNames.push(i);
-      trace(i);
-      trace(swagChar.animationOffsets[i]);
-    }
-
-    offsetAnimationDropdown.dataSource.clear();
-
-    for (charAnim in characterAnimNames)
-    {
-      trace('Adding ${charAnim} to HaxeUI dropdown');
-      offsetAnimationDropdown.dataSource.add({id: charAnim, text: charAnim});
-    }
-
-    offsetAnimationDropdown.selectedIndex = 0;
-
-    trace('Added ${offsetAnimationDropdown.dataSource.size} to HaxeUI dropdown');
-
-    offsetAnimationDropdown.onChange = function(event:UIEvent) {
-      if (event.data != null)
+      if (setOnionSkin)
       {
-        trace('Selected animation ${event.data.id}');
-        playCharacterAnimation(event.data.id, true);
+        // clears the canvas
+        onionSkinChar.pixels.fillRect(new Rectangle(0, 0, FlxG.width * 2, FlxG.height * 2), 0x00000000);
+
+        onionSkinChar.stamp(swagChar, Std.int(swagChar.x), Std.int(swagChar.y));
+        onionSkinChar.alpha = 0.6;
+      }
+
+      // var animName = characterAnimNames[Std.parseInt(str)];
+      var animName = str;
+      swagChar.playAnimation(animName, true); // trace();
+      trace(swagChar.animationOffsets.get(animName));
+
+      txtOffsetShit.text = 'Offset: ' + swagChar.animOffsets;
+      txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
+    }
+
+    var _file:FileReference;
+
+    function saveOffsets(saveString:String, fileName:String)
+    {
+      if ((saveString != null) && (saveString.length > 0))
+      {
+        _file = new FileReference();
+        _file.addEventListener(Event.COMPLETE, onSaveComplete);
+        _file.addEventListener(Event.CANCEL, onSaveCancel);
+        _file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
+        _file.save(saveString, fileName);
       }
     }
 
-    txtOffsetShit.text = 'Offset: ' + swagChar.animOffsets;
-    txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
-    dropDownSetup = true;
-  }
-
-  private var characterAnimNames:Array<String>;
-
-  function playCharacterAnimation(str:String, setOnionSkin:Bool = true)
-  {
-    if (setOnionSkin)
+    function onSaveComplete(_):Void
     {
-      // clears the canvas
-      onionSkinChar.pixels.fillRect(new Rectangle(0, 0, FlxG.width * 2, FlxG.height * 2), 0x00000000);
-
-      onionSkinChar.stamp(swagChar, Std.int(swagChar.x), Std.int(swagChar.y));
-      onionSkinChar.alpha = 0.6;
+      _file.removeEventListener(Event.COMPLETE, onSaveComplete);
+      _file.removeEventListener(Event.CANCEL, onSaveCancel);
+      _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
+      _file = null;
+      FlxG.log.notice("Successfully saved LEVEL DATA.");
     }
 
-    // var animName = characterAnimNames[Std.parseInt(str)];
-    var animName = str;
-    swagChar.playAnimation(animName, true); // trace();
-    trace(swagChar.animationOffsets.get(animName));
-
-    txtOffsetShit.text = 'Offset: ' + swagChar.animOffsets;
-    txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
-  }
-
-  var _file:FileReference;
-
-  function saveOffsets(saveString:String, fileName:String)
-  {
-    if ((saveString != null) && (saveString.length > 0))
+    /**
+     * Called when the save file dialog is cancelled.
+     */
+    function onSaveCancel(_):Void
     {
-      _file = new FileReference();
-      _file.addEventListener(Event.COMPLETE, onSaveComplete);
-      _file.addEventListener(Event.CANCEL, onSaveCancel);
-      _file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-      _file.save(saveString, fileName);
+      _file.removeEventListener(Event.COMPLETE, onSaveComplete);
+      _file.removeEventListener(Event.CANCEL, onSaveCancel);
+      _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
+      _file = null;
+    }
+
+    /**
+     * Called if there is an error while saving the gameplay recording.
+     */
+    function onSaveError(_):Void
+    {
+      _file.removeEventListener(Event.COMPLETE, onSaveComplete);
+      _file.removeEventListener(Event.CANCEL, onSaveCancel);
+      _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
+      _file = null;
+      FlxG.log.error("Problem saving Level data");
     }
   }
 
-  function onSaveComplete(_):Void
+  enum abstract ANIMDEBUGVIEW(String)
   {
-    _file.removeEventListener(Event.COMPLETE, onSaveComplete);
-    _file.removeEventListener(Event.CANCEL, onSaveCancel);
-    _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-    _file = null;
-    FlxG.log.notice("Successfully saved LEVEL DATA.");
+    var SPRITESHEET;
+    var ANIMATIONS;
   }
-
-  /**
-   * Called when the save file dialog is cancelled.
-   */
-  function onSaveCancel(_):Void
-  {
-    _file.removeEventListener(Event.COMPLETE, onSaveComplete);
-    _file.removeEventListener(Event.CANCEL, onSaveCancel);
-    _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-    _file = null;
-  }
-
-  /**
-   * Called if there is an error while saving the gameplay recording.
-   */
-  function onSaveError(_):Void
-  {
-    _file.removeEventListener(Event.COMPLETE, onSaveComplete);
-    _file.removeEventListener(Event.CANCEL, onSaveCancel);
-    _file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-    _file = null;
-    FlxG.log.error("Problem saving Level data");
-  }
-}
-
-enum abstract ANIMDEBUGVIEW(String)
-{
-  var SPRITESHEET;
-  var ANIMATIONS;
-}

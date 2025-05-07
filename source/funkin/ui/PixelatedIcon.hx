@@ -54,20 +54,13 @@ class PixelatedIcon extends FlxFilteredSprite
       return;
     }
     else
-    {
       this.visible = true;
-    }
 
     var isAnimated = openfl.utils.Assets.exists(Paths.file('images/$charPath.xml'));
 
-    if (isAnimated)
-    {
-      this.frames = Paths.getSparrowAtlas(charPath);
-    }
+    if (isAnimated) this.frames = Paths.getSparrowAtlas(charPath);
     else
-    {
       this.loadGraphic(Paths.image(charPath));
-    }
 
     this.scale.x = this.scale.y = 2;
 

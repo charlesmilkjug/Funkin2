@@ -164,10 +164,7 @@ class CreditsState extends MusicBeatState
       creditsLineY += CREDITS_FONT_SIZE * line.textField.numLines;
       entry.lineIndexToBuild++;
 
-      if (entry.lineIndexToBuild >= entry.data.body.length)
-      {
-        entry.hasBuiltBody = true;
-      }
+      if (entry.lineIndexToBuild >= entry.data.body.length) entry.hasBuiltBody = true;
       return;
     }
 
@@ -178,10 +175,7 @@ class CreditsState extends MusicBeatState
       creditsLineY += CREDITS_FONT_SIZE;
 
       entry.backerIndexToBuild++;
-      if (entry.backerIndexToBuild >= backersToBuild.length)
-      {
-        entry.hasBuiltBackers = true;
-      }
+      if (entry.backerIndexToBuild >= backersToBuild.length) entry.hasBuiltBackers = true;
       return;
     }
   }
@@ -210,7 +204,7 @@ class CreditsState extends MusicBeatState
 
   function killOffScreenLines():Void
   {
-    creditsGroup.forEachExists(function(creditsLine:FlxSprite) {
+    creditsGroup.forEachExists((creditsLine:FlxSprite) -> {
       if (creditsLine.y + creditsLine.height <= 0)
       {
         creditsLine.kill();
@@ -222,25 +216,16 @@ class CreditsState extends MusicBeatState
   function buildNextLine():Void
   {
     // no more entriesToBuild
-    if (entriesToBuild.length == 0)
-    {
-      return;
-    }
+    if (entriesToBuild.length == 0) return;
 
     // line is off-screen
-    if (creditsGroup.y + creditsLineY >= FlxG.height)
-    {
-      return;
-    }
+    if (creditsGroup.y + creditsLineY >= FlxG.height) return;
 
     var entry:CreditsEntry = entriesToBuild[0];
     buildCreditsEntryLine(entry);
 
     // check if everything has been built
-    if (!entry.hasBuiltHeader || !entry.hasBuiltBody || !entry.hasBuiltBackers)
-    {
-      return;
-    }
+    if (!entry.hasBuiltHeader || !entry.hasBuiltBody || !entry.hasBuiltBackers) return;
 
     entriesToBuild.shift();
 
@@ -274,26 +259,17 @@ class CreditsState extends MusicBeatState
         creditsGroup.y -= CREDITS_SCROLL_BASE_SPEED * elapsed;
       }
     }
-    if (controls.BACK || hasEnded())
-    {
-      exit();
-    }
+    if (controls.BACK || hasEnded()) exit();
   }
 
   function hasEnded():Bool
-  {
     return creditsGroup.getFirstExisting() == null && entriesToBuild.length == 0;
-  }
 
   function exit():Void
-  {
     FlxG.switchState(() -> new MainMenuState());
-  }
 
   public override function destroy():Void
-  {
     super.destroy();
-  }
 }
 
 enum CreditsSide

@@ -87,9 +87,7 @@ class Strumline extends FlxSpriteGroup
   }
 
   function set_conductorInUse(value:Conductor):Conductor
-  {
     return _conductorInUse = value;
-  }
 
   /**
    * Whether the game should auto position notes.
@@ -219,14 +217,10 @@ class Strumline extends FlxSpriteGroup
   }
 
   public function refresh():Void
-  {
     sort(SortUtil.byZIndex, FlxSort.ASCENDING);
-  }
 
   override function get_width():Float
-  {
     return KEY_COUNT * Strumline.NOTE_SPACING;
-  }
 
   public override function update(elapsed:Float):Void
   {
@@ -264,9 +258,7 @@ class Strumline extends FlxSpriteGroup
    */
   public function getNotesMayHit():Array<NoteSprite>
   {
-    return notes.members.filter(function(note:NoteSprite) {
-      return note != null && note.alive && !note.hasBeenHit && note.mayHit;
-    });
+    return notes.members.filter((note:NoteSprite) -> return note != null && note.alive && !note.hasBeenHit && note.mayHit);
   }
 
   /**
@@ -275,9 +267,9 @@ class Strumline extends FlxSpriteGroup
    */
   public function getHoldNotesHitOrMissed():Array<SustainTrail>
   {
-    return holdNotes.members.filter(function(holdNote:SustainTrail) {
-      return holdNote != null && holdNote.alive && (holdNote.hitNote || holdNote.missedNote);
-    });
+    return holdNotes.members.filter((holdNote:SustainTrail) -> return holdNote != null
+      && holdNote.alive
+      && (holdNote.hitNote || holdNote.missedNote));
   }
 
   public function getNoteSprite(target:SongNoteData):NoteSprite
@@ -457,10 +449,7 @@ class Strumline extends FlxSpriteGroup
 
       // If the note is miss
       var isOffscreen:Bool = Preferences.downscroll ? note.y > FlxG.height : note.y < -note.height;
-      if (note.handledMiss && isOffscreen)
-      {
-        killNote(note);
-      }
+      if (note.handledMiss && isOffscreen) killNote(note);
     }
 
     // Update rendering of hold notes.
@@ -492,19 +481,11 @@ class Strumline extends FlxSpriteGroup
       else if (holdNote.hitNote && holdNote.sustainLength <= 0)
       {
         // Hold note is completed, kill it.
-        if (isKeyHeld(holdNote.noteDirection))
-        {
-          playPress(holdNote.noteDirection);
-        }
+        if (isKeyHeld(holdNote.noteDirection)) playPress(holdNote.noteDirection);
         else
-        {
           playStatic(holdNote.noteDirection);
-        }
 
-        if (holdNote.cover != null && isPlayer)
-        {
-          holdNote.cover.playEnd();
-        }
+        if (holdNote.cover != null && isPlayer) holdNote.cover.playEnd();
         else if (holdNote.cover != null)
         {
           // *lightning* *zap* *crackle*
@@ -545,21 +526,13 @@ class Strumline extends FlxSpriteGroup
 
         holdNote.sustainLength = (holdNote.strumTime + holdNote.fullSustainLength) - conductorInUse.songPosition;
 
-        if (holdNote.sustainLength <= 10)
-        {
-          holdNote.visible = false;
-        }
+        if (holdNote.sustainLength <= 10) holdNote.visible = false;
 
         if (!customPositionData)
         {
-          if (Preferences.downscroll)
-          {
-            holdNote.y = this.y - INITIAL_OFFSET - holdNote.height + STRUMLINE_SIZE / 2;
-          }
+          if (Preferences.downscroll) holdNote.y = this.y - INITIAL_OFFSET - holdNote.height + STRUMLINE_SIZE / 2;
           else
-          {
             holdNote.y = this.y - INITIAL_OFFSET + STRUMLINE_SIZE / 2;
-          }
         }
       }
       else
@@ -579,9 +552,7 @@ class Strumline extends FlxSpriteGroup
               + holdNote.yOffset;
           }
           else
-          {
             holdNote.y = this.y - INITIAL_OFFSET + calculateNoteYPos(holdNote.strumTime) + STRUMLINE_SIZE / 2 + holdNote.yOffset;
-          }
         }
       }
     }
@@ -589,10 +560,7 @@ class Strumline extends FlxSpriteGroup
     // Update rendering of pressed keys.
     for (dir in DIRECTIONS)
     {
-      if (isKeyHeld(dir) && getByDirection(dir).getCurrentAnimation() == "static")
-      {
-        playPress(dir);
-      }
+      if (isKeyHeld(dir) && getByDirection(dir).getCurrentAnimation() == "static") playPress(dir);
     }
   }
 
@@ -601,11 +569,7 @@ class Strumline extends FlxSpriteGroup
    * @return An array of `NoteSprite` objects.
    */
   public function getNotesOnScreen():Array<NoteSprite>
-  {
-    return notes.members.filter(function(note:NoteSprite) {
-      return note != null && note.alive && !note.hasBeenHit;
-    });
-  }
+    return notes.members.filter((note:NoteSprite) -> return note != null && note.alive && !note.hasBeenHit);
 
   #if FEATURE_GHOST_TAPPING
   function updateGhostTapTimer(elapsed:Float):Void
@@ -615,10 +579,7 @@ class Strumline extends FlxSpriteGroup
 
     ghostTapTimer -= elapsed;
 
-    if (ghostTapTimer <= 0)
-    {
-      ghostTapTimer = 0;
-    }
+    if (ghostTapTimer <= 0) ghostTapTimer = 0;
   }
   #end
 
@@ -641,19 +602,13 @@ class Strumline extends FlxSpriteGroup
   }
 
   public function pressKey(dir:NoteDirection):Void
-  {
     heldKeys[dir] = true;
-  }
 
   public function releaseKey(dir:NoteDirection):Void
-  {
     heldKeys[dir] = false;
-  }
 
   public function isKeyHeld(dir:NoteDirection):Bool
-  {
     return heldKeys[dir];
-  }
 
   /**
    * Called when the song is reset.
@@ -689,9 +644,7 @@ class Strumline extends FlxSpriteGroup
     heldKeys = [false, false, false, false];
 
     for (dir in DIRECTIONS)
-    {
       playStatic(dir);
-    }
     resetScrollSpeed();
 
     #if FEATURE_GHOST_TAPPING
@@ -719,10 +672,7 @@ class Strumline extends FlxSpriteGroup
     playConfirm(note.direction);
     note.hasBeenHit = true;
 
-    if (removeNote)
-    {
-      killNote(note);
-    }
+    if (removeNote) killNote(note);
     else
     {
       note.alpha *= 0.5;
@@ -759,39 +709,25 @@ class Strumline extends FlxSpriteGroup
   }
 
   public function getByIndex(index:Int):StrumlineNote
-  {
     return this.strumlineNotes.members[index];
-  }
 
   public function getByDirection(direction:NoteDirection):StrumlineNote
-  {
     return getByIndex(DIRECTIONS.indexOf(direction));
-  }
 
   public function playStatic(direction:NoteDirection):Void
-  {
     getByDirection(direction).playStatic();
-  }
 
   public function playPress(direction:NoteDirection):Void
-  {
     getByDirection(direction).playPress();
-  }
 
   public function playConfirm(direction:NoteDirection):Void
-  {
     getByDirection(direction).playConfirm();
-  }
 
   public function holdConfirm(direction:NoteDirection):Void
-  {
     getByDirection(direction).holdConfirm();
-  }
 
   public function isConfirm(direction:NoteDirection):Bool
-  {
     return getByDirection(direction).isConfirm();
-  }
 
   public function playNoteSplash(direction:NoteDirection):Void
   {
@@ -920,10 +856,7 @@ class Strumline extends FlxSpriteGroup
       // Else, find a note splash which is inactive so we can revive it.
       result = this.noteSplashes.getFirstAvailable();
 
-      if (result != null)
-      {
-        result.revive();
-      }
+      if (result != null) result.revive();
       else
       {
         // The note splash pool is full and all note splashes are active,
@@ -954,10 +887,7 @@ class Strumline extends FlxSpriteGroup
       // Else, find a note splash which is inactive so we can revive it.
       result = this.noteHoldCovers.getFirstAvailable();
 
-      if (result != null)
-      {
-        result.revive();
-      }
+      if (result != null) result.revive();
       else
       {
         // The note hold cover pool is full and all note hold covers are active,
@@ -1051,9 +981,7 @@ class Strumline extends FlxSpriteGroup
   public function fadeInArrows():Void
   {
     for (index => arrow in this.strumlineNotes.members.keyValueIterator())
-    {
       fadeInArrow(index, arrow);
-    }
   }
 
   function compareNoteData(order:Int, a:SongNoteData, b:SongNoteData):Int
@@ -1081,14 +1009,9 @@ class Strumline extends FlxSpriteGroup
       if (member == this.background) continue;
 
       var minY:Float;
-      if (member.flixelType == SPRITEGROUP)
-      {
-        minY = (cast member : FlxSpriteGroup).findMinY();
-      }
+      if (member.flixelType == SPRITEGROUP) minY = (cast member : FlxSpriteGroup).findMinY();
       else
-      {
         minY = member.y;
-      }
 
       if (minY < value) value = minY;
     }
@@ -1105,14 +1028,9 @@ class Strumline extends FlxSpriteGroup
       if (member == this.background) continue;
 
       var maxY:Float;
-      if (member.flixelType == SPRITEGROUP)
-      {
-        maxY = (cast member : FlxSpriteGroup).findMaxY();
-      }
+      if (member.flixelType == SPRITEGROUP) maxY = (cast member : FlxSpriteGroup).findMaxY();
       else
-      {
         maxY = member.y + member.height;
-      }
 
       if (maxY > value) value = maxY;
     }

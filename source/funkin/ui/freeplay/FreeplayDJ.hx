@@ -313,7 +313,7 @@ class FreeplayDJ extends FlxAtlasSprite
     cartoonSnd.time = FlxG.random.float(0, Math.max(cartoonSnd.length - (5 * Constants.MS_PER_SEC), 0.0));
   }
 
-  final cartoonList:Array<String> = openfl.utils.Assets.list().filter(function(path) return path.startsWith("assets/sounds/cartoons/"));
+  final cartoonList:Array<String> = openfl.utils.Assets.list().filter((path) -> return path.startsWith("assets/sounds/cartoons/"));
 
   function getRandomFlashToon():String
   {

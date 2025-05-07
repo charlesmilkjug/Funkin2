@@ -476,17 +476,12 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
 
     var soundRequest = FlxPartialSound.partialLoadFromFile(path, start, end);
 
-    if (soundRequest == null)
-    {
-      promise.complete(null);
-    }
+    if (soundRequest == null) promise.complete(null);
     else
     {
-      promise.future.onError(function(e) {
-        soundRequest.error("Sound loading was errored or cancelled");
-      });
+      promise.future.onError((e) -> soundRequest.error("Sound loading was errored or cancelled"));
 
-      soundRequest.future.onComplete(function(partialSound) {
+      soundRequest.future.onComplete((partialSound) -> {
         var snd:Null<FunkinSound> = FunkinSound.load(partialSound, volume, looped, autoDestroy, autoPlay, false, onComplete, onLoad);
         if (snd != null) snd._label = path;
         promise.complete(snd);

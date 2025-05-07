@@ -44,9 +44,7 @@ class Preferences
   public static var naughtyness(get, set):Bool;
 
   static function get_naughtyness():Bool
-  {
     return Save?.instance?.options?.naughtyness ?? true;
-  }
 
   static function set_naughtyness(value:Bool):Bool
   {
@@ -63,9 +61,7 @@ class Preferences
   public static var downscroll(get, set):Bool;
 
   static function get_downscroll():Bool
-  {
     return Save?.instance?.options?.downscroll ?? false;
-  }
 
   static function set_downscroll(value:Bool):Bool
   {
@@ -82,9 +78,7 @@ class Preferences
   public static var flashingLights(get, set):Bool;
 
   static function get_flashingLights():Bool
-  {
     return Save?.instance?.options?.flashingLights ?? true;
-  }
 
   static function set_flashingLights(value:Bool):Bool
   {
@@ -101,9 +95,7 @@ class Preferences
   public static var zoomCamera(get, set):Bool;
 
   static function get_zoomCamera():Bool
-  {
-    return Save?.instance?.options?.zoomCamera ?? false;
-  }
+    return Save?.instance?.options?.zoomCamera ?? true;
 
   static function set_zoomCamera(value:Bool):Bool
   {
@@ -120,9 +112,7 @@ class Preferences
   public static var debugDisplay(get, set):Bool;
 
   static function get_debugDisplay():Bool
-  {
     return Save?.instance?.options?.debugDisplay ?? false;
-  }
 
   static function set_debugDisplay(value:Bool):Bool
   {
@@ -141,9 +131,7 @@ class Preferences
   public static var autoPause(get, set):Bool;
 
   static function get_autoPause():Bool
-  {
     return Save?.instance?.options?.autoPause ?? true;
-  }
 
   static function set_autoPause(value:Bool):Bool
   {
@@ -162,9 +150,7 @@ class Preferences
   public static var autoFullscreen(get, set):Bool;
 
   static function get_autoFullscreen():Bool
-  {
     return Save?.instance?.options?.autoFullscreen ?? true;
-  }
 
   static function set_autoFullscreen(value:Bool):Bool
   {
@@ -224,9 +210,7 @@ class Preferences
   public static var unlockedFramerate(get, set):Bool;
 
   static function get_unlockedFramerate():Bool
-  {
     return Save?.instance?.options?.unlockedFramerate ?? false;
-  }
 
   static function set_unlockedFramerate(value:Bool):Bool
   {
@@ -288,9 +272,7 @@ class Preferences
   public static var shouldHideMouse(get, set):Bool;
 
   static function get_shouldHideMouse():Bool
-  {
     return Save?.instance?.options?.screenshot?.shouldHideMouse ?? true;
-  }
 
   static function set_shouldHideMouse(value:Bool):Bool
   {
@@ -307,9 +289,7 @@ class Preferences
   public static var fancyPreview(get, set):Bool;
 
   static function get_fancyPreview():Bool
-  {
     return Save?.instance?.options?.screenshot?.fancyPreview ?? true;
-  }
 
   static function set_fancyPreview(value:Bool):Bool
   {
@@ -326,9 +306,7 @@ class Preferences
   public static var previewOnSave(get, set):Bool;
 
   static function get_previewOnSave():Bool
-  {
     return Save?.instance?.options?.screenshot?.previewOnSave ?? true;
-  }
 
   static function set_previewOnSave(value:Bool):Bool
   {

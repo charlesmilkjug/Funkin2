@@ -75,7 +75,7 @@ class CopyItemsCommand implements ChartEditorCommand
           FlxTween.tween(note.scale, {"y": prevX, "x": prevY}, 0.7,
             {
               ease: FlxEase.elasticOut,
-              onComplete: function(_) {
+              onComplete: (_) -> {
                 note.playNoteAnimation();
               }
             });
@@ -107,7 +107,7 @@ class CopyItemsCommand implements ChartEditorCommand
           FlxTween.tween(event.scale, {"y": prevX, "x": prevY}, 0.7,
             {
               ease: FlxEase.elasticOut,
-              onComplete: function(_) {
+              onComplete: (_) -> {
                 event.playAnimation();
               }
             });
@@ -144,7 +144,7 @@ class CopyItemsCommand implements ChartEditorCommand
         {
           type: FlxTweenType.ONESHOT,
           ease: FlxEase.quadOut,
-          onComplete: function(_) {
+          onComplete: (_) -> {
             state.txtCopyNotif.visible = false;
           }
         });

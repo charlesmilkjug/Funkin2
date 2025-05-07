@@ -225,10 +225,8 @@ class GameOverSubState extends MusicBeatSubState
       }
       else
       {
-        if (boyfriend.hasAnimation('fakeoutDeath') && FlxG.random.bool((1 / 4096) * 100))
-        {
-          boyfriend.playAnimation('fakeoutDeath', true, false);
-        }
+        if (boyfriend.hasAnimation('fakeoutDeath')
+          && FlxG.random.bool((1 / 4096) * 100)) boyfriend.playAnimation('fakeoutDeath', true, false);
         else
         {
           boyfriend.playAnimation('firstDeath', true, false); // ignoreOther is set to FALSE since you WANT to be able to mash and confirm game over!
@@ -251,10 +249,7 @@ class GameOverSubState extends MusicBeatSubState
       var touch:FlxTouch = FlxG.touches.getFirst();
       if (touch != null)
       {
-        if (boyfriend == null || touch.overlaps(boyfriend))
-        {
-          confirmDeath();
-        }
+        if (boyfriend == null || touch.overlaps(boyfriend)) confirmDeath();
       }
     }
 
@@ -398,10 +393,10 @@ class GameOverSubState extends MusicBeatSubState
         boyfriend.playAnimation('deathConfirm' + animationSuffix, true);
 
       // After the animation finishes...
-      new FlxTimer().start(0.7, function(tmr:FlxTimer) {
+      new FlxTimer().start(0.7, (tmr:FlxTimer) -> {
         // ...fade out the graphics. Then after that happens...
 
-        var resetPlaying = function(pixel:Bool = false) {
+        var resetPlaying = (pixel:Bool = false) -> {
           // ...close the GameOverSubState.
           if (pixel) RetroCameraFade.fadeBlack(FlxG.camera, 10, 1);
           else
@@ -433,9 +428,7 @@ class GameOverSubState extends MusicBeatSubState
           });
         }
         else
-        {
           FlxG.camera.fade(FlxColor.BLACK, 2, false, () -> resetPlaying());
-        }
       });
     }
   }
@@ -552,9 +545,7 @@ class GameOverSubState extends MusicBeatSubState
   }
 
   public override function toString():String
-  {
     return 'GameOverSubState';
-  }
 }
 
 /**

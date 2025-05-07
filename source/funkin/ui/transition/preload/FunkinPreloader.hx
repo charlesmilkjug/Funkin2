@@ -146,7 +146,7 @@ class FunkinPreloader extends FlxBasePreloader
     ratio = this._width / BASE_WIDTH / 2.0;
 
     // Create the logo.
-    logo = createBitmap(LogoImage, function(bmp:Bitmap) {
+    logo = createBitmap(LogoImage, (bmp:Bitmap) -> {
       // Scale and center the logo.
       // We have to do this inside the async call, after the image size is known.
       bmp.scaleX = bmp.scaleY = ratio;
@@ -287,7 +287,7 @@ class FunkinPreloader extends FlxBasePreloader
     vfdBitmap.shader = vfdShader;
 
     #if TOUCH_HERE_TO_PLAY
-    touchHereToPlay = createBitmap(TouchHereToPlayImage, function(bmp:Bitmap) {
+    touchHereToPlay = createBitmap(TouchHereToPlayImage, (bmp:Bitmap) -> {
       // Scale and center the touch to start image.
       // We have to do this inside the async call, after the image size is known.
       bmp.scaleX = bmp.scaleY = ratio;

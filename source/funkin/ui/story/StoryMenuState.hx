@@ -128,7 +128,7 @@ class StoryMenuState extends MusicBeatState
     super.create();
 
     levelList = LevelRegistry.instance.listSortedLevelIds();
-    levelList = levelList.filter(function(id) {
+    levelList = levelList.filter((id) -> {
       var levelData = LevelRegistry.instance.fetchEntry(id);
       if (levelData == null) return false;
 
@@ -228,14 +228,9 @@ class StoryMenuState extends MusicBeatState
 
   function rememberSelection():Void
   {
-    if (rememberedLevelId != null)
-    {
-      currentLevelId = rememberedLevelId;
-    }
-    if (rememberedDifficulty != null)
-    {
-      currentDifficultyId = rememberedDifficulty;
-    }
+    if (rememberedLevelId != null) currentLevelId = rememberedLevelId;
+
+    if (rememberedDifficulty != null) currentDifficultyId = rememberedDifficulty;
   }
 
   function playMenuMusic():Void
@@ -272,9 +267,7 @@ class StoryMenuState extends MusicBeatState
         if (Preferences.flashingLights) difficultySprite.animation.play('idle');
       }
       else
-      {
         difficultySprite.loadGraphic(Paths.image('storymenu/difficulties/${diff}'));
-      }
 
       difficultySprites.set(diff, difficultySprite);
 
@@ -357,55 +350,27 @@ class StoryMenuState extends MusicBeatState
         }
 
         #if !html5
-        if (FlxG.mouse.wheel != 0)
-        {
-          changeLevel(-Math.round(FlxG.mouse.wheel));
-        }
+        if (FlxG.mouse.wheel != 0) changeLevel(-Math.round(FlxG.mouse.wheel));
         #else
-        if (FlxG.mouse.wheel < 0)
-        {
-          changeLevel(-Math.round(FlxG.mouse.wheel / 8));
-        }
-        else if (FlxG.mouse.wheel > 0)
-        {
-          changeLevel(-Math.round(FlxG.mouse.wheel / 8));
-        }
+        if (FlxG.mouse.wheel < 0) changeLevel(-Math.round(FlxG.mouse.wheel / 8));
+        else if (FlxG.mouse.wheel > 0) changeLevel(-Math.round(FlxG.mouse.wheel / 8));
         #end
 
         // TODO: Querying UI_RIGHT_P (justPressed) after UI_RIGHT always returns false. Fix it!
-        if (controls.UI_RIGHT_P)
-        {
-          changeDifficulty(1);
-        }
+        if (controls.UI_RIGHT_P) changeDifficulty(1);
 
-        if (controls.UI_LEFT_P)
-        {
-          changeDifficulty(-1);
-        }
+        if (controls.UI_LEFT_P) changeDifficulty(-1);
 
-        if (controls.UI_RIGHT)
-        {
-          rightDifficultyArrow.animation.play('press');
-        }
+        if (controls.UI_RIGHT) rightDifficultyArrow.animation.play('press');
         else
-        {
           rightDifficultyArrow.animation.play('idle');
-        }
 
-        if (controls.UI_LEFT)
-        {
-          leftDifficultyArrow.animation.play('press');
-        }
+        if (controls.UI_LEFT) leftDifficultyArrow.animation.play('press');
         else
-        {
           leftDifficultyArrow.animation.play('idle');
-        }
       }
 
-      if (controls.ACCEPT)
-      {
-        selectLevel();
-      }
+      if (controls.ACCEPT) selectLevel();
     }
 
     if (controls.BACK && !exitingMenu && !selectedLevel)
@@ -449,9 +414,7 @@ class StoryMenuState extends MusicBeatState
         item.alpha = 1.0;
       }
       else
-      {
         item.alpha = 0.6;
-      }
     }
 
     if (currentIndex != prevIndex) FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
@@ -512,14 +475,9 @@ class StoryMenuState extends MusicBeatState
 
   function funnyMusicThing():Void
   {
-    if (currentDifficultyId == "nightmare")
-    {
-      FlxG.sound.music.fadeOut(FADE_OUT_TIME, 0.0);
-    }
+    if (currentDifficultyId == "nightmare") FlxG.sound.music.fadeOut(FADE_OUT_TIME, 0.0);
     else
-    {
       FlxG.sound.music.fadeOut(FADE_OUT_TIME, 1.0);
-    }
   }
 
   public override function dispatchEvent(event:ScriptEvent):Void
@@ -531,9 +489,7 @@ class StoryMenuState extends MusicBeatState
     {
       // Dispatch event to props.
       for (prop in levelProps.members)
-      {
         ScriptEventDispatcher.callEvent(prop, event);
-      }
     }
   }
 
@@ -554,9 +510,7 @@ class StoryMenuState extends MusicBeatState
     currentLevelTitle.isFlashing = true;
 
     for (prop in levelProps.members)
-    {
       prop.playConfirm();
-    }
 
     Paths.setCurrentLevel(currentLevel.id);
 
@@ -574,7 +528,7 @@ class StoryMenuState extends MusicBeatState
 
     Highscore.talliesLevel = new funkin.Highscore.Tallies();
 
-    new FlxTimer().start(1, function(tmr:FlxTimer) {
+    new FlxTimer().start(1, (tmr:FlxTimer) -> {
       FlxTransitionableState.skipNextTransIn = false;
       FlxTransitionableState.skipNextTransOut = false;
 
@@ -632,7 +586,7 @@ class StoryMenuState extends MusicBeatState
         FlxTween.tween(oldBackground, {alpha: 0.0}, 0.6,
           {
             ease: FlxEase.linear,
-            onComplete: function(_) {
+            onComplete: (_) -> {
               remove(oldBackground);
             }
           });

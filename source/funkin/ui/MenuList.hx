@@ -166,7 +166,7 @@ class MenuTypedList<T:MenuListItem> extends FlxTypedGroup<T>
     {
       busy = true;
       FunkinSound.playOnce(Paths.sound('confirmMenu'));
-      FlxFlicker.flicker(selected, 1, 0.06, true, false, function(_) {
+      FlxFlicker.flicker(selected, 1, 0.06, true, false, (_) -> {
         busy = false;
         selected.callback();
       });
@@ -185,14 +185,10 @@ class MenuTypedList<T:MenuListItem> extends FlxTypedGroup<T>
   }
 
   public function has(name:String)
-  {
     return byName.exists(name);
-  }
 
   public function getItem(name:String)
-  {
     return byName[name];
-  }
 
   override function destroy()
   {
@@ -203,9 +199,7 @@ class MenuTypedList<T:MenuListItem> extends FlxTypedGroup<T>
   }
 
   inline function get_selectedItem():T
-  {
     return members[selectedIndex];
-  }
 }
 
 class MenuListItem extends FlxSprite
@@ -253,14 +247,10 @@ class MenuListItem extends FlxSprite
   }
 
   public function idle()
-  {
     alpha = 0.6;
-  }
 
   public function select()
-  {
     alpha = 1.0;
-  }
 }
 
 class MenuTypedItem<T:FlxSprite> extends MenuListItem

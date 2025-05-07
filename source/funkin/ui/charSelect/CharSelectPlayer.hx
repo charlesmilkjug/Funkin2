@@ -12,7 +12,7 @@ class CharSelectPlayer extends FlxAtlasSprite implements IBPMSyncedScriptedClass
   {
     super(x, y, Paths.animateAtlas("charSelect/bfChill"));
 
-    onAnimationComplete.add(function(animLabel:String) {
+    onAnimationComplete.add((animLabel:String) -> {
       switch (animLabel)
       {
         case "slidein":
@@ -57,11 +57,8 @@ class CharSelectPlayer extends FlxAtlasSprite implements IBPMSyncedScriptedClass
     // but isAnimationFinished() and isLoopComplete() both don't work! What the hell?
     // danceEvery isn't necessary if that gets fixed.
     //
-    if (getCurrentAnimation() == "idle")
-    {
-      playAnimation("idle", true, false, false);
-    }
-  };
+    if (getCurrentAnimation() == "idle") playAnimation("idle", true, false, false);
+  }
 
   public function updatePosition(str:String)
   {
@@ -79,7 +76,7 @@ class CharSelectPlayer extends FlxAtlasSprite implements IBPMSyncedScriptedClass
 
   public function switchChar(str:String, pressedSelect:Bool = false)
   {
-    switch str
+    switch (str)
     {
       default:
         loadAtlas(Paths.animateAtlas("charSelect/" + str + "Chill"));

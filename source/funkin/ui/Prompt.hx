@@ -54,9 +54,7 @@ class Prompt extends flixel.FlxSubState
   }
 
   public function createBgFromMargin(margin = MARGIN, color = 0xFF808080)
-  {
     createBg(Std.int(FlxG.width - margin * 2), Std.int(FlxG.height - margin * 2), color);
-  }
 
   public function setButtons(style:ButtonStyle)
   {

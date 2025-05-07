@@ -61,9 +61,7 @@ class TitleState extends MusicBeatState
 
     // DEBUG BULLSHIT
 
-    if (!initialized) new FlxTimer().start(1, function(tmr:FlxTimer) {
-      startIntro();
-    });
+    if (!initialized) new FlxTimer().start(1, (tmr:FlxTimer) -> startIntro());
     else
       startIntro();
   }
@@ -142,10 +140,7 @@ class TitleState extends MusicBeatState
 
     ngSpr = new FlxSprite(0, FlxG.height * 0.52);
 
-    if (FlxG.random.bool(1))
-    {
-      ngSpr.loadGraphic(Paths.image('newgrounds_logo_classic'));
-    }
+    if (FlxG.random.bool(1)) ngSpr.loadGraphic(Paths.image('newgrounds_logo_classic'));
     else if (FlxG.random.bool(30))
     {
       ngSpr.loadGraphic(Paths.image('newgrounds_logo_animated'), true, 600);
@@ -204,13 +199,11 @@ class TitleState extends MusicBeatState
     var fullText:String = Assets.getText(Paths.txt('introText'));
 
     // Split into lines and remove empty lines
-    var firstArray:Array<String> = fullText.split('\n').filter(function(s:String) return s != '');
+    var firstArray:Array<String> = fullText.split('\n').filter((s:String) -> return s != '');
     var swagGoodArray:Array<Array<String>> = [];
 
     for (i in firstArray)
-    {
       swagGoodArray.push(i.split('--'));
-    }
 
     return swagGoodArray;
   }
@@ -225,10 +218,7 @@ class TitleState extends MusicBeatState
     // Pressing BACK on the title screen should close the game.
     // This lets you exit without leaving fullscreen mode.
     // Only applicable on desktop.
-    if (controls.BACK)
-    {
-      openfl.Lib.application.window.close();
-    }
+    if (controls.BACK) openfl.Lib.application.window.close();
     #end
 
     Conductor.instance.update();
@@ -244,10 +234,7 @@ class TitleState extends MusicBeatState
       }
           }
      */
-    if (FlxG.keys.justPressed.I)
-    {
-      FlxTween.tween(outlineShaderShit, {funnyX: 50, funnyY: 50}, 0.6, {ease: FlxEase.quartOut});
-    }
+    if (FlxG.keys.justPressed.I) FlxTween.tween(outlineShaderShit, {funnyX: 50, funnyY: 50}, 0.6, {ease: FlxEase.quartOut});
     if (FlxG.keys.pressed.D) outlineShaderShit.funnyX += 1;
     // outlineShaderShit.xPos.value[0] += 1;
 
@@ -271,10 +258,7 @@ class TitleState extends MusicBeatState
     }
 
     // If you spam Enter, we should skip the transition.
-    if (pressedEnter && transitioning && skippedIntro)
-    {
-      FlxG.switchState(() -> new MainMenuState());
-    }
+    if (pressedEnter && transitioning && skippedIntro) FlxG.switchState(() -> new MainMenuState());
 
     if (pressedEnter && !transitioning && skippedIntro)
     {
@@ -293,7 +277,7 @@ class TitleState extends MusicBeatState
 
       var targetState:NextState = () -> new MainMenuState();
 
-      new FlxTimer().start(2, function(tmr:FlxTimer) {
+      new FlxTimer().start(2, (tmr:FlxTimer) -> {
         // These assets are very unlikely to be used for the rest of gameplay, so it unloads them from cache/memory
         // Saves about 50mb of RAM or so???
         // TODO: This BREAKS the title screen if you return back to it! Figure out how to fix that.
@@ -303,7 +287,6 @@ class TitleState extends MusicBeatState
         // ngSpr??
         FlxG.switchState(targetState);
       });
-      // FunkinSound.playOnce(Paths.music('titleShoot'), 0.7);
     }
     if (pressedEnter && !skippedIntro && initialized) skipIntro();
 
@@ -374,7 +357,6 @@ class TitleState extends MusicBeatState
       var money:AtlasText = new AtlasText(0, 0, textArray[i], AtlasFont.BOLD);
       money.screenCenter(X);
       money.y += (i * 60) + 200;
-      // credGroup.add(money);
       textGroup.add(money);
     }
   }
@@ -396,10 +378,7 @@ class TitleState extends MusicBeatState
     if (credGroup == null || textGroup == null) return;
 
     while (textGroup.members.length > 0)
-    {
-      // credGroup.remove(textGroup.members[0], true);
       textGroup.remove(textGroup.members[0], true);
-    }
   }
 
   var isRainbow:Bool = false;

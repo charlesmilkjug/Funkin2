@@ -24,13 +24,13 @@ class ChartEditorUploadChartDialog extends ChartEditorBaseDialog
 
     this.chartBox.onClick = (_) -> this.onClickChartBox();
 
-    this.chartBox.onMouseOver = function(_event) {
+    this.chartBox.onMouseOver = (_event) -> {
       if (this.locked) return;
       this.chartBox.swapClass('upload-bg', 'upload-bg-hover');
       Cursor.cursorMode = Pointer;
     }
 
-    this.chartBox.onMouseOut = function(_event) {
+    this.chartBox.onMouseOut = (_event) -> {
       this.chartBox.swapClass('upload-bg-hover', 'upload-bg');
       Cursor.cursorMode = Default;
     }
@@ -47,9 +47,7 @@ class ChartEditorUploadChartDialog extends ChartEditorBaseDialog
       });
 
     for (dropTarget in dialog.dropHandlers)
-    {
       state.addDropHandler(dropTarget);
-    }
 
     dialog.showDialog(modal ?? true);
 
@@ -67,9 +65,7 @@ class ChartEditorUploadChartDialog extends ChartEditorBaseDialog
     }
 
     for (dropTarget in dropHandlers)
-    {
       chartEditorState.removeDropHandler(dropTarget);
-    }
   }
 
   public override function lock():Void
@@ -118,9 +114,7 @@ class ChartEditorUploadChartDialog extends ChartEditorBaseDialog
         this.hideDialog(DialogButton.APPLY);
       }
       else
-      {
         chartEditorState.failure('Failed to Load Chart', 'Failed to load chart (${path.toString()})');
-      }
     }
     catch (err)
     {
@@ -157,7 +151,5 @@ class ChartEditorUploadChartDialog extends ChartEditorBaseDialog
   }
 
   function onCancelBrowse():Void
-  {
     this.unlock();
-  }
 }

@@ -38,18 +38,13 @@ class CharacterPlayer extends Box
     super();
     // _overrideSkipTransformChildren = false;
 
-    if (defaultToBf)
-    {
-      loadCharacter('bf');
-    }
+    if (defaultToBf) loadCharacter('bf');
   }
 
   public var charId(get, set):String;
 
   function get_charId():String
-  {
     return character?.characterId ?? '';
-  }
 
   function set_charId(value:String):String
   {
@@ -60,9 +55,7 @@ class CharacterPlayer extends Box
   public var charName(get, never):String;
 
   function get_charName():String
-  {
     return character?.characterName ?? "Unknown";
-  }
 
   // possible haxeui bug: if listener is added after event is dispatched, event is "lost"... is it smart to "collect and redispatch"? Not sure
   var _redispatchLoaded:Bool = false;
@@ -101,24 +94,15 @@ class CharacterPlayer extends Box
     if (flip) character.flipX = !character.flipX;
     if (targetScale != 1.0) character.setScale(targetScale);
 
-    character.animation.onFrameChange.add(function(name:String = '', frameNumber:Int = -1, frameIndex:Int = -1) {
-      dispatch(new AnimationEvent(AnimationEvent.FRAME));
-    });
-    character.animation.onFinish.add(function(name:String = '') {
-      dispatch(new AnimationEvent(AnimationEvent.END));
-    });
+    character.animation.onFrameChange.add((name:String = '', frameNumber:Int = -1, frameIndex:Int = -1) -> dispatch(new AnimationEvent(AnimationEvent.FRAME)));
+    character.animation.onFinish.add((name:String = '') -> dispatch(new AnimationEvent(AnimationEvent.END)));
     add(character);
 
     invalidateComponentLayout();
 
-    if (hasEvent(AnimationEvent.LOADED))
-    {
-      dispatch(new AnimationEvent(AnimationEvent.LOADED));
-    }
+    if (hasEvent(AnimationEvent.LOADED)) dispatch(new AnimationEvent(AnimationEvent.LOADED));
     else
-    {
       _redispatchLoaded = true;
-    }
   }
 
   /**
@@ -138,10 +122,7 @@ class CharacterPlayer extends Box
   {
     if (value == flip) return value;
 
-    if (character != null)
-    {
-      character.flipX = !character.flipX;
-    }
+    if (character != null) character.flipX = !character.flipX;
 
     return flip = value;
   }
@@ -152,23 +133,16 @@ class CharacterPlayer extends Box
   {
     if (value == targetScale) return value;
 
-    if (character != null)
-    {
-      character.setScale(value);
-    }
+    if (character != null) character.setScale(value);
 
     return targetScale = value;
   }
 
   function onFrame(name:String, frameNumber:Int, frameIndex:Int):Void
-  {
     dispatch(new AnimationEvent(AnimationEvent.FRAME));
-  }
 
   function onFinish(name:String):Void
-  {
     dispatch(new AnimationEvent(AnimationEvent.END));
-  }
 
   override function repositionChildren():Void
   {
@@ -268,10 +242,7 @@ private class Layout extends DefaultLayout
 
     var player:CharacterPlayer = cast(_component, CharacterPlayer);
     var character:BaseCharacter = player.character;
-    if (character == null)
-    {
-      return super.resizeChildren();
-    }
+    if (character == null) return super.resizeChildren();
 
     character.cornerPosition.set(0, 0);
     // character.setGraphicSize(Std.int(innerWidth), Std.int(innerHeight));
@@ -281,10 +252,7 @@ private class Layout extends DefaultLayout
   {
     var player:CharacterPlayer = cast(_component, CharacterPlayer);
     var character:BaseCharacter = player.character;
-    if (character == null)
-    {
-      return super.calcAutoSize(exclusions);
-    }
+    if (character == null) return super.calcAutoSize(exclusions);
     var size:Size = new Size();
     size.width = character.width + paddingLeft + paddingRight;
     size.height = character.height + paddingTop + paddingBottom;

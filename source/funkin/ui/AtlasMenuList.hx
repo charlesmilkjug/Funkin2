@@ -73,19 +73,13 @@ class AtlasMenuItem extends MenuListItem
   }
 
   override function idle()
-  {
     changeAnim('idle');
-  }
 
   override function select()
-  {
     changeAnim('selected');
-  }
 
   override function get_selected()
-  {
     return animation.curAnim != null && animation.curAnim.name == "selected";
-  }
 
   override function destroy()
   {

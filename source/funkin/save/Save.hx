@@ -114,7 +114,7 @@ class Save
           downscroll: false,
           flashingLights: true,
           zoomCamera: true,
-          debugDisplay: false,
+          debugDisplay: true,
           autoPause: true,
           vsyncMode: 'Off',
           strumlineBackgroundOpacity: 0,
@@ -696,9 +696,7 @@ class Save
           };
       }
       else
-      {
         data.scores.levels = [];
-      }
     }
 
     var level = data.scores.levels.get(levelId);
@@ -737,10 +735,7 @@ class Save
     }
 
     var currentScore = level.get(difficultyId);
-    if (currentScore == null)
-    {
-      return true;
-    }
+    if (currentScore == null) return true;
 
     return score.score > currentScore.score;
   }
@@ -877,10 +872,7 @@ class Save
     }
 
     var currentScore = song.get(difficultyId);
-    if (currentScore == null)
-    {
-      return true;
-    }
+    if (currentScore == null) return true;
 
     return score.score > currentScore.score;
   }
@@ -934,10 +926,7 @@ class Save
    */
   public function hasBeatenSong(songId:String, ?difficultyList:Array<String>, ?variation:String):Bool
   {
-    if (difficultyList == null)
-    {
-      difficultyList = ['easy', 'normal', 'hard'];
-    }
+    if (difficultyList == null) difficultyList = ['easy', 'normal', 'hard'];
 
     if (variation == null) variation = '';
 
@@ -1017,23 +1006,13 @@ class Save
     switch (inputType)
     {
       case Keys:
-        if (playerId == 0)
-        {
-          data.options.controls.p1.keyboard = controls;
-        }
+        if (playerId == 0) data.options.controls.p1.keyboard = controls;
         else
-        {
           data.options.controls.p2.keyboard = controls;
-        }
       case Gamepad(_):
-        if (playerId == 0)
-        {
-          data.options.controls.p1.gamepad = controls;
-        }
+        if (playerId == 0) data.options.controls.p1.gamepad = controls;
         else
-        {
           data.options.controls.p2.gamepad = controls;
-        }
     }
 
     flush();
@@ -1059,14 +1038,10 @@ class Save
   public var volume(get, set):Float;
 
   function get_volume():Float
-  {
     return data.volume;
-  }
 
   function set_volume(value:Float):Float
-  {
     return data.volume = value;
-  }
 
   /**
    * Whether the user's volume is currently muted.
@@ -1074,22 +1049,16 @@ class Save
   public var mute(get, set):Bool;
 
   function get_mute():Bool
-  {
     return data.mute;
-  }
 
   function set_mute(value:Bool):Bool
-  {
     return data.mute = value;
-  }
 
   /**
    * Call this to make sure the save data is written to disk.
    */
   public function flush():Void
-  {
     FlxG.save.flush();
-  }
 
   /**
    * If you set slot to `2`, it will load an independent save file from slot 2.
@@ -1151,9 +1120,7 @@ class Save
       return new Save();
     }
     else
-    {
       return new Save();
-    }
   }
 
   /**
@@ -1170,14 +1137,9 @@ class Save
 
     var nextSlot = slot + 1;
 
-    if (nextSlot < 1000)
-    {
-      return loadFromSlot(nextSlot);
-    }
+    if (nextSlot < 1000) return loadFromSlot(nextSlot);
     else
-    {
       throw "End of save data slots. Can't load any more.";
-    }
   }
 
   public static function archiveBadSaveData(data:Dynamic):Int
@@ -1196,8 +1158,7 @@ class Save
     var firstBadSaveData = querySlotRange(RECOVERY_SLOT_START, RECOVERY_SLOT_END);
     if (firstBadSaveData > 0)
     {
-      trace('[SAVE] Found bad save data in slot ${firstBadSaveData}!');
-      trace('We should look into recovery...');
+      trace('[SAVE] Found bad save data in slot ${firstBadSaveData}!\nWe should look into recovery...');
 
       trace(haxe.Json.stringify(fetchFromSlotRaw(firstBadSaveData)));
     }
@@ -1266,12 +1227,7 @@ class Save
   static function querySlotRange(start:Int, end:Int):Int
   {
     for (i in start...end)
-    {
-      if (querySlot(i))
-      {
-        return i;
-      }
-    }
+      if (querySlot(i)) return i;
     return -1;
   }
 
@@ -1307,14 +1263,10 @@ class Save
   }
 
   public function updateVersionToLatest():Void
-  {
     this.data.version = Save.SAVE_DATA_VERSION;
-  }
 
   public function debug_dumpSave():Void
-  {
     FileUtil.saveFile(haxe.io.Bytes.ofString(this.serialize()), [FileUtil.FILE_FILTER_JSON], null, null, './save.json', 'Write save data as JSON...');
-  }
 }
 
 /**

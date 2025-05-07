@@ -35,7 +35,7 @@ class ChartEditorCharacterIconSelectorMenu extends ChartEditorBaseMenu
     FlxTween.tween(this, {alpha: 1, y: this.y + 10}, 0.2,
       {
         ease: FlxEase.quartOut,
-        onComplete: function(_) {
+        onComplete: (_) -> {
           // Just focus the button FFS. Idk why, but the scrollbar doesn't update until after the tween finishes with this????
           if (currentCharButton != null) currentCharButton.focus = true;
           else
@@ -126,12 +126,8 @@ class ChartEditorCharacterIconSelectorMenu extends ChartEditorBaseMenu
         chartEditorState.refreshToolbox(ChartEditorState.CHART_EDITOR_TOOLBOX_METADATA_LAYOUT);
       };
 
-      charButton.onMouseOver = _ -> {
-        charIconName.text = (charId != "") ? '${charData.name} [${charId}]' : 'None';
-      };
-      charButton.onMouseOut = _ -> {
-        charIconName.text = defaultText;
-      };
+      charButton.onMouseOver = _ -> charIconName.text = (charId != "") ? '${charData.name} [${charId}]' : 'None';
+      charButton.onMouseOut = _ -> charIconName.text = defaultText;
       charGrid.addComponent(charButton);
     }
 

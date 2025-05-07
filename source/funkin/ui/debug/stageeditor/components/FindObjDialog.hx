@@ -27,7 +27,7 @@ class FindObjDialog extends Dialog
     this.checkWord = wordCheck;
     this.checkCaps = capsCheck;
 
-    field.onChange = function(_) updateIndicator();
+    field.onChange = (_) -> updateIndicator();
     indicator.hide();
 
     top = 20;
@@ -57,19 +57,11 @@ class FindObjDialog extends Dialog
       if (((name.contains(checkFor) && !checkWord.selected) || (name == checkFor && checkWord.selected)) && ass.visible) assets.push(ass);
     }
 
-    if (assets.length > 0 && prevObjCheck == null)
-    {
-      stageEditorState.selectedSprite = assets[0];
-    }
+    if (assets.length > 0 && prevObjCheck == null) stageEditorState.selectedSprite = assets[0];
 
-    if (assets.length > 0)
-    {
-      indicator.text = "Selected: " + (assets.indexOf(stageEditorState.selectedSprite) + 1) + " / " + assets.length;
-    }
+    if (assets.length > 0) indicator.text = "Selected: " + (assets.indexOf(stageEditorState.selectedSprite) + 1) + " / " + assets.length;
     else
-    {
       indicator.text = "No Matches Found";
-    }
 
     if (field.text != "" && field.text != null) indicator.show();
     else

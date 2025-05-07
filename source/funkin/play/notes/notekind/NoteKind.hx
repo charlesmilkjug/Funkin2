@@ -37,9 +37,7 @@ class NoteKind implements INoteScriptedClass
   }
 
   public function toString():String
-  {
     return noteKind;
-  }
 
   /**
    * Retrieve all notes of this kind
@@ -48,9 +46,7 @@ class NoteKind implements INoteScriptedClass
   function getNotes():Array<NoteSprite>
   {
     var allNotes:Array<NoteSprite> = PlayState.instance.playerStrumline.notes.members.concat(PlayState.instance.opponentStrumline.notes.members);
-    return allNotes.filter(function(note:NoteSprite) {
-      return note != null && note.noteData.kind == this.noteKind;
-    });
+    return allNotes.filter((note:NoteSprite) -> return note != null && note.noteData.kind == this.noteKind);
   }
 
   public function onScriptEvent(event:ScriptEvent):Void {}

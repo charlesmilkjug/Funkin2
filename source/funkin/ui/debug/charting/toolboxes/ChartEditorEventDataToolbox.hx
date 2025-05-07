@@ -42,17 +42,12 @@ class ChartEditorEventDataToolbox extends ChartEditorBaseToolbox
   }
 
   function onClose(event:UIEvent)
-  {
     chartEditorState.menubarItemToggleToolboxEventData.selected = false;
-  }
 
   function initialize():Void
   {
-    toolboxEventsEventKind.onChange = function(event:UIEvent) {
-      if (event.data == null)
-      {
-        trace('ChartEditorEventDataToolbox: Event data is null');
-      }
+    toolboxEventsEventKind.onChange = (event:UIEvent) -> {
+      if (event.data == null) trace('ChartEditorEventDataToolbox: Event data is null');
 
       var eventType:String = event.data?.id;
 
@@ -95,19 +90,13 @@ class ChartEditorEventDataToolbox extends ChartEditorBaseToolbox
 
     var newDropdownElement = ChartEditorDropdowns.findDropdownElement(chartEditorState.eventKindToPlace, toolboxEventsEventKind);
 
-    if (newDropdownElement == null)
-    {
-      throw 'ChartEditorEventDataToolbox - Event kind not in dropdown: ${chartEditorState.eventKindToPlace}';
-    }
+    if (newDropdownElement == null) throw 'ChartEditorEventDataToolbox - Event kind not in dropdown: ${chartEditorState.eventKindToPlace}';
     else if (toolboxEventsEventKind.value != newDropdownElement || lastEventKind != toolboxEventsEventKind.value.id)
     {
       toolboxEventsEventKind.value = newDropdownElement;
 
       var schema:SongEventSchema = SongEventRegistry.getEventSchema(chartEditorState.eventKindToPlace);
-      if (schema == null)
-      {
-        trace('ChartEditorEventDataToolbox - Unknown event kind: ${chartEditorState.eventKindToPlace}');
-      }
+      if (schema == null) trace('ChartEditorEventDataToolbox - Unknown event kind: ${chartEditorState.eventKindToPlace}');
       else
       {
         trace('ChartEditorEventDataToolbox - Event kind changed: ${toolboxEventsEventKind.value.id} != ${newDropdownElement.id} != ${lastEventKind}, rebuilding form');
@@ -115,9 +104,7 @@ class ChartEditorEventDataToolbox extends ChartEditorBaseToolbox
       }
     }
     else
-    {
       trace('ChartEditorEventDataToolbox - Event kind not changed: ${toolboxEventsEventKind.value} == ${newDropdownElement} == ${lastEventKind}');
-    }
 
     for (pair in chartEditorState.eventDataToPlace.keyValueIterator())
     {
@@ -126,10 +113,7 @@ class ChartEditorEventDataToolbox extends ChartEditorBaseToolbox
 
       var field:Component = toolboxEventsDataGrid.findComponent(fieldId);
 
-      if (field == null)
-      {
-        throw 'ChartEditorEventDataToolbox - Field "${fieldId}" does not exist in the event data form for kind ${lastEventKind}.';
-      }
+      if (field == null) throw 'ChartEditorEventDataToolbox - Field "${fieldId}" does not exist in the event data form for kind ${lastEventKind}.';
       else
       {
         switch (field)
@@ -255,12 +239,9 @@ class ChartEditorEventDataToolbox extends ChartEditorBaseToolbox
       target.addComponent(inputBox);
 
       // Update the value of the event data.
-      input.onChange = function(event:UIEvent) {
+      input.onChange = (event:UIEvent) -> {
         var value = event.target.value;
-        if (field.type == ENUM)
-        {
-          value = event.target.value.value;
-        }
+        if (field.type == ENUM) value = event.target.value.value;
         else if (field.type == BOOL)
         {
           var chk:CheckBox = cast event.target;
@@ -270,14 +251,9 @@ class ChartEditorEventDataToolbox extends ChartEditorBaseToolbox
         trace('ChartEditorToolboxHandler.buildEventDataFormFromSchema() - ${event.target.id} = ${value}');
 
         // Edit the event data to place.
-        if (value == null)
-        {
-          chartEditorState.eventDataToPlace.remove(event.target.id);
-        }
+        if (value == null) chartEditorState.eventDataToPlace.remove(event.target.id);
         else
-        {
           chartEditorState.eventDataToPlace.set(event.target.id, value);
-        }
 
         // Edit the event data of any existing events.
         if (!_initializing && chartEditorState.currentEventSelection.length > 0)

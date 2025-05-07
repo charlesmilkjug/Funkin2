@@ -39,10 +39,7 @@ class CharSelectGF extends FlxAtlasSprite implements IBPMSyncedScriptedClass
 
   override public function destroy():Void
   {
-    if (analyzer != null)
-    {
-      analyzer.cleanup();
-    }
+    if (analyzer != null) analyzer.cleanup();
 
     super.destroy();
   }
@@ -77,12 +74,8 @@ class CharSelectGF extends FlxAtlasSprite implements IBPMSyncedScriptedClass
     // I tried make this not interrupt an existing idle,
     // but isAnimationFinished() and isLoopComplete() both don't work! What the hell?
     // danceEvery isn't necessary if that gets fixed.
-    if (getCurrentAnimation() == "idle" && (event.beat % danceEvery == 0))
-    {
-      // trace('GF beat hit');
-      playAnimation("idle", true, false, false);
-    }
-  };
+    if (getCurrentAnimation() == "idle" && (event.beat % danceEvery == 0)) playAnimation("idle", true, false, false);
+  }
 
   override public function draw()
   {

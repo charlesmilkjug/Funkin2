@@ -61,9 +61,7 @@ class AttractState extends MusicBeatState
       add(vid);
     }
     else
-    {
       trace('ALERT: Video is null! Could not play cutscene!');
-    }
   }
   #end
 
@@ -84,9 +82,7 @@ class AttractState extends MusicBeatState
       if (vid.load(filePath)) vid.play();
     }
     else
-    {
       trace('ALERT: Video is null! Could not play cutscene!');
-    }
   }
   #end
 
@@ -95,10 +91,7 @@ class AttractState extends MusicBeatState
     super.update(elapsed);
 
     // If the user presses any button, skip the video.
-    if (FlxG.keys.justPressed.ANY && !controls.VOLUME_MUTE && !controls.VOLUME_UP && !controls.VOLUME_DOWN)
-    {
-      onAttractEnd();
-    }
+    if (FlxG.keys.justPressed.ANY && !controls.VOLUME_MUTE && !controls.VOLUME_UP && !controls.VOLUME_DOWN) onAttractEnd();
   }
 
   /**
@@ -108,10 +101,7 @@ class AttractState extends MusicBeatState
   function onAttractEnd():Void
   {
     #if html5
-    if (vid != null)
-    {
-      remove(vid);
-    }
+    if (vid != null) remove(vid);
     #end
 
     #if hxvlc

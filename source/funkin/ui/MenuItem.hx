@@ -33,9 +33,7 @@ class MenuItem extends FlxSpriteGroup
   final flashFramerate:Float = 20;
 
   public function startFlashing():Void
-  {
     isFlashing = true;
-  }
 
   override function update(elapsed:Float)
   {

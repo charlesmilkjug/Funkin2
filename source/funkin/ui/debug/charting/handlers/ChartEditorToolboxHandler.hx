@@ -244,9 +244,7 @@ class ChartEditorToolboxHandler
 
     if (toolbox == null) return null;
 
-    toolbox.onDialogClosed = function(_) {
-      state.menubarItemToggleToolboxPlaytestProperties.selected = false;
-    }
+    toolbox.onDialogClosed = _ -> state.menubarItemToggleToolboxPlaytestProperties.selected = false;
 
     var checkboxPracticeMode:Null<CheckBox> = toolbox.findComponent('practiceModeCheckbox', CheckBox);
     if (checkboxPracticeMode == null) throw 'ChartEditorToolboxHandler.buildToolboxPlaytestPropertiesLayout() - Could not find practiceModeCheckbox component.';
@@ -345,9 +343,7 @@ class ChartEditorToolboxHandler
     toolbox.x = 200;
     toolbox.y = 350;
 
-    toolbox.onDialogClosed = function(event:DialogEvent) {
-      state.menubarItemToggleToolboxPlayerPreview.selected = false;
-    }
+    toolbox.onDialogClosed = (event:DialogEvent) -> state.menubarItemToggleToolboxPlayerPreview.selected = false;
 
     var charPlayer:Null<CharacterPlayer> = toolbox.findComponent('charPlayer');
     if (charPlayer == null) throw 'ChartEditorToolboxHandler.buildToolboxPlayerPreviewLayout() - Could not find charPlayer component.';

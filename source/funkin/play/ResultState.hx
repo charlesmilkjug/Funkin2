@@ -219,19 +219,13 @@ class ResultState extends MusicBeatSubState
           {
             // Animation is not looped.
             animation.onAnimationComplete.add((_name:String) -> {
-              if (animation != null)
-              {
-                animation.anim.pause();
-              }
+              if (animation != null) animation.anim.pause();
             });
           }
           else if (animData.loopFrameLabel != null)
           {
             animation.onAnimationComplete.add((_name:String) -> {
-              if (animation != null)
-              {
-                animation.playAnimation(animData.loopFrameLabel ?? '', true, false, true); // unpauses this anim, since it's on PlayOnce!
-              }
+              if (animation != null) animation.playAnimation(animData.loopFrameLabel ?? '', true, false, true); // unpauses this anim, since it's on PlayOnce!
             });
           }
           else if (animData.loopFrame != null)
@@ -265,10 +259,7 @@ class ResultState extends MusicBeatSubState
           if (animData.loopFrame != null)
           {
             animation.animation.finishCallback = (_name:String) -> {
-              if (animation != null)
-              {
-                animation.animation.play('idle', true, false, animData.loopFrame ?? 0);
-              }
+              if (animation != null) animation.animation.play('idle', true, false, animData.loopFrame ?? 0);
             }
           }
 
@@ -342,13 +333,9 @@ class ResultState extends MusicBeatSubState
       startRankTallySequence();
     });
 
-    new FlxTimer().start(rank.getBFDelay(), _ -> {
-      afterRankTallySequence();
-    });
+    new FlxTimer().start(rank.getBFDelay(), _ -> afterRankTallySequence());
 
-    new FlxTimer().start(rank.getFlashDelay(), _ -> {
-      displayRankText();
-    });
+    new FlxTimer().start(rank.getFlashDelay(), _ -> displayRankText());
 
     highscoreNew.frames = Paths.getSparrowAtlas("resultScreen/highscoreNew");
     highscoreNew.animation.addByPrefix("new", "highscoreAnim0", 24, false);
@@ -366,9 +353,7 @@ class ResultState extends MusicBeatSubState
         highscoreNew.animation.finishCallback = _ -> highscoreNew.animation.play("new", true, false, 16);
       }
       else
-      {
         highscoreNew.visible = false;
-      }
     });
 
     var hStuf:Int = 50;
@@ -550,10 +535,7 @@ class ResultState extends MusicBeatSubState
     clearPercentCounter.zIndex = 450;
     add(clearPercentCounter);
 
-    if (ratingsPopin == null)
-    {
-      trace("Could not build ratingsPopin!");
-    }
+    if (ratingsPopin == null) trace("Could not build ratingsPopin!");
     else
     {
       // ratingsPopin.animation.play("idle");
@@ -570,9 +552,7 @@ class ResultState extends MusicBeatSubState
           highscoreNew.animation.play("new");
         }
         else
-        {
           highscoreNew.visible = false;
-        }
       };
     }
 
@@ -594,9 +574,7 @@ class ResultState extends MusicBeatSubState
     FlxFlicker.flicker(rankTextVert, 2 / 24 * 3, 2 / 24, true);
 
     // Scrolling.
-    new FlxTimer().start(30 / 24, _ -> {
-      rankTextVert.velocity.y = -80;
-    });
+    new FlxTimer().start(30 / 24, _ -> rankTextVert.velocity.y = -80);
 
     for (i in 0...12)
     {
@@ -868,28 +846,18 @@ class ResultState extends MusicBeatSubState
         FlxTween.tween(rankBg, {alpha: 1}, 0.5,
           {
             ease: FlxEase.expoOut,
-            onComplete: function(_) {
-              if (shouldUseSubstate && targetState is FlxSubState)
-              {
-                openSubState(cast targetState);
-              }
+            onComplete: (_) -> {
+              if (shouldUseSubstate && targetState is FlxSubState) openSubState(cast targetState);
               else
-              {
                 FlxG.switchState(() -> targetState);
-              }
             }
           });
       }
       else
       {
-        if (shouldUseSubstate && targetState is FlxSubState)
-        {
-          openSubState(cast targetState);
-        }
+        if (shouldUseSubstate && targetState is FlxSubState) openSubState(cast targetState);
         else
-        {
           FlxG.switchState(() -> targetState);
-        }
       }
     }
 

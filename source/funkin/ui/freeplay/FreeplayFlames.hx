@@ -29,9 +29,7 @@ class FreeplayFlames extends FlxSpriteGroup
       flameCount = 0;
 
       // sets the loop... maybe better way to do this lol!
-      flame.animation.finishCallback = (_) -> {
-        flame.animation.play("flame", true, false, 2);
-      };
+      flame.animation.finishCallback = (_) -> flame.animation.play("flame", true, false, 2);
       add(flame);
     }
   }
@@ -73,7 +71,7 @@ class FreeplayFlames extends FlxSpriteGroup
       {
         if (!flame.visible)
         {
-          var nextTimer:FlxTimer = new FlxTimer().start(flameTimer * visibleCount, function(currentTimer:FlxTimer) {
+          var nextTimer:FlxTimer = new FlxTimer().start(flameTimer * visibleCount, (currentTimer:FlxTimer) -> {
             if (i >= this.flameCount)
             {
               trace('EARLY EXIT');
@@ -89,9 +87,7 @@ class FreeplayFlames extends FlxSpriteGroup
         }
       }
       else
-      {
         flame.visible = false;
-      }
     }
     return this.flameCount;
   }

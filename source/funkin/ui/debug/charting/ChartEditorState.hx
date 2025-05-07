@@ -2382,7 +2382,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
       var menuItemRecentChart:MenuItem = new MenuItem();
       menuItemRecentChart.text = chartPath;
-      menuItemRecentChart.onClick = function(_event) {
+      menuItemRecentChart.onClick = (_event) -> {
         // Load chart from file
         var result:Null<Array<String>> = this.loadFromFNFCPath(chartPath);
         if (result != null)
@@ -2763,11 +2763,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     this.setupNotifications();
 
     // Setup character dropdowns.
-    FlxMouseEvent.add(healthIconDad, function(_) {
-      if (!isCursorOverHaxeUI)
-      {
-        this.openCharacterDropdown(CharacterType.DAD, true);
-      }
+    FlxMouseEvent.add(healthIconDad, (_) -> {
+      if (!isCursorOverHaxeUI) this.openCharacterDropdown(CharacterType.DAD, true);
     });
 
     FlxMouseEvent.add(healthIconBF, (_) -> {
@@ -2859,10 +2856,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       if (noteSnapQuantIndex < 0) noteSnapQuantIndex = SNAP_QUANTS.length - 1;
     };
     playbarNoteSnap.onClick = _ -> {
-      if (FlxG.keys.pressed.SHIFT)
-      {
-        noteSnapQuantIndex = BASE_QUANT_INDEX;
-      }
+      if (FlxG.keys.pressed.SHIFT) noteSnapQuantIndex = BASE_QUANT_INDEX;
       else
       {
         noteSnapQuantIndex++;
@@ -2871,10 +2865,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     };
 
     playbarBPM.onClick = _ -> {
-      if (pressingControl())
-      {
-        this.setToolboxState(CHART_EDITOR_TOOLBOX_METADATA_LAYOUT, true);
-      }
+      if (pressingControl()) this.setToolboxState(CHART_EDITOR_TOOLBOX_METADATA_LAYOUT, true);
       else
       {
         Conductor.instance.currentTimeChange.bpm += 1;
@@ -2888,10 +2879,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     }
 
     playbarDifficulty.onClick = _ -> {
-      if (pressingControl())
-      {
-        this.setToolboxState(CHART_EDITOR_TOOLBOX_DIFFICULTY_LAYOUT, true);
-      }
+      if (pressingControl()) this.setToolboxState(CHART_EDITOR_TOOLBOX_DIFFICULTY_LAYOUT, true);
       else
       {
         incrementDifficulty(-1);
@@ -2910,14 +2898,9 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     menubarItemNewChart.onClick = _ -> this.openWelcomeDialog(true);
     menubarItemOpenChart.onClick = _ -> this.openBrowseFNFC(true);
     menubarItemSaveChart.onClick = _ -> {
-      if (currentWorkingFilePath != null)
-      {
-        this.exportAllSongData(true, currentWorkingFilePath);
-      }
+      if (currentWorkingFilePath != null) this.exportAllSongData(true, currentWorkingFilePath);
       else
-      {
         this.exportAllSongData(false, null);
-      }
     };
     menubarItemSaveChartAs.onClick = _ -> this.exportAllSongData(false, null);
     menubarItemExit.onClick = _ -> quitChartEditor();
@@ -2925,9 +2908,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     // Edit
     menubarItemUndo.onClick = _ -> undoLastCommand();
     menubarItemRedo.onClick = _ -> redoLastCommand();
-    menubarItemCopy.onClick = function(_) {
-      copySelection();
-    };
+    menubarItemCopy.onClick = (_) -> copySelection();
     menubarItemCut.onClick = _ -> performCommand(new CutItemsCommand(currentNoteSelection, currentEventSelection));
 
     menubarItemPaste.onClick = _ -> {
@@ -2944,18 +2925,10 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     };
 
     menubarItemDelete.onClick = _ -> {
-      if (currentNoteSelection.length > 0 && currentEventSelection.length > 0)
-      {
-        performCommand(new RemoveItemsCommand(currentNoteSelection, currentEventSelection));
-      }
-      else if (currentNoteSelection.length > 0)
-      {
-        performCommand(new RemoveNotesCommand(currentNoteSelection));
-      }
-      else if (currentEventSelection.length > 0)
-      {
-        performCommand(new RemoveEventsCommand(currentEventSelection));
-      }
+      if (currentNoteSelection.length > 0 && currentEventSelection.length > 0) performCommand(new RemoveItemsCommand(currentNoteSelection,
+        currentEventSelection));
+      else if (currentNoteSelection.length > 0) performCommand(new RemoveNotesCommand(currentNoteSelection));
+      else if (currentEventSelection.length > 0) performCommand(new RemoveEventsCommand(currentEventSelection));
       else
       {
         // Do nothing???
@@ -2984,17 +2957,11 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       if (noteSnapQuantIndex >= SNAP_QUANTS.length) noteSnapQuantIndex = 0;
     };
 
-    menuBarItemInputStyleNone.onClick = function(event:UIEvent) {
-      currentLiveInputStyle = None;
-    };
+    menuBarItemInputStyleNone.onClick = (event:UIEvent) -> currentLiveInputStyle = None;
     menuBarItemInputStyleNone.selected = currentLiveInputStyle == None;
-    menuBarItemInputStyleNumberKeys.onClick = function(event:UIEvent) {
-      currentLiveInputStyle = NumberKeys;
-    };
+    menuBarItemInputStyleNumberKeys.onClick = (event:UIEvent) -> currentLiveInputStyle = NumberKeys;
     menuBarItemInputStyleNumberKeys.selected = currentLiveInputStyle == NumberKeys;
-    menuBarItemInputStyleWASD.onClick = function(event:UIEvent) {
-      currentLiveInputStyle = WASDKeys;
-    };
+    menuBarItemInputStyleWASD.onClick = (event:UIEvent) -> currentLiveInputStyle = WASDKeys;
     menuBarItemInputStyleWASD.selected = currentLiveInputStyle == WASDKeys;
 
     menubarItemAbout.onClick = _ -> this.openAboutDialog();
@@ -3015,14 +2982,10 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     menubarItemDifficultyUp.onClick = _ -> incrementDifficulty(1);
     menubarItemDifficultyDown.onClick = _ -> incrementDifficulty(-1);
 
-    menuBarItemThemeLight.onChange = function(event:UIEvent) {
-      if (event.target.value) currentTheme = ChartEditorTheme.Light;
-    };
+    menuBarItemThemeLight.onChange = (event:UIEvent) -> if (event.target.value) currentTheme = ChartEditorTheme.Light;
     menuBarItemThemeLight.selected = currentTheme == ChartEditorTheme.Light;
 
-    menuBarItemThemeDark.onChange = function(event:UIEvent) {
-      if (event.target.value) currentTheme = ChartEditorTheme.Dark;
-    };
+    menuBarItemThemeDark.onChange = (event:UIEvent) -> if (event.target.value) currentTheme = ChartEditorTheme.Dark;
     menuBarItemThemeDark.selected = currentTheme == ChartEditorTheme.Dark;
 
     menubarItemPlayPause.onClick = _ -> toggleAudioPlayback();
@@ -3030,7 +2993,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     menubarItemLoadInstrumental.onClick = _ -> {
       var dialog = this.openUploadInstDialog(true);
       // Ensure instrumental and vocals are reloaded properly.
-      dialog.onDialogClosed = function(_) {
+      dialog.onDialogClosed = (_) -> {
         this.isHaxeUIDialogOpen = false;
         this.switchToCurrentInstrumental();
         this.postLoadInstrumental();
@@ -3040,7 +3003,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     menubarItemLoadVocals.onClick = _ -> {
       var dialog = this.openUploadVocalsDialog(true);
       // Ensure instrumental and vocals are reloaded properly.
-      dialog.onDialogClosed = function(_) {
+      dialog.onDialogClosed = (_) -> {
         this.isHaxeUIDialogOpen = false;
         this.switchToCurrentInstrumental();
         this.postLoadInstrumental();

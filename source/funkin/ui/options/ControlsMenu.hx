@@ -177,7 +177,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
     var margin = 100;
     menuCamera.deadzone.set(0, margin, menuCamera.width, menuCamera.height - margin * 2);
     menuCamera.minScrollY = 0;
-    controlGrid.onChange.add(function(selected) {
+    controlGrid.onChange.add((selected) -> {
       camFollow.y = selected.y;
 
       labels.forEach((label) -> label.alpha = 0.6);
@@ -215,13 +215,9 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
     switch (currentDevice)
     {
       case Keys:
-        {
-          keyUsedToEnterPrompt = FlxG.keys.firstJustPressed();
-        }
+        keyUsedToEnterPrompt = FlxG.keys.firstJustPressed();
       case Gamepad(id):
-        {
-          buttonUsedToEnterPrompt = FlxG.gamepads.getByID(id).firstJustPressedID();
-        }
+        buttonUsedToEnterPrompt = FlxG.gamepads.getByID(id).firstJustPressedID();
     }
 
     controlGrid.enabled = false;
@@ -300,10 +296,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
             var key = FlxG.keys.firstJustReleased();
             if (key != NONE && key != keyUsedToEnterPrompt)
             {
-              if (key == ESCAPE)
-              {
-                closePrompt();
-              }
+              if (key == ESCAPE) closePrompt();
               else if (key == BACKSPACE)
               {
                 onInputSelect(NONE);
@@ -328,10 +321,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
             var key = FlxG.keys.firstJustReleased();
             if (key != NONE && key != keyUsedToEnterPrompt)
             {
-              if (key == ESCAPE)
-              {
-                closePrompt();
-              }
+              if (key == ESCAPE) closePrompt();
               else if (key == BACKSPACE)
               {
                 onInputSelect(NONE);
@@ -369,19 +359,15 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
       case Keys:
         {
           var keyJustReleased:Int = FlxG.keys.firstJustReleased();
-          if (keyJustReleased != NONE && keyJustReleased == keyUsedToEnterPrompt)
-          {
-            keyUsedToEnterPrompt = null;
-          }
+          if (keyJustReleased != NONE && keyJustReleased == keyUsedToEnterPrompt) keyUsedToEnterPrompt = null;
+
           buttonUsedToEnterPrompt = null;
         }
       case Gamepad(id):
         {
           var buttonJustReleased:Int = FlxG.gamepads.getByID(id).firstJustReleasedID();
-          if (buttonJustReleased != NONE && buttonJustReleased == buttonUsedToEnterPrompt)
-          {
-            buttonUsedToEnterPrompt = null;
-          }
+          if (buttonJustReleased != NONE && buttonJustReleased == buttonUsedToEnterPrompt) buttonUsedToEnterPrompt = null;
+
           keyUsedToEnterPrompt = null;
         }
     }
@@ -558,7 +544,5 @@ class InputItem extends TextMenuItem
   }
 
   public function getLabel(input:Int)
-  {
     return input == FlxKey.NONE ? "---" : InputUtil.format(input, device);
-  }
 }
