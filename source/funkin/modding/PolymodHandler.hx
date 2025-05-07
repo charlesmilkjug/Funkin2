@@ -169,20 +169,12 @@ class PolymodHandler
         loadScriptsAsync: #if html5 true #else false #end,
       });
 
-    if (loadedModList == null)
-    {
-      trace('An error occurred! Failed when loading mods!');
-    }
+    if (loadedModList == null) trace('An error occurred! Failed when loading mods!');
     else
     {
-      if (loadedModList.length == 0)
-      {
-        trace('Mod loading complete. We loaded no mods / ${ids.length} mods.');
-      }
+      if (loadedModList.length == 0) trace('Mod loading complete. We loaded no mods / ${ids.length} mods.');
       else
-      {
         trace('Mod loading complete. We loaded ${loadedModList.length} / ${ids.length} mods.');
-      }
     }
 
     loadedModIds = [];
@@ -196,37 +188,27 @@ class PolymodHandler
     var fileList:Array<String> = Polymod.listModFiles(PolymodAssetType.IMAGE);
     trace('Installed mods have replaced ${fileList.length} images.');
     for (item in fileList)
-    {
       trace('  * $item');
-    }
 
     fileList = Polymod.listModFiles(PolymodAssetType.TEXT);
     trace('Installed mods have added/replaced ${fileList.length} text files.');
     for (item in fileList)
-    {
       trace('  * $item');
-    }
 
     fileList = Polymod.listModFiles(PolymodAssetType.AUDIO_MUSIC);
     trace('Installed mods have replaced ${fileList.length} music files.');
     for (item in fileList)
-    {
       trace('  * $item');
-    }
 
     fileList = Polymod.listModFiles(PolymodAssetType.AUDIO_SOUND);
     trace('Installed mods have replaced ${fileList.length} sound files.');
     for (item in fileList)
-    {
       trace('  * $item');
-    }
 
     fileList = Polymod.listModFiles(PolymodAssetType.AUDIO_GENERIC);
     trace('Installed mods have replaced ${fileList.length} generic audio files.');
     for (item in fileList)
-    {
       trace('  * $item');
-    }
     #end
   }
 
@@ -261,6 +243,21 @@ class PolymodHandler
 
     // `funkin.util.FileUtil` has unrestricted access to the file system.
     Polymod.addImportAlias('funkin.util.FileUtil', funkin.util.FileUtilSandboxed);
+
+    #if FEATURE_NEWGROUNDS
+    // `funkin.api.newgrounds.Leaderboards` allows for submitting cheated scores.
+    Polymod.addImportAlias('funkin.api.newgrounds.Leaderboards', funkin.api.newgrounds.Leaderboards.LeaderboardsSandboxed);
+
+    // `funkin.api.newgrounds.Medals` allows for unfair granting of medals.
+    Polymod.addImportAlias('funkin.api.newgrounds.Medals', funkin.api.newgrounds.Medals.MedalsSandboxed);
+
+    // `funkin.api.newgrounds.NewgroundsClientSandboxed` allows for submitting cheated data.
+    Polymod.addImportAlias('funkin.api.newgrounds.NewgroundsClient', funkin.api.newgrounds.NewgroundsClient.NewgroundsClientSandboxed);
+    #end
+
+    #if FEATURE_DISCORD_RPC
+    Polymod.addImportAlias('funkin.api.discord.DiscordClient', funkin.api.discord.DiscordClient.DiscordClientSandboxed);
+    #end
 
     // Add blacklisting for prohibited classes and packages.
 
@@ -319,12 +316,12 @@ class PolymodHandler
     }
 
     // `funkin.api.*`
-    // Contains functions which allow for cheating and such.
+    // Contains functions which may allow for cheating and such.
     for (cls in ClassMacro.listClassesInPackage('funkin.api'))
     {
       if (cls == null) continue;
       var className:String = Type.getClassName(cls);
-      if (allowedClasses.contains(className)) continue;
+      if (polymod.hscript._internal.PolymodScriptClass.importOverrides.exists(className)) continue;
       Polymod.blacklistImport(className);
     }
 

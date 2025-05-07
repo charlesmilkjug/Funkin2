@@ -276,12 +276,6 @@ class FreeplayState extends MusicBeatSubState
     DiscordClient.instance.setPresence({state: 'In the Menus', details: null});
     #end
 
-    var isDebug:Bool = false;
-
-    #if FEATURE_DEBUG_FUNCTIONS
-    isDebug = true;
-    #end
-
     // Block input until the intro finishes.
     busy = true;
     letterSort.inputEnabled = false;
@@ -452,6 +446,7 @@ class FreeplayState extends MusicBeatSubState
     // Reminder, this is a callback function being set, rather than these being called here in create()
     letterSort.changeSelectionCallback = (str) -> {
       var curSong:Null<FreeplaySongData> = grpCapsules.members[curSelected]?.freeplayData;
+      grpCapsules.members[curSelected].selected = false;
 
       switch (str)
       {
@@ -577,9 +572,7 @@ class FreeplayState extends MusicBeatSubState
     add(rankVignette);
     rankVignette.alpha = 0;
 
-    forEach((bs) -> {
-      bs.cameras = [funnyCam];
-    });
+    forEach((bs) -> bs.cameras = [funnyCam]);
 
     rankCamera.bgColor = FlxColor.TRANSPARENT;
     FlxG.cameras.add(rankCamera, false);
@@ -837,9 +830,7 @@ class FreeplayState extends MusicBeatSubState
 
     capsuleToRank.setPosition((FlxG.width / 2) - (capsuleToRank.width / 2), (FlxG.height / 2) - (capsuleToRank.height / 2));
 
-    new FlxTimer().start(0.5, _ -> {
-      rankDisplayNew(fromResults, capsuleToRank);
-    });
+    new FlxTimer().start(0.5, _ -> rankDisplayNew(fromResults, capsuleToRank));
   }
 
   function rankDisplayNew(fromResults:Null<FromResultsParams>, capsuleToRank:SongMenuItem):Void
@@ -848,10 +839,7 @@ class FreeplayState extends MusicBeatSubState
     capsuleToRank.fakeRanking.visible = false;
     capsuleToRank.ranking.scale.set(20, 20);
 
-    if (fromResults != null && fromResults.newRank != null)
-    {
-      capsuleToRank.ranking.playAnimationEach(fromResults.newRank.getFreeplayRankIconAsset(), true);
-    }
+    if (fromResults != null && fromResults.newRank != null) capsuleToRank.ranking.playAnimationEach(fromResults.newRank.getFreeplayRankIconAsset(), true);
 
     FlxTween.tween(capsuleToRank.ranking, {"scale.x": 1, "scale.y": 1}, 0.1);
 
@@ -1661,6 +1649,7 @@ class FreeplayState extends MusicBeatSubState
     var previousVariation:String = currentVariation;
 
     var daSong:Null<FreeplaySongData> = grpCapsules.members[curSelected].freeplayData;
+    grpCapsules.members[curSelected].selected = false;
 
     // Available variations for current character. We get this since bf is usually `default` variation, and `pico` is `pico`
     // but sometimes pico can be the default variation (weekend 1 songs), and bf can be `bf` variation (darnell)

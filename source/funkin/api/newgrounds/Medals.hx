@@ -62,7 +62,7 @@ class Medals
         // Play the medal unlock animation, but only if the user has not already unlocked it.
         #if html5
         // Web builds support parsing the bitmap data from the URL directly.
-        BitmapData.loadFromFile("https:" + medalData.icon).onComplete(function(bmp:BitmapData) {
+        BitmapData.loadFromFile("https:" + medalData.icon).onComplete((bmp:BitmapData) -> {
           var medalGraphic = FlxGraphic.fromBitmapData(bmp);
           medalGraphic.persist = true;
           NewgroundsMedalPlugin.play(medalData.value, medalData.name, medalGraphic);
@@ -72,13 +72,14 @@ class Medals
         // We have to use a medal image from the game files. We use a Base64 encoded image that NG spits out.
         // TODO: Wait, don't they give us the medal icon?
 
-        var localMedalData:Null<MedalJSON> = medalJSON.filter(function(jsonMedal) {
-          #if FEATURE_NEWGROUNDS_TESTING_MEDALS
-          return medal == jsonMedal.idTest;
-          #else
-          return medal == jsonMedal.id;
-          #end
-        })[0];
+        var localMedalData:Null<MedalJSON> = medalJSON.filter((jsonMedal) ->
+          {
+            #if FEATURE_NEWGROUNDS_TESTING_MEDALS
+            return medal == jsonMedal.idTest;
+            #else
+            return medal == jsonMedal.id;
+            #end
+          })[0];
 
         if (localMedalData == null) throw "You forgot to encode a Base64 image for medal: " + medal;
 
@@ -97,14 +98,10 @@ class Medals
         #end
       }
       else
-      {
         trace('[NEWGROUNDS] User already has medal (${medal}).');
-      }
     }
     else
-    {
       trace('[NEWGROUNDS] Attempted to award medal (${medal}), but not logged into Newgrounds.');
-    }
   }
 
   public static function loadMedalJSON():Void
@@ -126,36 +123,80 @@ class Medals
       medalJSON = [];
     }
     else
-    {
       medalJSON = parser.value;
+  }
+
+  public static function fetchMedalData(medal:Medal):Null<FetchedMedalData>
+  {
+    var medalList = NewgroundsClient.instance.medals;
+    @:privateAccess
+    if (medalList == null || medalList._map == null) return null;
+
+    var medalData:Null<MedalData> = medalList.get(medal.getId());
+    @:privateAccess
+    if (medalData == null || medalData._data == null)
+    {
+      trace('[NEWGROUNDS] Could not retrieve data for medal: ${medal}');
+      return null;
+    }
+
+    return {
+      id: medalData.id,
+      name: medalData.name,
+      description: medalData.description,
+      icon: medalData.icon,
+      value: medalData.value,
+      difficulty: medalData.difficulty,
+      secret: medalData.secret,
+      unlocked: medalData.unlocked
     }
   }
 
   public static function awardStoryLevel(id:String):Void
   {
-    switch (id)
+    var medal:Medal = Medal.getMedalByStoryLevel(id);
+    if (medal == Medal.Unknown)
     {
-      case 'tutorial':
-        Medals.award(Medal.StoryTutorial);
-      case 'week1':
-        Medals.award(Medal.StoryWeek1);
-      case 'week2':
-        Medals.award(Medal.StoryWeek2);
-      case 'week3':
-        Medals.award(Medal.StoryWeek3);
-      case 'week4':
-        Medals.award(Medal.StoryWeek4);
-      case 'week5':
-        Medals.award(Medal.StoryWeek5);
-      case 'week6':
-        Medals.award(Medal.StoryWeek6);
-      case 'week7':
-        Medals.award(Medal.StoryWeek7);
-      case 'weekend1':
-        Medals.award(Medal.StoryWeekend1);
-      default:
-        trace('[NEWGROUNDS] Story level does not have a medal! (${id}).');
+      trace('[NEWGROUNDS] Story level does not have a medal! (${id}).');
+      return;
     }
+    Medals.award(medal);
+  }
+}
+
+/**
+ * Contains data for a Medal, but excludes functions like `sendUnlock()`.
+ */
+typedef FetchedMedalData =
+{
+  var id:Int;
+  var name:String;
+  var description:String;
+  var icon:String;
+  var value:Int;
+  var difficulty:Int;
+  var secret:Bool;
+  var unlocked:Bool;
+}
+
+/**
+ * Wrapper for `Medals` that prevents awarding medals.
+ */
+class MedalsSandboxed
+{
+  public static function fetchMedalData(medal:Medal):Null<FetchedMedalData>
+  {
+    return Medals.fetchMedalData(medal);
+  }
+
+  public static function getMedalByStoryLevel(id:String):Medal
+  {
+    return Medal.getMedalByStoryLevel(id);
+  }
+
+  public static function getAllMedals():Array<Medal>
+  {
+    return Medal.getAllMedals();
   }
 }
 #end
@@ -324,6 +365,8 @@ enum abstract Medal(Int) from Int to Int
   {
     switch (levelId)
     {
+      case "tutorial":
+        return StoryTutorial;
       case "week1":
         return StoryWeek1;
       case "week2":
@@ -343,5 +386,34 @@ enum abstract Medal(Int) from Int to Int
       default:
         return Unknown;
     }
+  }
+
+  /**
+   * Lists all medals aside from the `Unknown` one.
+   */
+  public static function getAllMedals()
+  {
+    return [
+      StartGame,
+      StoryTutorial,
+      StoryWeek1,
+      StoryWeek2,
+      StoryWeek3,
+      StoryWeek4,
+      StoryWeek5,
+      StoryWeek6,
+      StoryWeek7,
+      StoryWeekend1,
+      CharSelect,
+      FreeplayPicoMix,
+      FreeplayStressPico,
+      LossRating,
+      PerfectRatingHard,
+      GoldPerfectRatingHard,
+      ErectDifficulty,
+      GoldPerfectRatingNightmare,
+      FridayNight,
+      Nice
+    ];
   }
 }

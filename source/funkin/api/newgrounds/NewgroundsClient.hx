@@ -92,14 +92,9 @@ class NewgroundsClient
       return;
     }
 
-    if (onSuccess != null && onError != null)
-    {
-      NG.core.requestLogin(onLoginResolvedWithCallbacks.bind(_, onSuccess, onError));
-    }
+    if (onSuccess != null && onError != null) NG.core.requestLogin(onLoginResolvedWithCallbacks.bind(_, onSuccess, onError));
     else
-    {
       NG.core.requestLogin(onLoginResolved);
-    }
   }
 
   public function autoLogin(?onSuccess:Void->Void, ?onError:Void->Void):Void
@@ -110,7 +105,7 @@ class NewgroundsClient
       return;
     }
 
-    var dummyPassport:String->Void = function(_) {
+    var dummyPassport:String->Void = (_) -> {
       // just a dummy passport, so we don't create a popup
       // otherwise `NG.core.requestLogin()` will automatically attempt to open a tab at the beginning of the game
       // users should go to the Options Menu to login to NG
@@ -118,14 +113,9 @@ class NewgroundsClient
       NG.core.cancelLoginRequest();
     };
 
-    if (onSuccess != null && onError != null)
-    {
-      NG.core.requestLogin(onLoginResolvedWithCallbacks.bind(_, onSuccess, onError), dummyPassport);
-    }
+    if (onSuccess != null && onError != null) NG.core.requestLogin(onLoginResolvedWithCallbacks.bind(_, onSuccess, onError), dummyPassport);
     else
-    {
       NG.core.requestLogin(onLoginResolved, dummyPassport);
-    }
   }
 
   /**
@@ -136,14 +126,9 @@ class NewgroundsClient
   {
     if (NG.core != null)
     {
-      if (onSuccess != null && onError != null)
-      {
-        NG.core.logOut(onLogoutResolvedWithCallbacks.bind(_, onSuccess, onError));
-      }
+      if (onSuccess != null && onError != null) NG.core.logOut(onLogoutResolvedWithCallbacks.bind(_, onSuccess, onError));
       else
-      {
         NG.core.logOut(onLogoutResolved);
-      }
     }
 
     Save.instance.ngSessionId = null;
@@ -267,9 +252,7 @@ class NewgroundsClient
   }
 
   function onLogoutSuccessful():Void
-  {
     trace('[NEWGROUNDS] Logout successful!');
-  }
 
   function onLogoutFailed(result:CallError):Void
   {
@@ -287,9 +270,7 @@ class NewgroundsClient
   }
 
   function onFetchedMedals(outcome:Outcome<CallError>):Void
-  {
     trace('[NEWGROUNDS] Fetched medals!');
-  }
 
   function onFetchedLeaderboards(outcome:Outcome<CallError>):Void
   {
@@ -327,5 +308,19 @@ class NewgroundsClient
     // We have to fetch the session ID from the save file.
     return Save.instance.ngSessionId;
   }
+}
+
+/**
+ * Wrapper for `NewgroundsClient` that prevents submitting cheated data.
+ */
+class NewgroundsClientSandboxed
+{
+  public static var user(get, never):Null<User>;
+
+  static function get_user()
+    return NewgroundsClient.instance.user;
+
+  public static function isLoggedIn()
+    return NewgroundsClient.instance.isLoggedIn();
 }
 #end

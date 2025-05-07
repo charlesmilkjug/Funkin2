@@ -48,9 +48,7 @@ class DiscordClient
   var daemon:Thread = null;
 
   function createDaemon():Void
-  {
     daemon = Thread.create(doDaemonWork);
-  }
 
   function doDaemonWork():Void
   {
@@ -73,9 +71,7 @@ class DiscordClient
   }
 
   public function setPresence(params:DiscordClientPresenceParams):Void
-  {
     Discord.updatePresence(buildPresence(params));
-  }
 
   function buildPresence(params:DiscordClientPresenceParams):DiscordRichPresence
   {
@@ -132,14 +128,9 @@ class DiscordClient
     final globalName:String = request[0].username;
     final discriminator:Int = Std.parseInt(request[0].discriminator);
 
-    if (discriminator != 0)
-    {
-      trace('[DISCORD] User: ${username}#${discriminator} (${globalName})');
-    }
+    if (discriminator != 0) trace('[DISCORD] User: ${username}#${discriminator} (${globalName})');
     else
-    {
       trace('[DISCORD] User: @${username} (${globalName})');
-    }
   }
 
   private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
@@ -197,5 +188,14 @@ typedef DiscordClientPresenceParams =
    * A small, inset image to the bottom right of `largeImageKey`.
    */
   var ?smallImageKey:String;
+}
+
+class DiscordClientSandboxed
+{
+  public static function setPresence(params:DiscordClientPresenceParams)
+    return DiscordClient.instance.setPresence(params);
+
+  public static function shutdown()
+    DiscordClient.instance.shutdown();
 }
 #end
