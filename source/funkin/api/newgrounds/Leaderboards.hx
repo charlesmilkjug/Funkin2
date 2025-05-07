@@ -9,7 +9,6 @@ import io.newgrounds.objects.User;
 import io.newgrounds.objects.events.Outcome;
 import io.newgrounds.utils.ScoreBoardList;
 
-@:nullSafety
 class Leaderboards
 {
   public static function listLeaderboardData():Map<Leaderboard, LeaderboardData>
@@ -20,8 +19,21 @@ class Leaderboards
       trace('[NEWGROUNDS] Not logged in, cannot fetch medal data!');
       return [];
     }
+    else
+    {
+      var result:Map<Leaderboard, LeaderboardData> = [];
 
-    return @:privateAccess leaderboardList._map.copy();
+      for (leaderboardId in leaderboardList.keys())
+      {
+        var leaderboardData = leaderboardList.get(leaderboardId);
+        if (leaderboardData == null) continue;
+
+        // A little hacky, but it works.
+        result.set(cast leaderboardId, leaderboardData);
+      }
+
+      return result;
+    }
   }
 
   /**
