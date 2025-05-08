@@ -401,7 +401,7 @@ class FreeplayState extends MusicBeatSubState
     ostName.visible = false;
 
     charSelectHint.alignment = CENTER;
-    charSelectHint.font = "5by7";
+    charSelectHint.font = Paths.font("5by7.ttf");
     charSelectHint.color = 0xFF5F5F5F;
     charSelectHint.text = 'Press [ ${controls.getDialogueNameFromControl(FREEPLAY_CHAR_SELECT, true)} ] to change characters';
     charSelectHint.y -= 100;
@@ -893,9 +893,7 @@ class FreeplayState extends MusicBeatSubState
       FlxTween.tween(capsuleToRank, {x: originalPos.x - 7, y: originalPos.y - 80}, 0.8 + 0.5, {ease: FlxEase.quartIn});
     });
 
-    new FlxTimer().start(0.6, _ -> {
-      rankAnimSlam(fromResults, capsuleToRank);
-    });
+    new FlxTimer().start(0.6, _ -> rankAnimSlam(fromResults, capsuleToRank));
   }
 
   function rankAnimSlam(fromResultsParams:Null<FromResultsParams>, capsuleToRank:SongMenuItem):Void
@@ -927,14 +925,8 @@ class FreeplayState extends MusicBeatSubState
     new FlxTimer().start(0.5, _ -> {
       funnyCam.shake(0.0045, 0.35);
 
-      if (fromResultsParams?.newRank == SHIT)
-      {
-        if (dj != null) dj.fistPumpLoss();
-      }
-      else
-      {
-        if (dj != null) dj.fistPump();
-      }
+      if (fromResultsParams?.newRank == SHIT) if (dj != null) dj.fistPumpLoss();
+      else if (dj != null) dj.fistPump();
 
       rankCamera.zoom = 0.8;
       funnyCam.zoom = 0.8;
@@ -959,7 +951,7 @@ class FreeplayState extends MusicBeatSubState
 
             capsule.doLerp = false;
             capsule.setPosition(originalPos.x, originalPos.y);
-            IntervalShake.shake(capsule, 0.6, 1 / 24, 0.12, 0, FlxEase.quadOut, function(_) {
+            IntervalShake.shake(capsule, 0.6, 1 / 24, 0.12, 0, FlxEase.quadOut, (_) -> {
               capsule.doLerp = true;
               capsule.cameras = [funnyCam];
 
@@ -969,13 +961,6 @@ class FreeplayState extends MusicBeatSubState
               playCurSongPreview(capsule);
             }, null);
 
-            // FlxTween.tween(capsule, {"targetPos.x": capsule.targetPos.x - 50}, 0.6,
-            //   {
-            //     ease: FlxEase.backInOut,
-            //     onComplete: function(_) {
-            //       capsule.cameras = [funnyCam];
-            //     }
-            //   });
             FlxTween.tween(capsule, {angle: 0}, 0.5, {ease: FlxEase.backOut});
           }
           if (index > curSelected)
@@ -987,9 +972,7 @@ class FreeplayState extends MusicBeatSubState
               capsule.capsule.angle = FlxG.random.float(-10 + (distFromSelected * 2), 10 - (distFromSelected * 2));
               FlxTween.tween(capsule.capsule, {angle: 0}, 0.5, {ease: FlxEase.backOut});
 
-              IntervalShake.shake(capsule, 0.6, 1 / 24, 0.12 / (distFromSelected + 1), 0, FlxEase.quadOut, function(_) {
-                capsule.doLerp = true;
-              });
+              IntervalShake.shake(capsule, 0.6, 1 / 24, 0.12 / (distFromSelected + 1), 0, FlxEase.quadOut, (_) -> capsule.doLerp = true);
             });
           }
 
@@ -1002,9 +985,7 @@ class FreeplayState extends MusicBeatSubState
               capsule.capsule.angle = FlxG.random.float(-10 + (distFromSelected * 2), 10 - (distFromSelected * 2));
               FlxTween.tween(capsule.capsule, {angle: 0}, 0.5, {ease: FlxEase.backOut});
 
-              IntervalShake.shake(capsule, 0.6, 1 / 24, 0.12 / (distFromSelected + 1), 0, FlxEase.quadOut, function(_) {
-                capsule.doLerp = true;
-              });
+              IntervalShake.shake(capsule, 0.6, 1 / 24, 0.12 / (distFromSelected + 1), 0, FlxEase.quadOut, (_) -> capsule.doLerp = true);
             });
           }
         }
@@ -1152,7 +1133,7 @@ class FreeplayState extends MusicBeatSubState
         FlxTween.tween(spr, {y: spr.y - moveDataY}, moveDataSpeed * 1.2,
           {
             ease: FlxEase.expoOut,
-            onComplete: function(_) {
+            onComplete: (_) -> {
               for (index => capsule in grpCapsules.members)
               {
                 capsule.doLerp = true;
@@ -1269,7 +1250,7 @@ class FreeplayState extends MusicBeatSubState
             {
               ease: FlxEase.expoIn,
               startDelay: 0.1,
-              onComplete: function(_) {
+              onComplete: (_) -> {
                 grpCapsules.members[realShit].doLerp = true;
                 busy = false;
               }
@@ -1293,7 +1274,7 @@ class FreeplayState extends MusicBeatSubState
             {
               ease: FlxEase.expoIn,
               startDelay: 0.1,
-              onComplete: function(_) {
+              onComplete: (_) -> {
                 grpCapsules.members[realShit].doLerp = true;
                 busy = false;
               }
@@ -1348,10 +1329,8 @@ class FreeplayState extends MusicBeatSubState
     {
       for (touch in FlxG.touches.list)
       {
-        if (touch.justPressed)
-        {
-          initTouchPos.set(touch.viewX, touch.viewY);
-        }
+        if (touch.justPressed) initTouchPos.set(touch.viewX, touch.viewY);
+
         if (touch.pressed)
         {
           var dx:Float = initTouchPos.x - touch.viewX;
@@ -1556,14 +1535,12 @@ class FreeplayState extends MusicBeatSubState
         trace('CHART RANDOM SONG');
         letterSort.inputEnabled = false;
 
-        var availableSongCapsules:Array<SongMenuItem> = grpCapsules.members.filter(function(cap:SongMenuItem) {
+        var availableSongCapsules:Array<SongMenuItem> = grpCapsules.members.filter((cap:SongMenuItem) -> {
           // Dead capsules are ones which were removed from the list when changing filters.
           return cap.alive && cap.freeplayData != null;
         });
 
-        trace('Available songs: ${availableSongCapsules.map(function(cap) {
-      return cap?.freeplayData?.data.songName;
-    })}');
+        trace('Available songs: ${availableSongCapsules.map((cap) -> return cap?.freeplayData?.data.songName;)}');
 
         if (availableSongCapsules.length == 0)
         {
@@ -1779,14 +1756,12 @@ class FreeplayState extends MusicBeatSubState
     busy = true;
     letterSort.inputEnabled = false;
 
-    var availableSongCapsules:Array<SongMenuItem> = grpCapsules.members.filter(function(cap:SongMenuItem) {
+    var availableSongCapsules:Array<SongMenuItem> = grpCapsules.members.filter((cap:SongMenuItem) -> {
       // Dead capsules are ones which were removed from the list when changing filters.
       return cap.alive && cap.freeplayData != null;
     });
 
-    trace('Available songs: ${availableSongCapsules.map(function(cap) {
-      return cap?.freeplayData?.data.songName;
-    })}');
+    trace('Available songs: ${availableSongCapsules.map((cap) -> return cap?.freeplayData?.data.songName)}');
 
     if (availableSongCapsules.length == 0)
     {
@@ -1978,9 +1953,7 @@ class FreeplayState extends MusicBeatSubState
     capsuleOptionsMenu.zIndex = 10000;
     add(capsuleOptionsMenu);
 
-    capsuleOptionsMenu.onConfirm = (targetInstId:String) -> {
-      capsuleOnConfirmDefault(cap, targetInstId);
-    };
+    capsuleOptionsMenu.onConfirm = (targetInstId:String) -> capsuleOnConfirmDefault(cap, targetInstId);
   }
 
   var capsuleOptionsMenu:Null<CapsuleOptionsMenu> = null;
@@ -2043,7 +2016,7 @@ class FreeplayState extends MusicBeatSubState
 
     backingCard?.confirm();
 
-    new FlxTimer().start(styleData?.getStartDelay(), function(tmr:FlxTimer) {
+    new FlxTimer().start(styleData?.getStartDelay(), (tmr:FlxTimer) -> {
       FunkinSound.emptyPartialQueue();
 
       Paths.setCurrentLevel(cap?.freeplayData?.levelId);
@@ -2065,17 +2038,13 @@ class FreeplayState extends MusicBeatSubState
   }
 
   function refreshCapsuleDisplays():Void
-  {
-    grpCapsules.forEachAlive((cap:SongMenuItem) -> {
-      cap.refreshDisplay();
-    });
-  }
+    grpCapsules.forEachAlive((cap:SongMenuItem) -> cap.refreshDisplay());
 
   function rememberSelection():Void
   {
     if (rememberedSongId != null)
     {
-      curSelected = currentFilteredSongs.findIndex(function(song) {
+      curSelected = currentFilteredSongs.findIndex((song) -> {
         if (song == null) return false;
         return song.data.id == rememberedSongId;
       });
@@ -2172,10 +2141,7 @@ class FreeplayState extends MusicBeatSubState
         songDifficulty?.variation ?? Constants.DEFAULT_VARIATION) ?? [];
       var instSuffix:String = baseInstrumentalId;
       #if FEATURE_DEBUG_FUNCTIONS
-      if (altInstrumentalIds.length > 0 && FlxG.keys.pressed.CONTROL)
-      {
-        instSuffix = altInstrumentalIds[0];
-      }
+      if (altInstrumentalIds.length > 0 && FlxG.keys.pressed.CONTROL) instSuffix = altInstrumentalIds[0];
       #end
       instSuffix = (instSuffix != '') ? '-$instSuffix' : '';
       trace('Attempting to play partial preview: ${previewSong.id}:${instSuffix}');
@@ -2273,7 +2239,7 @@ class DifficultySelector extends FlxSprite
 
     scale.x = scale.y = 0.5;
 
-    new FlxTimer().start(2 / 24, function(tmr) {
+    new FlxTimer().start(2 / 24, (tmr) -> {
       scale.x = scale.y = 1;
       whiteShader.colorSet = false;
       updateHitbox();

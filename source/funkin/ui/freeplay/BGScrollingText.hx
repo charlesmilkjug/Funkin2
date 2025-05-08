@@ -28,7 +28,7 @@ class BGScrollingText extends FlxSpriteGroup
     add(grpTexts);
 
     var testText:FlxText = new FlxText(0, 0, 0, text, this.size);
-    testText.font = "5by7";
+    testText.font = Paths.font("5by7.ttf");
     testText.bold = bold;
     testText.updateHitbox();
     grpTexts.add(testText);
@@ -37,11 +37,9 @@ class BGScrollingText extends FlxSpriteGroup
 
     for (i in 0...needed)
     {
-      var lmfao:Int = i + 1;
+      var coolText:FlxText = new FlxText(((i + 1) * testText.frameWidth) + ((i + 1) * 20), 0, 0, text, this.size);
 
-      var coolText:FlxText = new FlxText((lmfao * testText.frameWidth) + (lmfao * 20), 0, 0, text, this.size);
-
-      coolText.font = "5by7";
+      coolText.font = Paths.font("5by7.ttf");
       coolText.bold = bold;
       coolText.updateHitbox();
       grpTexts.add(coolText);
@@ -50,21 +48,14 @@ class BGScrollingText extends FlxSpriteGroup
 
   function set_size(value:Int):Int
   {
-    if (grpTexts != null)
-    {
-      grpTexts.forEach(function(txt:FlxText) {
-        txt.size = value;
-      });
-    }
+    if (grpTexts != null) grpTexts.forEach((txt:FlxText) -> txt.size = value);
     this.size = value;
     return value;
   }
 
   function set_funnyColor(col:Int):Int
   {
-    grpTexts.forEach(function(txt) {
-      txt.color = col;
-    });
+    grpTexts.forEach((txt) -> txt.color = col);
 
     return col;
   }
@@ -100,8 +91,6 @@ class BGScrollingText extends FlxSpriteGroup
 
   function sortTextShit():Void
   {
-    grpTexts.sort(function(Order:Int, Obj1:FlxObject, Obj2:FlxObject) {
-      return FlxSort.byValues(Order, Obj1.x, Obj2.x);
-    });
+    grpTexts.sort((Order:Int, Obj1:FlxObject, Obj2:FlxObject) -> return FlxSort.byValues(Order, Obj1.x, Obj2.x));
   }
 }

@@ -91,9 +91,7 @@ class LetterSort extends FlxTypedSpriteGroup<FlxSprite>
     var arrowToMove:FlxSprite = diff < 0 ? leftArrow : rightArrow;
     arrowToMove.offset.x = 3 * multiPosOrNeg;
 
-    new FlxTimer().start(2 / 24, function(_) {
-      arrowToMove.offset.x = 0;
-    });
+    new FlxTimer().start(2 / 24, (_) -> arrowToMove.offset.x = 0);
   }
 
   /**
@@ -103,10 +101,8 @@ class LetterSort extends FlxTypedSpriteGroup<FlxSprite>
    */
   function doLetterChangeAnims(diff:Int):Void
   {
-    var ezTimer:Int->FlxSprite->Float->Void = function(frameNum:Int, spr:FlxSprite, offsetNum:Float) {
-      new FlxTimer().start(frameNum / 24, function(_) {
-        spr.offset.x = offsetNum;
-      });
+    var ezTimer:Int->FlxSprite->Float->Void = (frameNum:Int, spr:FlxSprite, offsetNum:Float) -> {
+      new FlxTimer().start(frameNum / 24, (_) -> spr.offset.x = offsetNum);
     };
 
     var positions:Array<Float> = [-10, -22, 2, 0];
@@ -126,12 +122,12 @@ class LetterSort extends FlxTypedSpriteGroup<FlxSprite>
     {
       letter.offset.x = positions[0] * multiPosOrNeg;
 
-      new FlxTimer().start(1 / 24, function(_) {
+      new FlxTimer().start(1 / 24, (_) -> {
         letter.offset.x = positions[1] * multiPosOrNeg;
         if (index == 0) letter.visible = false;
       });
 
-      new FlxTimer().start(2 / 24, function(_) {
+      new FlxTimer().start(2 / 24, (_) -> {
         letter.offset.x = positions[2] * multiPosOrNeg;
         if (index == 0.) letter.visible = true;
       });
@@ -233,10 +229,6 @@ class FreeplayLetter extends FlxAtlasSprite
     }
 
     this.anim.play(animName, true);
-    if (curSelection != curLetter)
-    {
-      this.anim.pause();
-    }
-    // updateHitbox();
+    if (curSelection != curLetter) this.anim.pause();
   }
 }

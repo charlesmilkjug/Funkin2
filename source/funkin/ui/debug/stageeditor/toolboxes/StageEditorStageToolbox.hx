@@ -16,12 +16,12 @@ class StageEditorStageToolbox extends StageEditorDefaultToolbox
   {
     super(state);
 
-    stageNameText.onChange = function(_) {
+    stageNameText.onChange = (_) -> {
       state.stageName = stageNameText.text;
       state.saved = false;
     }
 
-    stageZoomStepper.onChange = function(_) {
+    stageZoomStepper.onChange = (_) -> {
       state.stageZoom = stageZoomStepper.pos;
       state.updateMarkerPos();
       state.saved = false;
@@ -33,20 +33,14 @@ class StageEditorStageToolbox extends StageEditorDefaultToolbox
     @:privateAccess
     {
       for (lib => idk in lime.utils.Assets.libraryPaths)
-      {
         if (!EXCLUDE_LIBS.contains(lib)) allLibs.push(lib);
-      }
     }
     allLibs.sort(SortUtil.alphabetically); // this system is VERY stupid, it relies on the possibility that the future libraries will be named week(end)[x]
 
     for (lib in allLibs)
-    {
       stageLibraryDrop.dataSource.add({text: lib});
-    }
 
-    stageLibraryDrop.onChange = function(_) {
-      state.stageFolder = stageLibraryDrop.selectedItem.text;
-    }
+    stageLibraryDrop.onChange = (_) -> state.stageFolder = stageLibraryDrop.selectedItem.text;
 
     refresh();
   }

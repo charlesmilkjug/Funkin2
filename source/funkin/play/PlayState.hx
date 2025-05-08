@@ -1559,9 +1559,7 @@ class PlayState extends MusicBeatSubState
      * Generates the stage and all its props.
      */
   function initStage():Void
-  {
     loadStage(currentStageId);
-  }
 
   function initMinimalMode():Void
   {
@@ -2198,9 +2196,7 @@ class PlayState extends MusicBeatSubState
 
       if (note.hasBeenHit)
       {
-        note.tooEarly = false;
-        note.mayHit = false;
-        note.hasMissed = false;
+        note.tooEarly = note.mayHit = note.hasMissed = false;
         continue;
       }
 
@@ -2211,13 +2207,9 @@ class PlayState extends MusicBeatSubState
       if (Conductor.instance.songPosition > hitWindowEnd)
       {
         if (note.hasMissed || note.hasBeenHit) continue;
-        note.tooEarly = false;
-        note.mayHit = false;
+        note.tooEarly = note.mayHit = false;
         note.hasMissed = true;
-        if (note.holdNoteSprite != null)
-        {
-          note.holdNoteSprite.missedNote = true;
-        }
+        if (note.holdNoteSprite != null) note.holdNoteSprite.missedNote = true;
       }
       else if (isBotPlayMode && Conductor.instance.songPosition > hitWindowCenter)
       {
@@ -2250,8 +2242,7 @@ class PlayState extends MusicBeatSubState
       else
       {
         note.tooEarly = true;
-        note.mayHit = false;
-        note.hasMissed = false;
+        note.mayHit = note.hasMissed = false;
         if (note.holdNoteSprite != null) note.holdNoteSprite.missedNote = false;
       }
 
@@ -2540,9 +2531,7 @@ class PlayState extends MusicBeatSubState
 
       var indices:Array<Int> = [];
       for (i in 0...pressArray.length)
-      {
         if (pressArray[i]) indices.push(i);
-      }
     }
     vocals.playerVolume = 0;
 
@@ -2729,9 +2718,7 @@ class PlayState extends MusicBeatSubState
 
       var indices:Array<Int> = [];
       for (i in 0...pressArray.length)
-      {
         if (pressArray[i]) indices.push(i);
-      }
     }
     comboPopUps.displayRating(daRating);
     if (combo >= 10) comboPopUps.displayCombo(combo);

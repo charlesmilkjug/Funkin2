@@ -40,7 +40,7 @@ class ChartEditorEventContextMenu extends ChartEditorBaseContextMenu
   {
     if (contextmenuEventKind.text != data.eventKind) contextmenuEventKind.text = data.eventKind;
     // NOTE: Remember to use commands here to ensure undo/redo works properly
-    contextmenuUnit.onChange = function(_) {
+    contextmenuUnit.onChange = (_) -> {
       if (contextmenuUnit.selectedIndex == -1)
       {
         contextmenuUnit.pauseEvent(UIEvent.CHANGE, true);
@@ -79,7 +79,7 @@ class ChartEditorEventContextMenu extends ChartEditorBaseContextMenu
     }
     var id:String = contextmenuUnit.dataSource.get(contextmenuUnit.selectedIndex).id;
 
-    contextmenuPosition.onChange = function(_) {
+    contextmenuPosition.onChange = (_) -> {
       var newTime:Float = contextmenuPosition.value;
       // Why does the dropdown do this after I specifically set the value of the damn thing?
       if (contextmenuUnit.selectedIndex == -1)
@@ -134,12 +134,8 @@ class ChartEditorEventContextMenu extends ChartEditorBaseContextMenu
       contextmenuPosition.resumeEvent(UIEvent.CHANGE, true, true);
     }
 
-    contextmenuEdit.onClick = function(_) {
-      chartEditorState.showToolbox(ChartEditorState.CHART_EDITOR_TOOLBOX_EVENT_DATA_LAYOUT);
-    }
+    contextmenuEdit.onClick = (_) -> chartEditorState.showToolbox(ChartEditorState.CHART_EDITOR_TOOLBOX_EVENT_DATA_LAYOUT);
 
-    contextmenuDelete.onClick = function(_) {
-      chartEditorState.performCommand(new RemoveEventsCommand([data]));
-    }
+    contextmenuDelete.onClick = (_) -> chartEditorState.performCommand(new RemoveEventsCommand([data]));
   }
 }

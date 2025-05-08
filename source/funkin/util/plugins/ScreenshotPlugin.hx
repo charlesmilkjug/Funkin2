@@ -46,10 +46,8 @@ class ScreenshotPlugin extends FlxBasic
 
   static function get_instance():ScreenshotPlugin
   {
-    if (_instance == null)
-    {
-      _instance = new ScreenshotPlugin({});
-    }
+    if (_instance == null) _instance = new ScreenshotPlugin({});
+
     return _instance;
   }
 
@@ -151,10 +149,7 @@ class ScreenshotPlugin extends FlxBasic
     if (asyncLoop != null)
     {
       // If the loop hasn't started yet, start it
-      if (!asyncLoop.started)
-      {
-        asyncLoop.start();
-      }
+      if (!asyncLoop.started) asyncLoop.start();
       else
       {
         // if the loop has been started, and is finished, then we kill. it
@@ -201,7 +196,7 @@ class ScreenshotPlugin extends FlxBasic
       // screenshot spamming timer
       if (screenshotSpammedTimer == null || screenshotSpammedTimer.finished)
       {
-        screenshotSpammedTimer = new FlxTimer().start(1, function(_) {
+        screenshotSpammedTimer = new FlxTimer().start(1, (_) -> {
           // The player's stopped spamming shots, so we can stop the screenshot spam mode too
           screenshotBeingSpammed = false;
           if (screenshotBuffer[0] != null) saveBufferedScreenshots(screenshotBuffer, screenshotNameBuffer);
@@ -225,10 +220,7 @@ class ScreenshotPlugin extends FlxBasic
       screenshotTakenFrame = 0;
       capture(); // After all these checks and waiting a frame, we finally try taking a screenshot
     }
-    else if (screenshotTakenFrame > 0)
-    {
-      screenshotTakenFrame++;
-    }
+    else if (screenshotTakenFrame > 0) screenshotTakenFrame++;
   }
 
   /**
@@ -356,12 +348,12 @@ class ScreenshotPlugin extends FlxBasic
 
     // fuck it, cursed locally scoped functions, purely because im lazy
     // (and so we can check changingAlpha, which is locally scoped.... because I'm lazy...)
-    var onHover:MouseEvent->Void = function(e:MouseEvent) {
+    var onHover:MouseEvent->Void = (e:MouseEvent) -> {
       if (!changingAlpha) e.target.alpha = 0.6;
       targetAlpha = 0.6;
     };
 
-    var onHoverOut:MouseEvent->Void = function(e:MouseEvent) {
+    var onHoverOut:MouseEvent->Void = (e:MouseEvent) -> {
       if (!changingAlpha) e.target.alpha = 1;
       targetAlpha = 1;
     }
@@ -379,22 +371,22 @@ class ScreenshotPlugin extends FlxBasic
     // set the alpha to 0.6 if the mouse is already over the preview sprite
     if (previewSprite.hitTestPoint(previewSprite.mouseX, previewSprite.mouseY)) targetAlpha = 0.6;
     // Wait to fade in.
-    new FlxTimer().start(PREVIEW_INITIAL_DELAY, function(_) {
+    new FlxTimer().start(PREVIEW_INITIAL_DELAY, (_) -> {
       // Fade in.
       changingAlpha = true;
       FlxTween.tween(previewSprite, {alpha: targetAlpha, y: 0}, PREVIEW_FADE_IN_DURATION,
         {
           ease: FlxEase.quartOut,
-          onComplete: function(_) {
+          onComplete: (_) -> {
             changingAlpha = false;
             // Wait to fade out.
-            new FlxTimer().start(PREVIEW_FADE_OUT_DELAY, function(_) {
+            new FlxTimer().start(PREVIEW_FADE_OUT_DELAY, (_) -> {
               changingAlpha = true;
               // Fade out.
               FlxTween.tween(previewSprite, {alpha: 0.0, y: 10}, PREVIEW_FADE_OUT_DURATION,
                 {
                   ease: FlxEase.quartInOut,
-                  onComplete: function(_) {
+                  onComplete: (_) -> {
                     if (wasMouseShown && FlxG.mouse.visible)
                     {
                       wasMouseShown = false;
@@ -431,9 +423,7 @@ class ScreenshotPlugin extends FlxBasic
   }
 
   function openScreenshotsFolder():Void
-  {
     FileUtil.openFolder(SCREENSHOT_FOLDER);
-  }
 
   // Save them, save the screenshots
   function onWindowClose(exitCode:Int):Void
@@ -452,21 +442,16 @@ class ScreenshotPlugin extends FlxBasic
   {
     var state:FlxState = FlxG.state;
     while (state.subState != null)
-    {
       state = state.subState;
-    }
+
     return state;
   }
 
   static function getScreenshotPath():String
-  {
     return '$SCREENSHOT_FOLDER/';
-  }
 
   static function makeScreenshotPath():Void
-  {
     FileUtil.createDirIfNotExists(SCREENSHOT_FOLDER);
-  }
 
   /**
    * Convert a Bitmap to a PNG ByteArray to save to a file.
@@ -515,7 +500,7 @@ class ScreenshotPlugin extends FlxBasic
 
     if (delaySave)
     { // Save the images with a delay (a timer)
-      new FlxTimer().start(screenShotNum, function(_) {
+      new FlxTimer().start(screenShotNum, (_) -> {
         var pngData:ByteArray = encode(bitmap);
 
         if (pngData == null)
@@ -564,17 +549,13 @@ class ScreenshotPlugin extends FlxBasic
     var i:Int = 0;
 
     asyncLoop = new FlxAsyncLoop(screenshots.length, () -> {
-      if (screenshots[i] != null)
-      {
-        saveScreenshot(screenshots[i], screenshotNames[i], i);
-      }
+      if (screenshots[i] != null) saveScreenshot(screenshots[i], screenshotNames[i], i);
+
       i++;
     }, 1);
     getCurrentState().add(asyncLoop);
     if (!Preferences.flashingLights && !Preferences.previewOnSave)
-    {
       showFancyPreview(screenshots[screenshots.length - 1]); // show the preview for the last screenshot
-    }
   }
 
   /**
@@ -612,9 +593,7 @@ class ScreenshotPlugin extends FlxBasic
     trace('Saving unsaved screenshots in buffer!');
 
     for (i in 0...unsavedScreenshotBuffer.length)
-    {
       if (unsavedScreenshotBuffer[i] != null) saveScreenshot(unsavedScreenshotBuffer[i], unsavedScreenshotNameBuffer[i], i, false);
-    }
 
     unsavedScreenshotBuffer = [];
     unsavedScreenshotNameBuffer = [];
@@ -649,9 +628,7 @@ class ScreenshotPlugin extends FlxBasic
     {
       if (parent == null) continue;
       for (child in parent.__children)
-      {
         parent.removeChild(child);
-      }
     }
 
     // flashSprite = null

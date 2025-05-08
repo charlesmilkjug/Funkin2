@@ -38,9 +38,7 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
   public static var DEFAULT_GENERATEDBY(get, never):String;
 
   static function get_DEFAULT_GENERATEDBY():String
-  {
     return '${Constants.TITLE} - ${Constants.VERSION}';
-  }
 
   public function new()
   {
@@ -68,9 +66,7 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
         scriptedEntryIds.set(entry.id, entryCls);
       }
       else
-      {
         log('Failed to create scripted entry (${entryCls})');
-      }
     }
 
     //
@@ -164,44 +160,24 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
     variation = variation ?? Constants.DEFAULT_VARIATION;
 
     // If a version rule is not specified, do not check against it.
-    if (SONG_METADATA_VERSION_RULE == null || VersionUtil.validateVersion(version, SONG_METADATA_VERSION_RULE))
-    {
-      return parseEntryMetadata(id, variation);
-    }
-    else if (VersionUtil.validateVersion(version, "2.1.x"))
-    {
-      return parseEntryMetadata_v2_1_0(id, variation);
-    }
-    else if (VersionUtil.validateVersion(version, "2.0.x"))
-    {
-      return parseEntryMetadata_v2_0_0(id, variation);
-    }
+    if (SONG_METADATA_VERSION_RULE == null
+      || VersionUtil.validateVersion(version, SONG_METADATA_VERSION_RULE)) return parseEntryMetadata(id, variation);
+    else if (VersionUtil.validateVersion(version, "2.1.x")) return parseEntryMetadata_v2_1_0(id, variation);
+    else if (VersionUtil.validateVersion(version, "2.0.x")) return parseEntryMetadata_v2_0_0(id, variation);
     else
-    {
       throw '[${registryId}] Metadata entry ${id}:${variation} does not support migration to version ${SONG_METADATA_VERSION_RULE}.';
-    }
   }
 
   public function parseEntryMetadataRawWithMigration(contents:String, ?fileName:String = 'raw', version:thx.semver.Version,
       ?variation:String):Null<SongMetadata>
   {
     // If a version rule is not specified, do not check against it.
-    if (SONG_METADATA_VERSION_RULE == null || VersionUtil.validateVersion(version, SONG_METADATA_VERSION_RULE))
-    {
-      return parseEntryMetadataRaw(contents, fileName, variation);
-    }
-    else if (VersionUtil.validateVersion(version, "2.1.x"))
-    {
-      return parseEntryMetadataRaw_v2_1_0(contents, fileName);
-    }
-    else if (VersionUtil.validateVersion(version, "2.0.x"))
-    {
-      return parseEntryMetadataRaw_v2_0_0(contents, fileName);
-    }
+    if (SONG_METADATA_VERSION_RULE == null
+      || VersionUtil.validateVersion(version, SONG_METADATA_VERSION_RULE)) return parseEntryMetadataRaw(contents, fileName, variation);
+    else if (VersionUtil.validateVersion(version, "2.1.x")) return parseEntryMetadataRaw_v2_1_0(contents, fileName);
+    else if (VersionUtil.validateVersion(version, "2.0.x")) return parseEntryMetadataRaw_v2_0_0(contents, fileName);
     else
-    {
       throw '[${registryId}] Metadata entry "${fileName}" does not support migration to version ${SONG_METADATA_VERSION_RULE}.';
-    }
   }
 
   function parseEntryMetadata_v2_1_0(id:String, ?variation:String):Null<SongMetadata>
@@ -318,27 +294,19 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
     variation = variation == null ? Constants.DEFAULT_VARIATION : variation;
 
     // If a version rule is not specified, do not check against it.
-    if (SONG_MUSIC_DATA_VERSION_RULE == null || VersionUtil.validateVersion(version, SONG_MUSIC_DATA_VERSION_RULE))
-    {
-      return parseMusicData(id, variation);
-    }
+    if (SONG_MUSIC_DATA_VERSION_RULE == null
+      || VersionUtil.validateVersion(version, SONG_MUSIC_DATA_VERSION_RULE)) return parseMusicData(id, variation);
     else
-    {
       throw '[${registryId}] Chart entry ${id}:${variation} does not support migration to version ${SONG_CHART_DATA_VERSION_RULE}.';
-    }
   }
 
   public function parseMusicDataRawWithMigration(contents:String, ?fileName:String = 'raw', version:thx.semver.Version):Null<SongMusicData>
   {
     // If a version rule is not specified, do not check against it.
-    if (SONG_MUSIC_DATA_VERSION_RULE == null || VersionUtil.validateVersion(version, SONG_MUSIC_DATA_VERSION_RULE))
-    {
-      return parseMusicDataRaw(contents, fileName);
-    }
+    if (SONG_MUSIC_DATA_VERSION_RULE == null
+      || VersionUtil.validateVersion(version, SONG_MUSIC_DATA_VERSION_RULE)) return parseMusicDataRaw(contents, fileName);
     else
-    {
       throw '[${registryId}] Chart entry "$fileName" does not support migration to version ${SONG_CHART_DATA_VERSION_RULE}.';
-    }
   }
 
   public function parseEntryChartData(id:String, ?variation:String):Null<SongChartData>
@@ -385,27 +353,19 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
     variation = variation == null ? Constants.DEFAULT_VARIATION : variation;
 
     // If a version rule is not specified, do not check against it.
-    if (SONG_CHART_DATA_VERSION_RULE == null || VersionUtil.validateVersion(version, SONG_CHART_DATA_VERSION_RULE))
-    {
-      return parseEntryChartData(id, variation);
-    }
+    if (SONG_CHART_DATA_VERSION_RULE == null
+      || VersionUtil.validateVersion(version, SONG_CHART_DATA_VERSION_RULE)) return parseEntryChartData(id, variation);
     else
-    {
       throw '[${registryId}] Chart entry ${id}:${variation} does not support migration to version ${SONG_CHART_DATA_VERSION_RULE}.';
-    }
   }
 
   public function parseEntryChartDataRawWithMigration(contents:String, ?fileName:String = 'raw', version:thx.semver.Version):Null<SongChartData>
   {
     // If a version rule is not specified, do not check against it.
-    if (SONG_CHART_DATA_VERSION_RULE == null || VersionUtil.validateVersion(version, SONG_CHART_DATA_VERSION_RULE))
-    {
-      return parseEntryChartDataRaw(contents, fileName);
-    }
+    if (SONG_CHART_DATA_VERSION_RULE == null
+      || VersionUtil.validateVersion(version, SONG_CHART_DATA_VERSION_RULE)) return parseEntryChartDataRaw(contents, fileName);
     else
-    {
       throw '[${registryId}] Chart entry "${fileName}" does not support migration to version ${SONG_CHART_DATA_VERSION_RULE}.';
-    }
   }
 
   function loadEntryMetadataFile(id:String, ?variation:String):Null<JsonFile>
@@ -503,9 +463,7 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
       if (song == null) continue;
 
       for (diff in song.listDifficulties(null, song.getVariationsByCharacter(character)))
-      {
         if (!allDifficulties.contains(diff)) allDifficulties.push(diff);
-      }
     }
 
     if (allDifficulties.length == 0)

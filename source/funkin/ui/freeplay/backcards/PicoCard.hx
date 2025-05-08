@@ -82,8 +82,7 @@ class PicoCard extends BackingCard
 
     confirmGlow.blend = BlendMode.ADD;
 
-    confirmGlow.visible = false;
-    confirmGlow2.visible = false;
+    confirmGlow.visible = confirmGlow2.visible = false;
 
     scrollBack = new FlxBackdrop(Paths.image('freeplay/backingCards/pico/lowerLoop'), X, 20);
     scrollBack.setPosition(0, 200);
@@ -129,13 +128,7 @@ class PicoCard extends BackingCard
     glow.blend = BlendMode.ADD;
     add(glow);
 
-    blueBar.visible = false;
-    scrollBack.visible = false;
-    scrollLower.visible = false;
-    scrollTop.visible = false;
-    scrollMiddle.visible = false;
-    glow.visible = false;
-    glowDark.visible = false;
+    blueBar.visible = scrollBack.visible = scrollLower.visible = scrollTop.visible = scrollMiddle.visible = glow.visible = glowDark.visible = false;
 
     confirmAtlas = new FlxAtlasSprite(5, 55, Paths.animateAtlas("freeplay/backingCards/pico/pico-confirm"));
     confirmAtlas.visible = false;
@@ -154,61 +147,61 @@ class PicoCard extends BackingCard
     FlxTween.color(instance.backingImage, 10 / 24, 0xFFFFFFFF, 0xFF8A8A8A,
       {
         ease: FlxEase.expoOut,
-        onUpdate: function(_) {
+        onUpdate: (_) -> {
           instance.angleMaskShader.extraColor = instance.backingImage.color;
         }
       });
 
-    new FlxTimer().start(10 / 24, function(_) {
+    new FlxTimer().start(10 / 24, (_) -> {
       // shoot
       FlxTween.color(instance.backingImage, 3 / 24, 0xFF343036, 0xFF696366,
         {
           ease: FlxEase.expoOut,
-          onUpdate: function(_) {
+          onUpdate: (_) -> {
             instance.angleMaskShader.extraColor = instance.backingImage.color;
           }
         });
     });
 
-    new FlxTimer().start(14 / 24, function(_) {
+    new FlxTimer().start(14 / 24, (_) -> {
       // shoot
       FlxTween.color(instance.backingImage, 3 / 24, 0xFF27292D, 0xFF686A6F,
         {
           ease: FlxEase.expoOut,
-          onUpdate: function(_) {
+          onUpdate: (_) -> {
             instance.angleMaskShader.extraColor = instance.backingImage.color;
           }
         });
     });
 
-    new FlxTimer().start(18 / 24, function(_) {
+    new FlxTimer().start(18 / 24, (_) -> {
       // shoot
       FlxTween.color(instance.backingImage, 3 / 24, 0xFF2D282D, 0xFF676164,
         {
           ease: FlxEase.expoOut,
-          onUpdate: function(_) {
+          onUpdate: (_) -> {
             instance.angleMaskShader.extraColor = instance.backingImage.color;
           }
         });
     });
 
-    new FlxTimer().start(21 / 24, function(_) {
+    new FlxTimer().start(21 / 24, (_) -> {
       // shoot
       FlxTween.color(instance.backingImage, 3 / 24, 0xFF29292F, 0xFF62626B,
         {
           ease: FlxEase.expoOut,
-          onUpdate: function(_) {
+          onUpdate: (_) -> {
             instance.angleMaskShader.extraColor = instance.backingImage.color;
           }
         });
     });
 
-    new FlxTimer().start(24 / 24, function(_) {
+    new FlxTimer().start(24 / 24, (_) -> {
       // shoot
       FlxTween.color(instance.backingImage, 3 / 24, 0xFF29232C, 0xFF808080,
         {
           ease: FlxEase.expoOut,
-          onUpdate: function(_) {
+          onUpdate: (_) -> {
             instance.angleMaskShader.extraColor = instance.backingImage.color;
           }
         });
@@ -237,15 +230,7 @@ class PicoCard extends BackingCard
   {
     pinkBack.color = 0xFF98A2F3;
 
-    blueBar.visible = true;
-    scrollBack.visible = true;
-    scrollLower.visible = true;
-    scrollTop.visible = true;
-    scrollMiddle.visible = true;
-    glowDark.visible = true;
-    glow.visible = true;
-
-    cardGlow.visible = true;
+    blueBar.visible = scrollBack.visible = scrollLower.visible = scrollTop.visible = scrollMiddle.visible = glowDark.visible = glow.visible = cardGlow.visible = true;
     FlxTween.tween(cardGlow, {alpha: 0, "scale.x": 1.2, "scale.y": 1.2}, 0.45, {ease: FlxEase.sineOut});
   }
 
@@ -253,13 +238,7 @@ class PicoCard extends BackingCard
   {
     FlxTween.color(pinkBack, 0.25, 0xFF98A2F3, 0xFFFFD0D5, {ease: FlxEase.quadOut});
 
-    blueBar.visible = false;
-    scrollBack.visible = false;
-    scrollLower.visible = false;
-    scrollTop.visible = false;
-    scrollMiddle.visible = false;
-    glowDark.visible = false;
-    glow.visible = false;
+    blueBar.visible = scrollBack.visible = scrollLower.visible = scrollTop.visible = scrollMiddle.visible = glowDark.visible = glow.visible = false;
 
     cardGlow.visible = true;
     cardGlow.alpha = 1;
@@ -274,25 +253,17 @@ class PicoCard extends BackingCard
 
     if (scrollTop.animation.curAnim.finished == true)
     {
-      if (FlxMath.inBounds(scrollProgress, 500, 700) && scrollTop.animation.curAnim.name != 'sniper')
-      {
-        scrollTop.animation.play('sniper', true, false);
-      }
+      if (FlxMath.inBounds(scrollProgress, 500, 700)
+        && scrollTop.animation.curAnim.name != 'sniper') scrollTop.animation.play('sniper', true, false);
 
-      if (FlxMath.inBounds(scrollProgress, 700, 1300) && scrollTop.animation.curAnim.name != 'rifle')
-      {
-        scrollTop.animation.play('rifle', true, false);
-      }
+      if (FlxMath.inBounds(scrollProgress, 700, 1300)
+        && scrollTop.animation.curAnim.name != 'rifle') scrollTop.animation.play('rifle', true, false);
 
-      if (FlxMath.inBounds(scrollProgress, 1450, 2000) && scrollTop.animation.curAnim.name != 'rocket launcher')
-      {
-        scrollTop.animation.play('rocket launcher', true, false);
-      }
+      if (FlxMath.inBounds(scrollProgress, 1450, 2000)
+        && scrollTop.animation.curAnim.name != 'rocket launcher') scrollTop.animation.play('rocket launcher', true, false);
 
-      if (FlxMath.inBounds(scrollProgress, 0, 300) && scrollTop.animation.curAnim.name != 'uzi')
-      {
-        scrollTop.animation.play('uzi', true, false);
-      }
+      if (FlxMath.inBounds(scrollProgress, 0, 300)
+        && scrollTop.animation.curAnim.name != 'uzi') scrollTop.animation.play('uzi', true, false);
     }
   }
 }

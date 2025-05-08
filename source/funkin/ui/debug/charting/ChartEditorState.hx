@@ -3246,7 +3246,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   function onWindowCrash(message:String):Void
   {
     trace('Chart editor intercepted crash: \n${message}');
-
     trace('Should save chart? $saveDataDirty');
 
     var needsAutoSave:Bool = saveDataDirty;
@@ -4992,10 +4991,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
       if (currentSongMetadata.playData.characters.opponent != charPlayer.charId)
       {
-        if (healthIconDad != null)
-        {
-          healthIconDad.characterId = currentSongMetadata.playData.characters.opponent;
-        }
+        if (healthIconDad != null) healthIconDad.characterId = currentSongMetadata.playData.characters.opponent;
 
         charPlayer.loadCharacter(currentSongMetadata.playData.characters.opponent);
         charPlayer.characterType = CharacterType.DAD;
@@ -5111,9 +5107,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       performCommand(new RemoveNotesCommand(notesAtPos));
     }
     else
-    {
       trace('Already a note there. ${column}');
-    }
   }
 
   function placeEventAtPlayhead(isOpponent:Bool):Void
@@ -5629,9 +5623,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function handlePostUpdate():Void
-  {
     wasCursorOverHaxeUI = isCursorOverHaxeUI;
-  }
 
   /**
    * PLAYTEST FUNCTIONS
@@ -5719,9 +5711,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     this.persistentDraw = false;
     stopWelcomeMusic();
 
-    LoadingState.loadPlayState(targetStateParams, false, true, (targetState) -> {
-      targetState.vocals = audioVocalTrackGroup;
-    });
+    LoadingState.loadPlayState(targetStateParams, false, true, (targetState) -> targetState.vocals = audioVocalTrackGroup);
   }
 
   /**
@@ -5839,9 +5829,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    * @param high Whether to play the full beat sound rather than the quarter beat sound.
    */
   function playMetronomeTick(high:Bool = false):Void
-  {
     this.playSound(Paths.sound('chartingSounds/metronome${high ? '1' : '2'}'), metronomeVolume);
-  }
 
   function switchToCurrentInstrumental():Void
   {
@@ -5889,9 +5877,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function isEventSelected(event:Null<SongEventData>):Bool
-  {
     return event != null && currentEventSelection.indexOf(event) != -1;
-  }
 
   function createDifficulty(variation:String, difficulty:String, scrollSpeed:Float = 1.0):Void
   {

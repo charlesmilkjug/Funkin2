@@ -44,7 +44,7 @@ class ChartEditorSelectionContextMenu extends ChartEditorBaseContextMenu
   public function initialize():Void
   {
     // NOTE: Remember to use commands here to ensure undo/redo works properly
-    contextmenuUnit.onChange = function(_) {
+    contextmenuUnit.onChange = (_) -> {
       // Why does the dropdown do this after I specifically set the value of the damn thing?
       if (contextmenuUnit.selectedIndex == -1)
       {
@@ -56,24 +56,15 @@ class ChartEditorSelectionContextMenu extends ChartEditorBaseContextMenu
       {
         case "MILLISECONDS":
           contextmenuOffset.label = "Offset (MS)";
-          if (contextmenuOffset.value != 0)
-          {
-            contextmenuOffset.value = Conductor.instance.getStepTimeInMs(contextmenuOffset.value);
-          }
+          if (contextmenuOffset.value != 0) contextmenuOffset.value = Conductor.instance.getStepTimeInMs(contextmenuOffset.value);
 
         case "STEPS":
           contextmenuOffset.label = "Offset (Steps)";
-          if (contextmenuOffset.value != 0)
-          {
-            contextmenuOffset.value = Conductor.instance.getTimeInSteps(contextmenuOffset.value);
-          }
+          if (contextmenuOffset.value != 0) contextmenuOffset.value = Conductor.instance.getTimeInSteps(contextmenuOffset.value);
 
         default:
           contextmenuOffset.label = "Offset (MS)";
-          if (contextmenuOffset.value != 0)
-          {
-            contextmenuOffset.value = Conductor.instance.getStepTimeInMs(contextmenuOffset.value);
-          }
+          if (contextmenuOffset.value != 0) contextmenuOffset.value = Conductor.instance.getStepTimeInMs(contextmenuOffset.value);
       }
     }
     var id:String = contextmenuUnit.dataSource.get(contextmenuUnit.selectedIndex).id;
@@ -108,27 +99,18 @@ class ChartEditorSelectionContextMenu extends ChartEditorBaseContextMenu
       }
     }
 
-    contextmenuCut.onClick = (_) -> {
-      chartEditorState.performCommand(new CutItemsCommand(chartEditorState.currentNoteSelection, chartEditorState.currentEventSelection));
-    }
+    contextmenuCut.onClick = (_) -> chartEditorState.performCommand(new CutItemsCommand(chartEditorState.currentNoteSelection,
+      chartEditorState.currentEventSelection));
 
-    contextmenuCopy.onClick = (_) -> {
-      chartEditorState.copySelection();
-    }
+    contextmenuCopy.onClick = (_) -> chartEditorState.copySelection();
 
     contextmenuFlip.onClick = (_) -> {
-      if (chartEditorState.currentNoteSelection.length > 0 && chartEditorState.currentEventSelection.length > 0)
-      {
-        chartEditorState.performCommand(new RemoveItemsCommand(chartEditorState.currentNoteSelection, chartEditorState.currentEventSelection));
-      }
-      else if (chartEditorState.currentNoteSelection.length > 0)
-      {
-        chartEditorState.performCommand(new RemoveNotesCommand(chartEditorState.currentNoteSelection));
-      }
+      if (chartEditorState.currentNoteSelection.length > 0
+        && chartEditorState.currentEventSelection.length > 0) chartEditorState.performCommand(new RemoveItemsCommand(chartEditorState.currentNoteSelection,
+          chartEditorState.currentEventSelection));
+      else if (chartEditorState.currentNoteSelection.length > 0) chartEditorState.performCommand(new RemoveNotesCommand(chartEditorState.currentNoteSelection));
       else if (chartEditorState.currentEventSelection.length > 0)
-      {
         chartEditorState.performCommand(new RemoveEventsCommand(chartEditorState.currentEventSelection));
-      }
       else
       {
         // Do nothing???

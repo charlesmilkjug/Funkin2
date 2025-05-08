@@ -51,7 +51,7 @@ class RegistryMacro
     var fields:Array<Field> = Context.getBuildFields();
 
     // Classes with the `@:funkinBase` meta or `@:funkinProcessed` meta should be ignored.
-    var baseMeta:Null<MetadataEntry> = cls.meta.get().find(function(m) return m.name == ':funkinBase');
+    var baseMeta:Null<MetadataEntry> = cls.meta.get().find((m) -> return m.name == ':funkinBase');
     if (baseMeta != null || alreadyProcessed(cls)) return fields;
 
     var typeParams:RegistryTypeParams = getTypeParams(cls);
@@ -364,9 +364,7 @@ class RegistryMacro
     var files:Array<String> = sys.FileSystem.readDirectory(dataFilePath);
 
     for (file in files)
-    {
       result.push(macro $v{file.replace('.json', '')});
-    }
 
     return result;
   }
@@ -380,7 +378,7 @@ class RegistryMacro
   static function alreadyProcessed(cls:ClassType):Bool
   {
     // Check for the `@:funkinProcessed` meta.
-    var processedMeta:MetadataEntry = cls.meta.get().find(function(m) return m.name == ':funkinProcessed');
+    var processedMeta:MetadataEntry = cls.meta.get().find((m) -> return m.name == ':funkinProcessed');
     if (processedMeta != null) return true;
 
     // If it's not found, check the superclass.

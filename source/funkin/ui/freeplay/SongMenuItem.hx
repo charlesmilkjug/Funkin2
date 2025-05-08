@@ -87,7 +87,6 @@ class SongMenuItem extends FlxSpriteGroup
     capsule.frames = Paths.getSparrowAtlas('freeplay/freeplayCapsule/capsule/freeplayCapsule');
     capsule.animation.addByPrefix('selected', 'mp3 capsule w backing0', 24);
     capsule.animation.addByPrefix('unselected', 'mp3 capsule w backing NOT SELECTED', 24);
-    // capsule.animation
     add(capsule);
 
     bpmText = new FlxSprite(144, 87).loadGraphic(Paths.image('freeplay/freeplayCapsule/bpmtext'));
@@ -112,13 +111,7 @@ class SongMenuItem extends FlxSpriteGroup
     newText.animation.addByPrefix('newAnim', 'NEW notif', 24, true);
     newText.animation.play('newAnim', true);
     newText.setGraphicSize(Std.int(newText.width * 0.9));
-
-    // newText.visible = false;
-
     add(newText);
-
-    // var debugNumber2:CapsuleNumber = new CapsuleNumber(0, 0, true, 2);
-    // add(debugNumber2);
 
     for (i in 0...2)
     {
@@ -271,10 +264,7 @@ class SongMenuItem extends FlxSpriteGroup
       weekType.visible = true;
       weekNumbers[0].visible = true;
     }
-    if (weekNum > 0)
-    {
-      weekType.animation.play('WEEK', true);
-    }
+    if (weekNum > 0) weekType.animation.play('WEEK', true);
     else
     {
       weekType.animation.play('WEEKEND', true);
@@ -298,9 +288,7 @@ class SongMenuItem extends FlxSpriteGroup
       clipType += 1;
     }
     else
-    {
       favIconBlurred.x = favIcon.x = this.x + 405;
-    }
 
     if (favIcon.visible) clipType += 1;
 
@@ -319,10 +307,7 @@ class SongMenuItem extends FlxSpriteGroup
     var shiftX:Float = 191;
     var tempShift:Float = 0;
 
-    if (Math.floor(newBPM / 100) == 1)
-    {
-      shiftX = 186;
-    }
+    if (Math.floor(newBPM / 100) == 1) shiftX = 186;
 
     for (i in 0...smallNumbers.length)
     {
@@ -330,20 +315,12 @@ class SongMenuItem extends FlxSpriteGroup
       switch (i)
       {
         case 0:
-          if (newBPM < 100)
-          {
-            smallNumbers[i].digit = 0;
-          }
+          if (newBPM < 100) smallNumbers[i].digit = 0;
           else
-          {
             smallNumbers[i].digit = Math.floor(newBPM / 100) % 10;
-          }
 
         case 1:
-          if (newBPM < 10)
-          {
-            smallNumbers[i].digit = 0;
-          }
+          if (newBPM < 10) smallNumbers[i].digit = 0;
           else
           {
             smallNumbers[i].digit = Math.floor(newBPM / 10) % 10;
@@ -384,7 +361,7 @@ class SongMenuItem extends FlxSpriteGroup
     FlxTween.tween(evilTrail, {alpha: 0}, 0.6,
       {
         ease: FlxEase.quadOut,
-        onComplete: function(_) {
+        onComplete: (_) -> {
           remove(evilTrail);
         }
       });
@@ -481,14 +458,10 @@ class SongMenuItem extends FlxSpriteGroup
       switch (i)
       {
         case 0:
-          if (newRating < 10)
-          {
-            bigNumbers[i].digit = 0;
-          }
+          if (newRating < 10) bigNumbers[i].digit = 0;
           else
-          {
             bigNumbers[i].digit = Math.floor(newRating / 10);
-          }
+
         case 1:
           bigNumbers[i].digit = newRating % 10;
         default:
@@ -527,22 +500,18 @@ class SongMenuItem extends FlxSpriteGroup
     songText.scale.x = 1.7;
     songText.scale.y = 0.2;
 
-    new FlxTimer().start(1 / 24, function(_) {
+    new FlxTimer().start(1 / 24, (_) -> {
       songText.scale.x = 0.4;
       songText.scale.y = 1.4;
     });
 
-    new FlxTimer().start(2 / 24, function(_) {
-      songText.scale.x = songText.scale.y = 1;
-    });
+    new FlxTimer().start(2 / 24, (_) -> songText.scale.x = songText.scale.y = 1);
   }
 
   function setVisibleGrp(value:Bool):Void
   {
     for (spr in grpHide.members)
-    {
       spr.visible = value;
-    }
 
     textAppear();
 
@@ -597,10 +566,7 @@ class SongMenuItem extends FlxSpriteGroup
   {
     frameInTypeBeat = 0;
 
-    new FlxTimer().start((1 / 24) * maxTimer, function(doShit) {
-      doJumpIn = true;
-      doLerp = true;
-    });
+    new FlxTimer().start((1 / 24) * maxTimer, (doShit) -> doJumpIn = doLerp = true);
 
     if (force)
     {
@@ -610,7 +576,7 @@ class SongMenuItem extends FlxSpriteGroup
     }
     else
     {
-      new FlxTimer().start((xFrames.length / 24) * 2.5, function(_) {
+      new FlxTimer().start((xFrames.length / 24) * 2.5, (_) -> {
         visible = true;
         capsule.alpha = 1;
         setVisibleGrp(true);
@@ -689,10 +655,7 @@ class SongMenuItem extends FlxSpriteGroup
 
         frameOutTypeBeat += 1;
       }
-      else if (frameOutTypeBeat == xFrames.length)
-      {
-        doJumpOut = false;
-      }
+      else if (frameOutTypeBeat == xFrames.length) doJumpOut = false;
     }
 
     if (doLerp)
@@ -717,14 +680,10 @@ class SongMenuItem extends FlxSpriteGroup
   }
 
   public function intendedX(index:Int):Float
-  {
     return 270 + (60 * (Math.sin(index)));
-  }
 
   public function intendedY(index:Int):Float
-  {
     return (index * ((height * realScaled) + 10)) + 120;
-  }
 
   function set_selected(value:Bool):Bool
   {
@@ -757,9 +716,7 @@ class SongMenuItem extends FlxSpriteGroup
 
     visible = true;
     capsule.alpha = 1;
-    doLerp = false;
-    doJumpIn = false;
-    doJumpOut = false;
+    doLerp = doJumpIn = doJumpOut = false;
   }
 }
 
@@ -777,10 +734,7 @@ class FreeplayRank extends FlxSpriteGroup
   {
     rank = val;
 
-    if (rank == null || val == null)
-    {
-      this.visible = false;
-    }
+    if (rank == null || val == null) this.visible = false;
     else
     {
       this.visible = true;
@@ -862,9 +816,7 @@ class FreeplayRank extends FlxSpriteGroup
   public function playAnimationEach(animName:String, force = false, reversed = false, frame = 0):Void
   {
     for (i in members)
-    {
       i.animation.play(animName, force, reversed, frame);
-    }
   }
 }
 
@@ -874,9 +826,7 @@ class CapsuleNumber extends FlxSprite
   public var digit(get, set):Int = 0;
 
   function get_digit():Int
-  {
     return this.digit;
-  }
 
   function set_digit(val):Int
   {
@@ -914,14 +864,9 @@ class CapsuleNumber extends FlxSprite
   {
     super(x, y);
 
-    if (big)
-    {
-      frames = Paths.getSparrowAtlas('freeplay/freeplayCapsule/bignumbers');
-    }
+    if (big) frames = Paths.getSparrowAtlas('freeplay/freeplayCapsule/bignumbers');
     else
-    {
       frames = Paths.getSparrowAtlas('freeplay/freeplayCapsule/smallnumbers');
-    }
 
     for (i in 0...10)
     {

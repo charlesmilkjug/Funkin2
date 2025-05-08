@@ -162,9 +162,7 @@ class PreciseInputManager extends FlxKeyManager<FlxKey, PreciseInputList>
   }
 
   static function getPreventDefaultKeys():Array<FlxKey>
-  {
     return FlxG.keys.preventDefaultKeys;
-  }
 
   /**
    * Call this whenever the user's inputs change.
@@ -230,9 +228,7 @@ class PreciseInputManager extends FlxKeyManager<FlxKey, PreciseInputList>
    * @return An Int64 representing the time since the given note direction was last pressed.
    */
   public function getTimeSincePressed(noteDirection:NoteDirection):Int64
-  {
     return getCurrentTimestamp() - _dirPressTimestamps.get(noteDirection);
-  }
 
   /**
    * Get the time, in nanoseconds, since the given note direction was last released.
@@ -240,50 +236,33 @@ class PreciseInputManager extends FlxKeyManager<FlxKey, PreciseInputList>
    * @return An Int64 representing the time since the given note direction was last released.
    */
   public function getTimeSinceReleased(noteDirection:NoteDirection):Int64
-  {
     return getCurrentTimestamp() - _dirReleaseTimestamps.get(noteDirection);
-  }
 
   // TODO: Why doesn't this work?
   // @:allow(funkin.input.PreciseInputManager.PreciseInputList)
   public function getInputByKey(key:FlxKey):FlxKeyInput
-  {
     return _keyListMap.get(key);
-  }
 
   public function getInputByButton(gamepad:FlxGamepad, button:FlxGamepadInputID):FlxInput<FlxGamepadInputID>
-  {
     return _buttonListMap.get(gamepad.id).get(button);
-  }
 
   public function getDirectionForKey(key:FlxKey):NoteDirection
-  {
     return _keyListDir.get(key);
-  }
 
   public function getDirectionForButton(gamepad:FlxGamepad, button:FlxGamepadInputID):NoteDirection
-  {
     return _buttonListDir.get(gamepad.id).get(button);
-  }
 
   function getButton(gamepad:FlxGamepad, button:FlxGamepadInputID):FlxInput<FlxGamepadInputID>
-  {
     return _buttonListMap.get(gamepad.id).get(button);
-  }
 
   function updateButtonStates(gamepad:FlxGamepad, button:FlxGamepadInputID, down:Bool):Void
   {
     var input = getButton(gamepad, button);
     if (input == null) return;
 
-    if (down)
-    {
-      input.press();
-    }
+    if (down) input.press();
     else
-    {
       input.release();
-    }
   }
 
   function handleKeyDown(keyCode:KeyCode, _:KeyModifier, timestamp:Int64):Void
@@ -432,9 +411,7 @@ class PreciseInputList extends FlxKeyList
   }
 
   static function getKeysForDir(noteDir:NoteDirection):Array<FlxKey>
-  {
     return PreciseInputManager.getKeysForDirection(PlayerSettings.player1.controls, noteDir);
-  }
 
   function isKeyValid(key:FlxKey):Bool
   {
@@ -453,9 +430,8 @@ class PreciseInputList extends FlxKeyList
   public function checkDir(noteDir:NoteDirection):Bool
   {
     for (key in getKeysForDir(noteDir))
-    {
       if (check(_preciseInputManager.getInputByKey(key)?.ID)) return true;
-    }
+
     return false;
   }
 

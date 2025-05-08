@@ -50,7 +50,7 @@ class CapsuleText extends FlxSpriteGroup
   function initText(songTitle, size:Float):FlxText
   {
     var text:FlxText = new FlxText(0, 0, 0, songTitle, Std.int(size));
-    text.font = "5by7";
+    text.font = Paths.font("5by7.ttf");
     return text;
   }
 
@@ -134,15 +134,13 @@ class CapsuleText extends FlxSpriteGroup
     var distToMove:Float = whiteText.width - clipWidth;
     moveTween = FlxTween.tween(whiteText.offset, {x: distToMove}, 2,
       {
-        onUpdate: function(_) {
+        onUpdate: (_) -> {
           whiteText.clipRect = new FlxRect(whiteText.offset.x, 0, clipWidth, whiteText.height);
           blurredText.offset = whiteText.offset;
           blurredText.clipRect = new FlxRect(whiteText.offset.x, 0, clipWidth, blurredText.height);
         },
-        onComplete: function(_) {
-          moveTimer.start(0.3, (timer) -> {
-            moveTextLeft();
-          });
+        onComplete: (_) -> {
+          moveTimer.start(0.3, (timer) -> moveTextLeft());
         },
         ease: FlxEase.sineInOut
       });
@@ -152,15 +150,13 @@ class CapsuleText extends FlxSpriteGroup
   {
     moveTween = FlxTween.tween(whiteText.offset, {x: 0}, 2,
       {
-        onUpdate: function(_) {
+        onUpdate: (_) -> {
           whiteText.clipRect = new FlxRect(whiteText.offset.x, 0, clipWidth, whiteText.height);
           blurredText.offset = whiteText.offset;
           blurredText.clipRect = new FlxRect(whiteText.offset.x, 0, clipWidth, blurredText.height);
         },
-        onComplete: function(_) {
-          moveTimer.start(0.3, (timer) -> {
-            moveTextRight();
-          });
+        onComplete: (_) -> {
+          moveTimer.start(0.3, (timer) -> moveTextRight());
         },
         ease: FlxEase.sineInOut
       });

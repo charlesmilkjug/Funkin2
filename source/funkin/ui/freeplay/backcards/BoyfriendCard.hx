@@ -97,16 +97,14 @@ class BoyfriendCard extends BackingCard
     add(alsoOrangeLOL);
 
     FlxSpriteUtil.alphaMaskFlxSprite(orangeBackShit, pinkBack, orangeBackShit);
-    orangeBackShit.visible = false;
-    alsoOrangeLOL.visible = false;
+    orangeBackShit.visible = alsoOrangeLOL.visible = false;
 
     confirmTextGlow.blend = BlendMode.ADD;
     confirmTextGlow.visible = false;
 
     confirmGlow.blend = BlendMode.ADD;
 
-    confirmGlow.visible = false;
-    confirmGlow2.visible = false;
+    confirmGlow.visible = confirmGlow2.visible = false;
 
     add(confirmGlow2);
     add(confirmGlow);
@@ -118,12 +116,7 @@ class BoyfriendCard extends BackingCard
     cardGlow.blend = BlendMode.ADD;
     cardGlow.visible = false;
 
-    moreWays.visible = false;
-    funnyScroll.visible = false;
-    txtNuts.visible = false;
-    funnyScroll2.visible = false;
-    moreWays2.visible = false;
-    funnyScroll3.visible = false;
+    moreWays.visible = funnyScroll.visible = txtNuts.visible = funnyScroll2.visible = moreWays2.visible = funnyScroll3.visible = false;
 
     moreWays.funnyColor = 0xFFFFF383;
     moreWays.speed = 6.8;
@@ -156,8 +149,7 @@ class BoyfriendCard extends BackingCard
     glow.blend = BlendMode.ADD;
     add(glow);
 
-    glowDark.visible = false;
-    glow.visible = false;
+    glowDark.visible = glow.visible = false;
 
     add(cardGlow);
   }
@@ -183,15 +175,7 @@ class BoyfriendCard extends BackingCard
   public override function introDone():Void
   {
     super.introDone();
-    moreWays.visible = true;
-    funnyScroll.visible = true;
-    txtNuts.visible = true;
-    funnyScroll2.visible = true;
-    moreWays2.visible = true;
-    funnyScroll3.visible = true;
-    // grpTxtScrolls.visible = true;
-    glowDark.visible = true;
-    glow.visible = true;
+    moreWays.visible = funnyScroll.visible = txtNuts.visible = funnyScroll2.visible = moreWays2.visible = funnyScroll3.visible = glowDark.visible = glow.visible = true;
   }
 
   public override function confirm():Void
@@ -199,27 +183,13 @@ class BoyfriendCard extends BackingCard
     super.confirm();
     // FlxTween.color(bgDad, 0.33, 0xFFFFFFFF, 0xFF555555, {ease: FlxEase.quadOut});
 
-    moreWays.visible = false;
-    funnyScroll.visible = false;
-    txtNuts.visible = false;
-    funnyScroll2.visible = false;
-    moreWays2.visible = false;
-    funnyScroll3.visible = false;
-    glowDark.visible = false;
-    glow.visible = false;
+    moreWays.visible = funnyScroll.visible = txtNuts.visible = funnyScroll2.visible = moreWays2.visible = funnyScroll3.visible = glowDark.visible = glow.visible = false;
   }
 
   public override function disappear():Void
   {
     super.disappear();
 
-    moreWays.visible = false;
-    funnyScroll.visible = false;
-    txtNuts.visible = false;
-    funnyScroll2.visible = false;
-    moreWays2.visible = false;
-    funnyScroll3.visible = false;
-    glowDark.visible = false;
-    glow.visible = false;
+    moreWays.visible = funnyScroll.visible = txtNuts.visible = funnyScroll2.visible = moreWays2.visible = funnyScroll3.visible = glowDark.visible = glow.visible = false;
   }
 }

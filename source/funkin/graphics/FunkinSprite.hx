@@ -101,15 +101,12 @@ class FunkinSprite extends FlxSprite
   public function loadTextureAsync(key:String, fade:Bool = false):Void
   {
     var fadeTween:Null<FlxTween> = null;
-    if (fade)
-    {
-      fadeTween = FlxTween.tween(this, {alpha: 0}, 0.25);
-    }
+    if (fade) fadeTween = FlxTween.tween(this, {alpha: 0}, 0.25);
 
     trace('[ASYNC] Start loading image (${key})');
     graphic.persist = true;
     openfl.Assets.loadBitmapData(key)
-      .onComplete(function(bitmapData:openfl.display.BitmapData) {
+      .onComplete((bitmapData:openfl.display.BitmapData) -> {
         trace('[ASYNC] Finished loading image');
         var cache:Bool = false;
         loadBitmapData(bitmapData, cache);
@@ -120,7 +117,7 @@ class FunkinSprite extends FlxSprite
           FlxTween.tween(this, {alpha: 1.0}, 0.25);
         }
       })
-      .onError(function(error:Dynamic) {
+      .onError((error:Dynamic) -> {
         trace('[ASYNC] Failed to load image: ${error}');
         if (fadeTween != null)
         {
@@ -128,9 +125,7 @@ class FunkinSprite extends FlxSprite
           this.alpha = 1.0;
         }
       })
-      .onProgress(function(progress:Int, total:Int) {
-        trace('[ASYNC] Loading image progress: ${progress}/${total}');
-      });
+      .onProgress((progress:Int, total:Int) -> trace('[ASYNC] Loading image progress: ${progress}/${total}'));
   }
 
   /**
@@ -140,10 +135,7 @@ class FunkinSprite extends FlxSprite
    */
   public function loadBitmapData(input:BitmapData, cache:Bool = true):FunkinSprite
   {
-    if (cache)
-    {
-      loadGraphic(input);
-    }
+    if (cache) loadGraphic(input);
     else
     {
       var graphic:FlxGraphic = FlxGraphic.fromBitmapData(input, false, null, false);
@@ -249,9 +241,7 @@ class FunkinSprite extends FlxSprite
   }
 
   public static function cachePacker(key:String):Void
-  {
     cacheTexture(Paths.image(key));
-  }
 
   /**
    * Call this, then `cacheTexture` to keep the textures we still need, then `purgeCache` to remove the textures that we won't be using anymore.

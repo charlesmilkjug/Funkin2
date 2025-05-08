@@ -51,13 +51,11 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
   }
 
   function onClose(event:UIEvent)
-  {
     chartEditorState.menubarItemToggleToolboxNoteData.selected = false;
-  }
 
   function initialize():Void
   {
-    toolboxNotesNoteKind.onChange = function(event:UIEvent) {
+    toolboxNotesNoteKind.onChange = (event:UIEvent) -> {
       var noteKind:Null<String> = event?.data?.id ?? null;
       if (noteKind == '') noteKind = null;
 
@@ -114,7 +112,7 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
     var startingValueNoteKind = ChartEditorDropdowns.populateDropdownWithNoteKinds(toolboxNotesNoteKind, '');
     toolboxNotesNoteKind.value = startingValueNoteKind;
 
-    toolboxNotesCustomKind.onChange = function(event:UIEvent) {
+    toolboxNotesCustomKind.onChange = (event:UIEvent) -> {
       var customKind:Null<String> = event?.target?.text;
       chartEditorState.noteKindToPlace = customKind;
 
@@ -122,9 +120,8 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
       {
         // Edit the note data of any selected notes.
         for (note in chartEditorState.currentNoteSelection)
-        {
           note.kind = chartEditorState.noteKindToPlace;
-        }
+
         chartEditorState.saveDataDirty = true;
         chartEditorState.noteDisplayDirty = true;
         chartEditorState.notePreviewDirty = true;
@@ -196,18 +193,12 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
 
           // this check should be unnecessary but for some reason
           // even when these are null it will set it to 0
-          if (param.data?.min != null)
-          {
-            paramStepper.min = param.data.min;
-          }
-          if (param.data?.max != null)
-          {
-            paramStepper.max = param.data.max;
-          }
-          if (param.data?.precision != null)
-          {
-            paramStepper.precision = param.data.precision;
-          }
+          if (param.data?.min != null) paramStepper.min = param.data.min;
+
+          if (param.data?.max != null) paramStepper.max = param.data.max;
+
+          if (param.data?.precision != null) paramStepper.precision = param.data.precision;
+
           paramComponent = paramStepper;
 
         case NoteKindParamType.STRING:
@@ -217,25 +208,16 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
           paramComponent = paramTextField;
       }
 
-      if (paramComponent == null)
-      {
-        continue;
-      }
+      if (paramComponent == null) continue;
 
-      paramComponent.onChange = function(event:UIEvent) {
+      paramComponent.onChange = (event:UIEvent) -> {
         chartEditorState.noteParamsToPlace[i].value = paramComponent.value;
 
         for (note in chartEditorState.currentNoteSelection)
         {
-          if (note.params.length != noteKindParams.length)
-          {
-            break;
-          }
+          if (note.params.length != noteKindParams.length) break;
 
-          if (note.params[i].name == param.name)
-          {
-            note.params[i].value = paramComponent.value;
-          }
+          if (note.params[i].name == param.name) note.params[i].value = paramComponent.value;
         }
       }
 
@@ -246,9 +228,8 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
     {
       var noteParamData:Array<NoteParamData> = [];
       for (i in 0...noteKindParams.length)
-      {
         noteParamData.push(new NoteParamData(noteKindParams[i].name, toolboxNotesParams[i].component.value));
-      }
+
       chartEditorState.noteParamsToPlace = noteParamData;
     }
   }
@@ -278,22 +259,14 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
     super.update(elapsed);
 
     // current dialog is minimized, dont change the height
-    if (this.minimized)
-    {
-      return;
-    }
+    if (this.minimized) return;
 
     var heightToSet:Int = Std.int(Math.max(DIALOG_HEIGHT, (toolboxNotesGrid?.height ?? 50.0) + HEIGHT_OFFSET)) + MINIMIZE_FIX;
-    if (this.height != heightToSet)
-    {
-      this.height = heightToSet;
-    }
+    if (this.height != heightToSet) this.height = heightToSet;
   }
 
   public static function build(chartEditorState:ChartEditorState):ChartEditorNoteDataToolbox
-  {
     return new ChartEditorNoteDataToolbox(chartEditorState);
-  }
 }
 
 typedef ToolboxNoteKindParam =
