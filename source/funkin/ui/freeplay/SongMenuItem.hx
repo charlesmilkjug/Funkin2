@@ -254,16 +254,10 @@ class SongMenuItem extends FlxSpriteGroup
 
     weekNumbers[0].digit = Std.int(Math.abs(weekNum));
 
-    if (weekNum == 0)
-    {
-      weekType.visible = false;
-      weekNumbers[0].visible = false;
-    }
+    if (weekNum == 0) weekType.visible = weekNumbers[0].visible = false;
     else
-    {
-      weekType.visible = true;
-      weekNumbers[0].visible = true;
-    }
+      weekType.visible = weekNumbers[0].visible = true;
+
     if (weekNum > 0) weekType.animation.play('WEEK', true);
     else
     {
@@ -371,20 +365,14 @@ class SongMenuItem extends FlxSpriteGroup
   }
 
   public function getTrailColor():FlxColor
-  {
     return evilTrail.color;
-  }
 
   public function refreshDisplay(updateRank:Bool = true):Void
   {
     if (freeplayData == null)
     {
       songText.text = 'Random';
-      pixelIcon.visible = false;
-      ranking.visible = false;
-      favIcon.visible = false;
-      favIconBlurred.visible = false;
-      newText.visible = false;
+      pixelIcon.visible = ranking.visible = favIcon.visible = favIconBlurred.visible = newText.visible = false;
     }
     else
     {
@@ -395,8 +383,7 @@ class SongMenuItem extends FlxSpriteGroup
       updateDifficultyRating(freeplayData.difficultyRating ?? 0);
       if (updateRank) updateScoringRank(freeplayData.scoringRank);
       newText.visible = freeplayData.isNew;
-      favIcon.visible = freeplayData.isFav;
-      favIconBlurred.visible = freeplayData.isFav;
+      favIcon.visible = favIconBlurred.visible = freeplayData.isFav;
       checkClip();
     }
     updateSelected();
@@ -513,8 +500,6 @@ class SongMenuItem extends FlxSpriteGroup
     for (spr in grpHide.members)
       spr.visible = value;
 
-    textAppear();
-
     updateSelected();
   }
 
@@ -592,15 +577,13 @@ class SongMenuItem extends FlxSpriteGroup
     capsule.alpha = 1;
     updateSelected();
     doLerp = true;
-    doJumpIn = false;
-    doJumpOut = false;
+    doJumpIn = doJumpOut = false;
 
     frameInTypeBeat = xFrames.length;
     frameOutTypeBeat = 0;
 
     capsule.scale.x = xFrames[frameInTypeBeat - 1];
     capsule.scale.y = 1 / xFrames[frameInTypeBeat - 1];
-    // x = FlxG.width * xPosLerpLol[Std.int(Math.min(frameInTypeBeat - 1, xPosLerpLol.length - 1))];
 
     x = targetPos.x;
     y = targetPos.y;
@@ -672,11 +655,12 @@ class SongMenuItem extends FlxSpriteGroup
    */
   public function confirm():Void
   {
-    if (songText != null && Preferences.flashingLights) songText.flickerText();
-    if (pixelIcon != null && pixelIcon.visible)
+    if (songText != null)
     {
-      pixelIcon.animation.play('confirm');
+      textAppear();
+      if (Preferences.flashingLights) songText.flickerText();
     }
+    if (pixelIcon != null && pixelIcon.visible) pixelIcon.animation.play('confirm');
   }
 
   public function intendedX(index:Int):Float
