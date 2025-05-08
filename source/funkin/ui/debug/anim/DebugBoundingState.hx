@@ -313,13 +313,8 @@ class DebugBoundingState extends FlxState
       else
       {
         offsetAnimationDropdown.selectedIndex = 0;
-        trace(offsetAnimationDropdown.selectedIndex
-          + " "
-          + offsetAnimationDropdown.dataSource.
-            + " "
-            + offsetAnimationDropdown.value
-            + " "
-            + currentAnimationName);
+        trace(offsetAnimationDropdown.selectedIndex + " " + offsetAnimationDropdown.dataSource.size + " " + offsetAnimationDropdown.value + " "
+          + currentAnimationName);
         playCharacterAnimation(currentAnimationName, true);
       }
       if (FlxG.keys.justPressed.LBRACKET || FlxG.keys.justPressed.Q)
