@@ -88,10 +88,8 @@ class NoteHoldCover extends FlxTypedSpriteGroup<FlxSprite>
 
   public function onAnimationFinished(animationName:String):Void
   {
-    if (animationName.startsWith('holdCoverStart'))
-    {
-      playContinue();
-    }
+    if (animationName.startsWith('holdCoverStart')) playContinue();
+
     if (animationName.startsWith('holdCoverEnd'))
     {
       // *lightning* *zap* *crackle*

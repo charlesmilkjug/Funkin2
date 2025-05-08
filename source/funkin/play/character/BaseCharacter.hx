@@ -24,9 +24,7 @@ class BaseCharacter extends Bopper
   public var characterType(default, set):CharacterType = OTHER;
 
   function set_characterType(value:CharacterType):CharacterType
-  {
     return this.characterType = value;
-  }
 
   /**
    * Tracks how long, in seconds, the character has been playing the current `sing` animation.
@@ -82,9 +80,7 @@ class BaseCharacter extends Bopper
   public var cornerPosition(get, set):FlxPoint;
 
   function get_cornerPosition():FlxPoint
-  {
     return new FlxPoint(x, y);
-  }
 
   function set_cornerPosition(value:FlxPoint):FlxPoint
   {
@@ -176,28 +172,20 @@ class BaseCharacter extends Bopper
   }
 
   public function getBaseScale():Float
-  {
     return _data.scale;
-  }
 
   public function getDeathCameraZoom():Float
-  {
     return _data.death?.cameraZoom ?? 1.0;
-  }
 
   public function getDeathPreTransitionDelay():Float
-  {
     return _data.death?.preTransitionDelay ?? 0.0;
-  }
 
   /**
    * Gets the value of flipX from the character data.
    * `!getFlipX()` is the direction Boyfriend should face.
    */
   public function getDataFlipX():Bool
-  {
     return _data.flipX;
-  }
 
   function findCountAnimations(prefix:String):Array<Int>
   {
@@ -260,9 +248,7 @@ class BaseCharacter extends Bopper
   var characterCameraOffsets(get, never):Array<Float>;
 
   function get_characterCameraOffsets():Array<Float>
-  {
     return _data.cameraOffsets;
-  }
 
   override function onCreate(event:ScriptEvent):Void
   {
@@ -310,9 +296,7 @@ class BaseCharacter extends Bopper
   }
 
   public function getHealthIconId():String
-  {
     return _data?.healthIcon?.id ?? Constants.DEFAULT_HEALTH_ICON;
-  }
 
   public function initHealthIcon(isOpponent:Bool):Void
   {
@@ -574,11 +558,7 @@ class BaseCharacter extends Bopper
   function playComboAnimation(comboCount:Int):Void
   {
     var comboAnim = 'combo${comboCount}';
-    if (hasAnimation(comboAnim))
-    {
-      // trace('Playing GF combo animation: ${comboAnim}');
-      this.playAnimation(comboAnim, true, true);
-    }
+    if (hasAnimation(comboAnim)) this.playAnimation(comboAnim, true, true);
   }
 
   function playComboDropAnimation(comboCount:Int):Void
@@ -589,15 +569,9 @@ class BaseCharacter extends Bopper
     // If there are several (for example, drop10 and drop50) the highest one will be used.
     // If the combo count is too low, no animation will be played.
     for (count in dropNoteCounts)
-    {
       if (comboCount >= count) dropAnim = 'drop${count}';
-    }
 
-    if (dropAnim != null)
-    {
-      // trace('Playing GF combo drop animation: ${dropAnim}');
-      this.playAnimation(dropAnim, true, true);
-    }
+    if (dropAnim != null) this.playAnimation(dropAnim, true, true);
   }
 
   /**
@@ -622,9 +596,7 @@ class BaseCharacter extends Bopper
   }
 
   public override function onDestroy(event:ScriptEvent):Void
-  {
     this.characterType = OTHER;
-  }
 
   /**
    * Play the appropriate singing animation, for the given note direction.
@@ -642,14 +614,10 @@ class BaseCharacter extends Bopper
   }
 
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
-  {
     super.playAnimation(name, restart, ignoreOther, reversed);
-  }
 
   public function getDeathQuote():Null<String>
-  {
     return null;
-  }
 }
 
 /**

@@ -60,17 +60,13 @@ class ResultScore extends FlxTypedSpriteGroup<ScoreNum>
     super(x, y);
 
     for (i in 0...digitCount)
-    {
       add(new ScoreNum(x + (65 * i), y));
-    }
 
     this.scoreShit = scoreShit;
   }
 
   public function updateScore(scoreNew:Int)
-  {
     scoreShit = scoreNew;
-  }
 }
 
 @:nullSafety
@@ -97,9 +93,8 @@ class ScoreNum extends FlxSprite
         glow = false;
       }
       else
-      {
         animation.play(numToString[val], true, false, 4);
-      }
+
       updateHitbox();
 
       switch (val)
@@ -126,9 +121,7 @@ class ScoreNum extends FlxSprite
   }
 
   public function playAnim():Void
-  {
     animation.play(numToString[digit], true, false, 0);
-  }
 
   public var finalDelay:Float = 0;
 
@@ -151,9 +144,7 @@ class ScoreNum extends FlxSprite
       {
         ease: FlxEase.quadOut,
         onComplete: (input) -> {
-          new FlxTimer().start((finalDelay) / 24, _ -> {
-            animation.play(animation.curAnim.name, true, false, 0);
-          });
+          new FlxTimer().start((finalDelay) / 24, _ -> animation.play(animation.curAnim.name, true, false, 0));
           // fuck
         }
       }, tweenFunction);

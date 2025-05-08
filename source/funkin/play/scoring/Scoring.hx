@@ -318,47 +318,21 @@ class Scoring
         0;
     }
 
-    if (absTiming < WEEK7_HIT_WINDOW * WEEK7_SICK_THRESHOLD)
-    {
-      return WEEK7_SICK_SCORE;
-    }
-    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_GOOD_THRESHOLD)
-    {
-      return WEEK7_GOOD_SCORE;
-    }
-    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_BAD_THRESHOLD)
-    {
-      return WEEK7_BAD_SCORE;
-    }
-    else if (absTiming < WEEK7_HIT_WINDOW)
-    {
-      return WEEK7_SHIT_SCORE;
-    }
+    if (absTiming < WEEK7_HIT_WINDOW * WEEK7_SICK_THRESHOLD) return WEEK7_SICK_SCORE;
+    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_GOOD_THRESHOLD) return WEEK7_GOOD_SCORE;
+    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_BAD_THRESHOLD) return WEEK7_BAD_SCORE;
+    else if (absTiming < WEEK7_HIT_WINDOW) return WEEK7_SHIT_SCORE;
     else
-    {
       return 0;
-    }
   }
 
   static function judgeNoteWEEK7(msTiming:Float):String
   {
     var absTiming = Math.abs(msTiming);
-    if (absTiming < WEEK7_HIT_WINDOW * WEEK7_SICK_THRESHOLD)
-    {
-      return 'sick';
-    }
-    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_GOOD_THRESHOLD)
-    {
-      return 'good';
-    }
-    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_BAD_THRESHOLD)
-    {
-      return 'bad';
-    }
-    else if (absTiming < WEEK7_HIT_WINDOW)
-    {
-      return 'shit';
-    }
+    if (absTiming < WEEK7_HIT_WINDOW * WEEK7_SICK_THRESHOLD) return 'sick';
+    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_GOOD_THRESHOLD) return 'good';
+    else if (absTiming < WEEK7_HIT_WINDOW * WEEK7_BAD_THRESHOLD) return 'bad';
+    else if (absTiming < WEEK7_HIT_WINDOW) return 'shit';
     else
     {
       FlxG.log.warn('Missed note: Bad timing ($absTiming < $WEEK7_HIT_WINDOW)');
@@ -375,10 +349,7 @@ class Scoring
 
     // Perfect (Platinum) is a Sick Full Clear
     var isPerfectGold = scoreData.tallies.sick == scoreData.tallies.totalNotes;
-    if (isPerfectGold)
-    {
-      return ScoringRank.PERFECT_GOLD;
-    }
+    if (isPerfectGold) return ScoringRank.PERFECT_GOLD;
 
     // Else, use the standard grades
 
@@ -386,26 +357,12 @@ class Scoring
 
     var grade = (scoreData.tallies.sick + scoreData.tallies.good - scoreData.tallies.missed) / scoreData.tallies.totalNotes;
 
-    if (grade == Constants.RANK_PERFECT_THRESHOLD)
-    {
-      return ScoringRank.PERFECT;
-    }
-    else if (grade >= Constants.RANK_EXCELLENT_THRESHOLD)
-    {
-      return ScoringRank.EXCELLENT;
-    }
-    else if (grade >= Constants.RANK_GREAT_THRESHOLD)
-    {
-      return ScoringRank.GREAT;
-    }
-    else if (grade >= Constants.RANK_GOOD_THRESHOLD)
-    {
-      return ScoringRank.GOOD;
-    }
+    if (grade == Constants.RANK_PERFECT_THRESHOLD) return ScoringRank.PERFECT;
+    else if (grade >= Constants.RANK_EXCELLENT_THRESHOLD) return ScoringRank.EXCELLENT;
+    else if (grade >= Constants.RANK_GREAT_THRESHOLD) return ScoringRank.GREAT;
+    else if (grade >= Constants.RANK_GOOD_THRESHOLD) return ScoringRank.GOOD;
     else
-    {
       return ScoringRank.SHIT;
-    }
   }
 }
 
@@ -657,7 +614,5 @@ enum abstract ScoringRank(String)
   }
 
   public function toString():String
-  {
     return this;
-  }
 }

@@ -69,14 +69,9 @@ class SparrowCharacter extends BaseCharacter
 
     for (anim in _data.animations)
     {
-      if (anim.offsets == null)
-      {
-        setAnimationOffsets(anim.name, 0, 0);
-      }
+      if (anim.offsets == null) setAnimationOffsets(anim.name, 0, 0);
       else
-      {
         setAnimationOffsets(anim.name, anim.offsets[0], anim.offsets[1]);
-      }
     }
 
     var animNames = this.animation.getNameList();

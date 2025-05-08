@@ -48,23 +48,16 @@ class FreeplayScore extends FlxTypedSpriteGroup<ScoreNum>
 
     for (i in 0...digitCount)
     {
-      if (styleData == null)
-      {
-        add(new ScoreNum(x + (45 * i), y, 0));
-      }
+      if (styleData == null) add(new ScoreNum(x + (45 * i), y, 0));
       else
-      {
         add(new ScoreNum(x + (45 * i), y, 0, styleData));
-      }
     }
 
     this.scoreShit = scoreShit;
   }
 
   public function updateScore(scoreNew:Int)
-  {
     scoreShit = scoreNew;
-  }
 }
 
 class ScoreNum extends FlxSprite
@@ -113,14 +106,9 @@ class ScoreNum extends FlxSprite
     baseY = y;
     baseX = x;
 
-    if (styleData == null)
-    {
-      frames = Paths.getSparrowAtlas('digital_numbers');
-    }
+    if (styleData == null) frames = Paths.getSparrowAtlas('digital_numbers');
     else
-    {
       frames = Paths.getSparrowAtlas(styleData.getNumbersAssetKey());
-    }
 
     for (i in 0...10)
     {

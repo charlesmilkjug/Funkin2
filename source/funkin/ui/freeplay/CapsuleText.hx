@@ -60,7 +60,6 @@ class CapsuleText extends FlxSpriteGroup
     blurredText.color = glowColor;
     whiteText.textField.filters = [
       new openfl.filters.GlowFilter(glowColor, 1, 5, 5, 210, BitmapFilterQuality.MEDIUM),
-      // new openfl.filters.BlurFilter(5, 5, BitmapFilterQuality.LOW)
     ];
   }
 
@@ -113,7 +112,6 @@ class CapsuleText extends FlxSpriteGroup
     checkClipWidth();
     whiteText.textField.filters = [
       new openfl.filters.GlowFilter(glowColor, 1, 5, 5, 210, BitmapFilterQuality.MEDIUM),
-      // new openfl.filters.BlurFilter(5, 5, BitmapFilterQuality.LOW)
     ];
 
     return text = value;
@@ -193,7 +191,6 @@ class CapsuleText extends FlxSpriteGroup
       whiteText.color = 0xFFFFFFFF;
       whiteText.textField.filters = [
         new openfl.filters.GlowFilter(0xFFFFFF, 1, 5, 5, 210, BitmapFilterQuality.MEDIUM),
-        // new openfl.filters.BlurFilter(5, 5, BitmapFilterQuality.LOW)
       ];
     }
     else
@@ -202,14 +199,11 @@ class CapsuleText extends FlxSpriteGroup
       whiteText.color = 0xFFDDDDDD;
       whiteText.textField.filters = [
         new openfl.filters.GlowFilter(0xDDDDDD, 1, 5, 5, 210, BitmapFilterQuality.MEDIUM),
-        // new openfl.filters.BlurFilter(5, 5, BitmapFilterQuality.LOW)
       ];
     }
     flickerState = !flickerState;
   }
 
   override function update(elapsed:Float):Void
-  {
     super.update(elapsed);
-  }
 }

@@ -247,10 +247,7 @@ class GameOverSubState extends MusicBeatSubState
     if (FlxG.onMobile)
     {
       var touch:FlxTouch = FlxG.touches.getFirst();
-      if (touch != null)
-      {
-        if (boyfriend == null || touch.overlaps(boyfriend)) confirmDeath();
-      }
+      if (touch != null) if (boyfriend == null || touch.overlaps(boyfriend)) confirmDeath();
     }
 
     // KEYBOARD ONLY: Restart the level when pressing the assigned key.
@@ -520,14 +517,10 @@ class GameOverSubState extends MusicBeatSubState
   public static function playBlueBalledSFX():Void
   {
     blueballed = true;
-    if (Assets.exists(Paths.sound('gameplay/gameover/fnf_loss_sfx' + blueBallSuffix)))
-    {
-      FunkinSound.playOnce(Paths.sound('gameplay/gameover/fnf_loss_sfx' + blueBallSuffix));
-    }
+    if (Assets.exists(Paths.sound('gameplay/gameover/fnf_loss_sfx' + blueBallSuffix))) FunkinSound.playOnce(Paths.sound('gameplay/gameover/fnf_loss_sfx'
+      + blueBallSuffix));
     else
-    {
       FlxG.log.error('Missing blue ball sound effect: ' + Paths.sound('gameplay/gameover/fnf_loss_sfx' + blueBallSuffix));
-    }
   }
 
   var hasPlayedDeathQuote:Bool = false;

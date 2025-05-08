@@ -119,10 +119,7 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
   function onAnimationFinished(name:String)
   {
     // TODO: Can we make a system of like, animation priority or something?
-    if (!canPlayOtherAnims)
-    {
-      canPlayOtherAnims = true;
-    }
+    if (!canPlayOtherAnims) canPlayOtherAnims = true;
   }
 
   /**
@@ -162,10 +159,7 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
    */
   public function onStepHit(event:SongTimeScriptEvent)
   {
-    if (danceEvery > 0 && (event.step % (danceEvery * Constants.STEPS_PER_BEAT)) == 0)
-    {
-      dance(shouldBop);
-    }
+    if (danceEvery > 0 && (event.step % (danceEvery * Constants.STEPS_PER_BEAT)) == 0) dance(shouldBop);
   }
 
   public function onBeatHit(event:SongTimeScriptEvent):Void {}
@@ -175,32 +169,20 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
    */
   public function dance(forceRestart:Bool = false):Void
   {
-    if (this.animation == null)
-    {
-      return;
-    }
+    if (this.animation == null) return;
 
-    if (shouldAlternate == null)
-    {
-      update_shouldAlternate();
-    }
+    if (shouldAlternate == null) update_shouldAlternate();
 
     if (shouldAlternate)
     {
-      if (hasDanced)
-      {
-        playAnimation('danceRight$idleSuffix', forceRestart);
-      }
+      if (hasDanced) playAnimation('danceRight$idleSuffix', forceRestart);
       else
-      {
         playAnimation('danceLeft$idleSuffix', forceRestart);
-      }
+
       hasDanced = !hasDanced;
     }
     else
-    {
       playAnimation('idle$idleSuffix', forceRestart);
-    }
   }
 
   public function hasAnimation(id:String):Bool
@@ -278,10 +260,7 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
 
     this.animation.play(correctName, restart, reversed, 0);
 
-    if (ignoreOther)
-    {
-      canPlayOtherAnims = false;
-    }
+    if (ignoreOther) canPlayOtherAnims = false;
 
     applyAnimationOffsets(correctName);
   }
@@ -305,9 +284,7 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
     applyAnimationOffsets(correctName);
 
     canPlayOtherAnims = false;
-    forceAnimationTimer.start(duration, (timer) -> {
-      canPlayOtherAnims = true;
-    }, 1);
+    forceAnimationTimer.start(duration, (timer) -> canPlayOtherAnims = true, 1);
   }
 
   function applyAnimationOffsets(name:String):Void
@@ -317,14 +294,10 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
   }
 
   public function isAnimationFinished():Bool
-  {
     return this.animation?.finished ?? false;
-  }
 
   public function setAnimationOffsets(name:String, xOffset:Float, yOffset:Float):Void
-  {
     animationOffsets.set(name, [xOffset, yOffset]);
-  }
 
   /**
    * Returns the name of the animation that is currently playing.

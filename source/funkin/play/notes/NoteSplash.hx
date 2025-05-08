@@ -28,10 +28,7 @@ class NoteSplash extends FlxSprite
   {
     if (frames == null) noteStyle.buildSplashSprite(this);
 
-    if (this.animation.getAnimationList().length < 8)
-    {
-      trace('WARNING: NoteSplash failed to initialize all animations.');
-    }
+    if (this.animation.getAnimationList().length < 8) trace('WARNING: NoteSplash failed to initialize all animations.');
   }
 
   public function playAnimation(name:String, force:Bool = false, reversed:Bool = false, startFrame:Int = 0):Void

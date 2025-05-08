@@ -277,9 +277,7 @@ class CharacterDataParser
    * @return An array of character IDs.
    */
   public static function listCharacterIds():Array<String>
-  {
     return characterCache.keys().array();
-  }
 
   /**
    * Returns the idle frame of a character.
@@ -361,14 +359,9 @@ class CharacterDataParser
    */
   static function clearCharacterCache():Void
   {
-    if (characterCache != null)
-    {
-      characterCache.clear();
-    }
-    if (characterScriptedClass != null)
-    {
-      characterScriptedClass.clear();
-    }
+    if (characterCache != null) characterCache.clear();
+
+    if (characterScriptedClass != null) characterScriptedClass.clear();
   }
 
   /**
@@ -392,9 +385,7 @@ class CharacterDataParser
     var rawJson = Assets.getText(charFilePath).trim();
 
     while (!StringTools.endsWith(rawJson, '}'))
-    {
       rawJson = rawJson.substr(0, rawJson.length - 1);
-    }
 
     return rawJson;
   }
@@ -472,10 +463,7 @@ class CharacterDataParser
       input.name = DEFAULT_NAME;
     }
 
-    if (input.renderType == null)
-    {
-      input.renderType = DEFAULT_RENDERTYPE;
-    }
+    if (input.renderType == null) input.renderType = DEFAULT_RENDERTYPE;
 
     if (input.assetPath == null)
     {
@@ -483,15 +471,9 @@ class CharacterDataParser
       return null;
     }
 
-    if (input.offsets == null)
-    {
-      input.offsets = DEFAULT_OFFSETS;
-    }
+    if (input.offsets == null) input.offsets = DEFAULT_OFFSETS;
 
-    if (input.cameraOffsets == null)
-    {
-      input.cameraOffsets = DEFAULT_OFFSETS;
-    }
+    if (input.cameraOffsets == null) input.cameraOffsets = DEFAULT_OFFSETS;
 
     if (input.healthIcon == null)
     {
@@ -505,55 +487,25 @@ class CharacterDataParser
         };
     }
 
-    if (input.healthIcon.id == null)
-    {
-      input.healthIcon.id = id;
-    }
+    if (input.healthIcon.id == null) input.healthIcon.id = id;
 
-    if (input.healthIcon.scale == null)
-    {
-      input.healthIcon.scale = DEFAULT_SCALE;
-    }
+    if (input.healthIcon.scale == null) input.healthIcon.scale = DEFAULT_SCALE;
 
-    if (input.healthIcon.flipX == null)
-    {
-      input.healthIcon.flipX = DEFAULT_FLIPX;
-    }
+    if (input.healthIcon.flipX == null) input.healthIcon.flipX = DEFAULT_FLIPX;
 
-    if (input.healthIcon.offsets == null)
-    {
-      input.healthIcon.offsets = DEFAULT_OFFSETS;
-    }
+    if (input.healthIcon.offsets == null) input.healthIcon.offsets = DEFAULT_OFFSETS;
 
-    if (input.startingAnimation == null)
-    {
-      input.startingAnimation = DEFAULT_STARTINGANIM;
-    }
+    if (input.startingAnimation == null) input.startingAnimation = DEFAULT_STARTINGANIM;
 
-    if (input.scale == null)
-    {
-      input.scale = DEFAULT_SCALE;
-    }
+    if (input.scale == null) input.scale = DEFAULT_SCALE;
 
-    if (input.isPixel == null)
-    {
-      input.isPixel = DEFAULT_ISPIXEL;
-    }
+    if (input.isPixel == null) input.isPixel = DEFAULT_ISPIXEL;
 
-    if (input.healthIcon.isPixel == null)
-    {
-      input.healthIcon.isPixel = input.isPixel;
-    }
+    if (input.healthIcon.isPixel == null) input.healthIcon.isPixel = input.isPixel;
 
-    if (input.danceEvery == null)
-    {
-      input.danceEvery = DEFAULT_DANCEEVERY;
-    }
+    if (input.danceEvery == null) input.danceEvery = DEFAULT_DANCEEVERY;
 
-    if (input.singTime == null)
-    {
-      input.singTime = DEFAULT_SINGTIME;
-    }
+    if (input.singTime == null) input.singTime = DEFAULT_SINGTIME;
 
     if (input.animations == null || input.animations.length == 0)
     {
@@ -561,15 +513,9 @@ class CharacterDataParser
       input.animations = [];
     }
 
-    if (input.flipX == null)
-    {
-      input.flipX = DEFAULT_FLIPX;
-    }
+    if (input.flipX == null) input.flipX = DEFAULT_FLIPX;
 
-    if (input.animations.length == 0 && input.startingAnimation != null)
-    {
-      return null;
-    }
+    if (input.animations.length == 0 && input.startingAnimation != null) return null;
 
     for (inputAnimation in input.animations)
     {
@@ -579,30 +525,15 @@ class CharacterDataParser
         return null;
       }
 
-      if (inputAnimation.frameRate == null)
-      {
-        inputAnimation.frameRate = DEFAULT_FRAMERATE;
-      }
+      if (inputAnimation.frameRate == null) inputAnimation.frameRate = DEFAULT_FRAMERATE;
 
-      if (inputAnimation.offsets == null)
-      {
-        inputAnimation.offsets = DEFAULT_OFFSETS;
-      }
+      if (inputAnimation.offsets == null) inputAnimation.offsets = DEFAULT_OFFSETS;
 
-      if (inputAnimation.looped == null)
-      {
-        inputAnimation.looped = DEFAULT_LOOP;
-      }
+      if (inputAnimation.looped == null) inputAnimation.looped = DEFAULT_LOOP;
 
-      if (inputAnimation.flipX == null)
-      {
-        inputAnimation.flipX = DEFAULT_FLIPX;
-      }
+      if (inputAnimation.flipX == null) inputAnimation.flipX = DEFAULT_FLIPX;
 
-      if (inputAnimation.flipY == null)
-      {
-        inputAnimation.flipY = DEFAULT_FLIPY;
-      }
+      if (inputAnimation.flipY == null) inputAnimation.flipY = DEFAULT_FLIPY;
     }
 
     // All good!

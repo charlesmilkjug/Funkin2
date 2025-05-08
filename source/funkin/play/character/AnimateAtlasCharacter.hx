@@ -116,18 +116,14 @@ class AnimateAtlasCharacter extends BaseCharacter
   }
 
   public override function hasAnimation(name:String):Bool
-  {
     return getAnimationData(name) != null;
-  }
 
   /**
    * Returns true if the animation has finished playing.
    * Never true if animation is configured to loop.
    */
   public override function isAnimationFinished():Bool
-  {
     return mainSprite?.isAnimationFinished() ?? false;
-  }
 
   function loadAtlasSprite():FlxAtlasSprite
   {
@@ -221,10 +217,7 @@ class AnimateAtlasCharacter extends BaseCharacter
   }
 
   public override function getCurrentAnimation():String
-  {
-    // return this.mainSprite.getCurrentAnimation();
     return currentAnimName;
-  }
 
   function getAnimationData(name:String = null):AnimateAtlasAnimation
   {
@@ -377,14 +370,9 @@ class AnimateAtlasCharacter extends BaseCharacter
 
   inline function alphaTransform(sprite:FlxSprite, alpha:Float):Void
   {
-    if (sprite.alpha != 0 || alpha == 0)
-    {
-      sprite.alpha *= alpha; // multiplication
-    }
+    if (sprite.alpha != 0 || alpha == 0) sprite.alpha *= alpha; // multiplication
     else
-    {
       sprite.alpha = 1 / alpha; // direct set to avoid stuck sprites
-    }
   }
 
   inline function directAlphaTransform(sprite:FlxSprite, alpha:Float):Void
@@ -448,9 +436,7 @@ class AnimateAtlasCharacter extends BaseCharacter
     sprite.scrollFactor.copyFrom(scrollFactor);
 
   inline function clipRectTransform(sprite:FlxSprite, clipRect:FlxRect):Void
-  {
     sprite.clipRect = (clipRect == null) ? null : FlxRect.get(clipRect.x - sprite.x + x, clipRect.y - sprite.y + y, clipRect.width, clipRect.height);
-  }
 
   var resS:FlxPoint = new FlxPoint();
 
@@ -575,10 +561,8 @@ class AnimateAtlasCharacter extends BaseCharacter
   {
     value = FlxMath.bound(value, 0, 1);
 
-    if (exists && alpha != value)
-    {
-      transformChildren(directAlphaTransform, value);
-    }
+    if (exists && alpha != value) transformChildren(directAlphaTransform, value);
+
     return alpha = value;
   }
 
@@ -662,14 +646,10 @@ class AnimateAtlasCharacter extends BaseCharacter
    * @return the left-most position of the left-most member
    */
   public function findMinX():Float
-  {
     return this.mainSprite == null ? x : findMinXHelper();
-  }
 
   function findMinXHelper():Float
-  {
     return this.mainSprite.x;
-  }
 
   /**
    * Returns the right-most position of the right-most member.
@@ -679,22 +659,16 @@ class AnimateAtlasCharacter extends BaseCharacter
    * @return the right-most position of the right-most member
    */
   public function findMaxX():Float
-  {
     return this.mainSprite == null ? x : findMaxXHelper();
-  }
 
   function findMaxXHelper():Float
-  {
     return this.mainSprite.x + this.mainSprite.width;
-  }
 
   /**
    * This functionality isn't supported in SpriteGroup
    */
   override function set_height(value:Float):Float
-  {
     return value;
-  }
 
   override function get_height():Float
   {
@@ -711,14 +685,10 @@ class AnimateAtlasCharacter extends BaseCharacter
    * @return the top-most position of the top-most member
    */
   public function findMinY():Float
-  {
     return this.mainSprite == null ? y : findMinYHelper();
-  }
 
   function findMinYHelper():Float
-  {
     return this.mainSprite.y;
-  }
 
   /**
    * Returns the top-most position of the top-most member.
@@ -728,14 +698,10 @@ class AnimateAtlasCharacter extends BaseCharacter
    * @return the bottom-most position of the bottom-most member
    */
   public function findMaxY():Float
-  {
     return this.mainSprite == null ? y : findMaxYHelper();
-  }
 
   function findMaxYHelper():Float
-  {
     return this.mainSprite.y + this.mainSprite.height;
-  }
 
   /**
    * This functionality isn't supported in SpriteGroup
@@ -755,9 +721,7 @@ class AnimateAtlasCharacter extends BaseCharacter
    */
   public override function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false,
       ?Key:String):FlxSprite
-  {
     return this;
-  }
 
   /**
    * This functionality isn't supported in SpriteGroup
@@ -785,19 +749,13 @@ class AnimateAtlasCharacter extends BaseCharacter
   }
 
   override function set_pixels(value:BitmapData):BitmapData
-  {
     return value;
-  }
 
   override function set_frame(value:FlxFrame):FlxFrame
-  {
     return value;
-  }
 
   override function get_pixels():BitmapData
-  {
     return null;
-  }
 
   /**
    * Internal function to update the current animation frame.
@@ -820,9 +778,7 @@ class AnimateAtlasCharacter extends BaseCharacter
   public override inline function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
 
   override function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
-  {
     return Frames;
-  }
 
   /**
    * This functionality isn't supported in SpriteGroup

@@ -26,10 +26,7 @@ class FreeplayStyle implements IRegistryEntry<FreeplayStyleData>
     this.id = id;
     this._data = _fetchData(id);
 
-    if (_data == null)
-    {
-      throw 'Could not parse album data for id: $id';
-    }
+    if (_data == null) throw 'Could not parse album data for id: $id';
   }
 
   /**
@@ -37,45 +34,35 @@ class FreeplayStyle implements IRegistryEntry<FreeplayStyleData>
    * @return The built graphic
    */
   public function getBgAssetGraphic():FlxGraphic
-  {
     return FlxG.bitmap.add(Paths.image(getBgAssetKey()));
-  }
 
   /**
    * Get the asset key for the background.
    * @return The asset key
    */
   public function getBgAssetKey():String
-  {
     return _data.bgAsset;
-  }
 
   /**
    * Get the asset key for the background.
    * @return The asset key
    */
   public function getSelectorAssetKey():String
-  {
     return _data.selectorAsset;
-  }
 
   /**
    * Get the asset key for the number assets.
    * @return The asset key
    */
   public function getCapsuleAssetKey():String
-  {
     return _data.capsuleAsset;
-  }
 
   /**
    * Get the asset key for the capsule art.
    * @return The asset key
    */
   public function getNumbersAssetKey():String
-  {
     return _data.numbersAsset;
-  }
 
   /**
    * Return the deselected color of the text outline
@@ -83,23 +70,17 @@ class FreeplayStyle implements IRegistryEntry<FreeplayStyleData>
    * @return The deselected color
    */
   public function getCapsuleDeselCol():FlxColor
-  {
     return FlxColor.fromString(_data.capsuleTextColors[0]);
-  }
 
   /**
    * Return the song selection transition delay.
    * @return The start delay
    */
   public function getStartDelay():Float
-  {
     return _data.startDelay;
-  }
 
   public function toString():String
-  {
     return 'Style($id)';
-  }
 
   /**
    * Return the selected color of the text outline
@@ -107,14 +88,10 @@ class FreeplayStyle implements IRegistryEntry<FreeplayStyleData>
    * @return The selected color
    */
   public function getCapsuleSelCol():FlxColor
-  {
     return FlxColor.fromString(_data.capsuleTextColors[1]);
-  }
 
   public function destroy():Void {}
 
   static function _fetchData(id:String):Null<FreeplayStyleData>
-  {
     return FreeplayStyleRegistry.instance.parseEntryDataWithMigration(id, FreeplayStyleRegistry.instance.fetchEntryVersion(id));
-  }
 }

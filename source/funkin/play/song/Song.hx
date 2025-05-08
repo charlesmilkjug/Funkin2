@@ -80,15 +80,11 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
   public var variations(get, never):Array<String>;
 
   function get_variations():Array<String>
-  {
     return _metadata.keys().array();
-  }
 
   // this returns false so that any new song can override this and return true when needed
   public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
-  {
     return false;
-  }
 
   /**
    * Set to false if the song was edited in the charter and should not be saved as a high score.
@@ -212,17 +208,13 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
 
     result._metadata.clear();
     for (meta in metadata)
-    {
       result._metadata.set(meta.variation, meta);
-    }
 
     result.difficulties.clear();
     result.populateDifficulties();
 
     for (variation => chartData in charts)
-    {
       result.applyChartData(chartData, variation);
-    }
 
     result.validScore = validScore;
 
@@ -251,10 +243,7 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
       for (difficultyId in variationMap.keys())
       {
         var meta:Null<SongDifficulty> = variationMap.get(difficultyId);
-        if (meta != null && meta.album != null)
-        {
-          result.set(difficultyId, meta.album);
-        }
+        if (meta != null && meta.album != null) result.set(difficultyId, meta.album);
       }
     }
 
@@ -343,10 +332,7 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
    */
   public function cacheCharts(force:Bool = false):Void
   {
-    if (force)
-    {
-      clearCharts();
-    }
+    if (force) clearCharts();
 
     trace('Caching ${variations.length} chart files for song $id');
     for (variation in variations)
@@ -419,12 +405,7 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
     if (variations == null) variations = [variation];
 
     for (currentVariation in variations)
-    {
-      if (difficulties.get(currentVariation)?.exists(diffId) ?? false)
-      {
-        return difficulties.get(currentVariation)?.get(diffId);
-      }
-    }
+      if (difficulties.get(currentVariation)?.exists(diffId) ?? false) return difficulties.get(currentVariation)?.get(diffId);
 
     return null;
   }
@@ -438,17 +419,12 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
    */
   public function getFirstValidVariation(?diffId:String, ?currentCharacter:PlayableCharacter, ?possibleVariations:Array<String>):Null<String>
   {
-    if (possibleVariations == null)
-    {
-      possibleVariations = getVariationsByCharacter(currentCharacter);
-    }
+    if (possibleVariations == null) possibleVariations = getVariationsByCharacter(currentCharacter);
 
     if (diffId == null) diffId = listDifficulties(null, possibleVariations)[0];
 
     for (variationId in possibleVariations)
-    {
       if (difficulties.get('$variationId')?.exists(diffId) ?? false) return variationId;
-    }
 
     return null;
   }
@@ -476,10 +452,7 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
       var playerCharId = metadata?.playData?.characters?.player;
       if (playerCharId == null) continue;
 
-      if (char.shouldShowCharacter(playerCharId))
-      {
-        result.push(variation);
-      }
+      if (char.shouldShowCharacter(playerCharId)) result.push(variation);
     }
 
     result.sort(SortUtil.defaultsThenAlphabetically.bind(Constants.DEFAULT_VARIATION_LIST));
@@ -568,9 +541,8 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
     if (variationId != null) variationIds.push(variationId);
 
     for (targetVariation in variationIds)
-    {
       if (difficulties.get(targetVariation)?.exists(diffId) ?? false) return true;
-    }
+
     return false;
   }
 
@@ -609,12 +581,8 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
   public function clearCharts():Void
   {
     for (variationMap in difficulties)
-    {
       for (diff in variationMap)
-      {
         diff.clearChart();
-      }
-    }
   }
 
   public function onPause(event:PauseScriptEvent):Void {};

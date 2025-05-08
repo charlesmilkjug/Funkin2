@@ -47,9 +47,7 @@ class ClearPercentCounter extends FlxTypedSpriteGroup<FlxSprite>
    * @param enabled Whether the counter should be white.
    */
   public function flash(enabled:Bool):Void
-  {
     flashShader.colorSet = enabled;
-  }
 
   var tmr:Float = 0;
 
@@ -110,9 +108,7 @@ class ClearPercentCounter extends FlxTypedSpriteGroup<FlxSprite>
       }
     }
     for (ind in (seperatedScore.length + 1)...(members.length))
-    {
       members[ind].visible = false;
-    }
   }
 }
 
@@ -125,9 +121,7 @@ class ClearPercentNumber extends FlxSprite
     frames = Paths.getSparrowAtlas('resultScreen/clearPercent/clearPercentNumber${small ? 'Small' : variant ? 'Right' : 'Left'}');
 
     for (i in 0...10)
-    {
       animation.addByPrefix('$i', 'number $i 0', 24, false);
-    }
 
     animation.play('$digit');
     updateHitbox();

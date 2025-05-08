@@ -126,9 +126,7 @@ class HealthIcon extends FunkinSprite
   }
 
   function onSetSize(value:FlxPoint):Void
-  {
     snapToTargetSize();
-  }
 
   function set_characterId(value:Null<String>):String
   {
@@ -251,14 +249,10 @@ class HealthIcon extends FunkinSprite
    */
   public function snapToTargetSize():Void
   {
-    if (this.width > this.height)
-    {
-      setGraphicSize(Std.int(HEALTH_ICON_SIZE * this.size.x), 0);
-    }
+    if (this.width > this.height) setGraphicSize(Std.int(HEALTH_ICON_SIZE * this.size.x), 0);
     else
-    {
       setGraphicSize(0, Std.int(HEALTH_ICON_SIZE * this.size.y));
-    }
+
     updateHitbox();
   }
 
@@ -302,14 +296,10 @@ class HealthIcon extends FunkinSprite
     if (bopEvery != 0 && curStep % bopEvery == 0 && isLegacyStyle)
     {
       // Make the icon increase in size (the update function causes them to lerp back down).
-      if (this.width > this.height)
-      {
-        setGraphicSize(Std.int(this.width + (HEALTH_ICON_SIZE * this.size.x * BOP_SCALE)), 0);
-      }
+      if (this.width > this.height) setGraphicSize(Std.int(this.width + (HEALTH_ICON_SIZE * this.size.x * BOP_SCALE)), 0);
       else
-      {
         setGraphicSize(0, Std.int(this.height + (HEALTH_ICON_SIZE * this.size.y * BOP_SCALE)));
-      }
+
       // Make the icon twist (the update function causes them to lerp back to normal).
       this.angle += bopAngle * (playerId == 0 ? 1 : -1);
 
@@ -330,48 +320,30 @@ class HealthIcon extends FunkinSprite
     switch (getCurrentAnimation())
     {
       case Idle:
-        if (health < LOSING_THRESHOLD)
-        {
-          playAnimation(ToLosing, Losing);
-        }
-        else if (health > WINNING_THRESHOLD)
-        {
-          playAnimation(ToWinning, Winning);
-        }
+        if (health < LOSING_THRESHOLD) playAnimation(ToLosing, Losing);
+        else if (health > WINNING_THRESHOLD) playAnimation(ToWinning, Winning);
         else
-        {
           playAnimation(Idle);
-        }
+
       case Winning:
-        if (health < WINNING_THRESHOLD)
-        {
-          playAnimation(FromWinning, Idle);
-        }
+        if (health < WINNING_THRESHOLD) playAnimation(FromWinning, Idle);
         else
-        {
           playAnimation(Winning, Idle);
-        }
+
       case Losing:
         if (health > LOSING_THRESHOLD) playAnimation(FromLosing, Idle);
         else
-        {
           playAnimation(Losing, Idle);
-        }
+
       case ToLosing:
-        if (isAnimationFinished())
-        {
-          playAnimation(Losing, Idle);
-        }
+        if (isAnimationFinished()) playAnimation(Losing, Idle);
+
       case ToWinning:
-        if (isAnimationFinished())
-        {
-          playAnimation(Winning, Idle);
-        }
+        if (isAnimationFinished()) playAnimation(Winning, Idle);
+
       case FromLosing | FromWinning:
-        if (isAnimationFinished())
-        {
-          playAnimation(Idle);
-        }
+        if (isAnimationFinished()) playAnimation(Idle);
+
       case '':
         playAnimation(Idle);
       default:
@@ -405,21 +377,14 @@ class HealthIcon extends FunkinSprite
     // Don't flip BF's icon here! That's done later.
     this.animation.add(Idle, [0], 0, false, false);
     this.animation.add(Losing, [1], 0, false, false);
-    if (animation.numFrames >= 3)
-    {
-      this.animation.add(Winning, [2], 0, false, false);
-    }
+    if (animation.numFrames >= 3) this.animation.add(Winning, [2], 0, false, false);
   }
 
   function iconExists(charId:String):Bool
-  {
     return Assets.exists(Paths.image('icons/icon-$charId'));
-  }
 
   function isNewSpritesheet(charId:String):Bool
-  {
     return Assets.exists(Paths.file('images/icons/icon-$characterId.xml'));
-  }
 
   function loadCharacter(charId:Null<String>):Void
   {
@@ -475,9 +440,7 @@ class HealthIcon extends FunkinSprite
    * @return Whether the current animation is in the finished state.
    */
   public function isAnimationFinished():Bool
-  {
     return this.animation.finished;
-  }
 
   /**
    * Plays the animation with the given name.

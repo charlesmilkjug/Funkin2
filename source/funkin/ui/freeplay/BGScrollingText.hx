@@ -90,7 +90,5 @@ class BGScrollingText extends FlxSpriteGroup
   }
 
   function sortTextShit():Void
-  {
     grpTexts.sort((Order:Int, Obj1:FlxObject, Obj2:FlxObject) -> return FlxSort.byValues(Order, Obj1.x, Obj2.x));
-  }
 }

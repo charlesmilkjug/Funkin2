@@ -290,28 +290,22 @@ class PauseSubState extends MusicBeatSubState
 
     var metadataSong:FlxText = new FlxText(20, 15, FlxG.width - 40, 'Song Name');
     metadataSong.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, FlxTextAlign.RIGHT);
-    if (PlayState.instance?.currentChart != null)
-    {
-      metadataSong.text = '${PlayState.instance.currentChart.songName}';
-    }
+    if (PlayState.instance?.currentChart != null) metadataSong.text = '${PlayState.instance.currentChart.songName}';
+
     metadataSong.scrollFactor.set(0, 0);
     metadata.add(metadataSong);
 
     metadataArtist = new FlxText(20, metadataSong.y + 32, FlxG.width - 40, 'Artist: ${Constants.DEFAULT_ARTIST}');
     metadataArtist.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, FlxTextAlign.RIGHT);
-    if (PlayState.instance?.currentChart != null)
-    {
-      metadataArtist.text = 'Artist: ${PlayState.instance.currentChart.songArtist}';
-    }
+    if (PlayState.instance?.currentChart != null) metadataArtist.text = 'Artist: ${PlayState.instance.currentChart.songArtist}';
+
     metadataArtist.scrollFactor.set(0, 0);
     metadata.add(metadataArtist);
 
     var metadataDifficulty:FlxText = new FlxText(20, metadataArtist.y + 32, FlxG.width - 40, 'Difficulty: ');
     metadataDifficulty.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, FlxTextAlign.RIGHT);
-    if (PlayState.instance?.currentDifficulty != null)
-    {
-      metadataDifficulty.text += PlayState.instance.currentDifficulty.replace('-', ' ').toTitleCase();
-    }
+    if (PlayState.instance?.currentDifficulty != null) metadataDifficulty.text += PlayState.instance.currentDifficulty.replace('-', ' ').toTitleCase();
+
     metadataDifficulty.scrollFactor.set(0, 0);
     metadata.add(metadataDifficulty);
 
@@ -521,9 +515,7 @@ class PauseSubState extends MusicBeatSubState
           var difficultiesInVariation = PlayState.instance.currentSong.listDifficulties(PlayState.instance.currentChart.variation, true);
           trace('DIFFICULTIES: ${difficultiesInVariation}');
           for (difficulty in difficultiesInVariation)
-          {
             entries.push({text: difficulty.toTitleCase(), callback: (state) -> changeDifficulty(state, difficulty)});
-          }
         }
 
         // Add the back button.
@@ -554,11 +546,8 @@ class PauseSubState extends MusicBeatSubState
     var toRemove = [];
     for (entry in currentMenuEntries)
     {
-      if (entry == null || (entry.filter != null && !entry.filter()))
-      {
-        // Remove entries that should be hidden.
-        toRemove.push(entry);
-      }
+      // Remove entries that should be hidden.
+      if (entry == null || (entry.filter != null && !entry.filter())) toRemove.push(entry);
       else
       {
         // Handle visible entries.
@@ -735,10 +724,7 @@ class PauseSubState extends MusicBeatSubState
       new StoryMenuState(sticker) : (sticker) -> FreeplayState.build(sticker);
 
     // Do this AFTER because this resets the value of isStoryMode!
-    if (PlayStatePlaylist.isStoryMode)
-    {
-      PlayStatePlaylist.reset();
-    }
+    if (PlayStatePlaylist.isStoryMode) PlayStatePlaylist.reset();
 
     var stickerPackId:Null<String> = PlayState.instance.currentChart.stickerPack;
 

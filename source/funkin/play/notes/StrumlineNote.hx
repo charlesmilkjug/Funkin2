@@ -74,10 +74,7 @@ class StrumlineNote extends FunkinSprite
     // Run a timer before we stop playing the confirm animation.
     // On opponent, this prevent issues with hold notes.
     // On player, this allows holding the confirm key to fall back to press.
-    if (name == 'confirm')
-    {
-      confirmHoldTimer = 0;
-    }
+    if (name == 'confirm') confirmHoldTimer = 0;
   }
 
   override function update(elapsed:Float)
@@ -154,10 +151,7 @@ class StrumlineNote extends FunkinSprite
   {
     this.active = true;
 
-    if (getCurrentAnimation() == "confirm-hold")
-    {
-      return;
-    }
+    if (getCurrentAnimation() == "confirm-hold") return;
     else if (getCurrentAnimation() == "confirm")
     {
       if (isAnimationFinished())
@@ -167,9 +161,7 @@ class StrumlineNote extends FunkinSprite
       }
     }
     else
-    {
       this.playAnimation('confirm', false, false);
-    }
   }
 
   /**
@@ -184,9 +176,7 @@ class StrumlineNote extends FunkinSprite
   }
 
   public function isAnimationFinished():Bool
-  {
     return this.animation.finished;
-  }
 
   static final DEFAULT_OFFSET:Int = 13;
 
@@ -206,8 +196,6 @@ class StrumlineNote extends FunkinSprite
       this.offset.y -= DEFAULT_OFFSET;
     }
     else
-    {
       this.centerOrigin();
-    }
   }
 }

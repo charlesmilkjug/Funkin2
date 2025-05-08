@@ -51,17 +51,12 @@ class NoteKindManager
 
       var noteKind:NoteKind = noteKinds.get(noteEvent?.note?.kind);
 
-      if (noteKind != null)
-      {
-        ScriptEventDispatcher.callEvent(noteKind, event);
-      }
+      if (noteKind != null) ScriptEventDispatcher.callEvent(noteKind, event);
     }
     else // call the event for all note kind scripts
     {
       for (noteKind in noteKinds.iterator())
-      {
         ScriptEventDispatcher.callEvent(noteKind, event);
-      }
     }
   }
 
@@ -75,10 +70,7 @@ class NoteKindManager
   {
     var noteStyleId:Null<String> = getNoteStyleId(noteKind, suffix);
 
-    if (noteStyleId == null)
-    {
-      return null;
-    }
+    if (noteStyleId == null) return null;
 
     return NoteStyleRegistry.instance.fetchEntry(noteStyleId);
   }
@@ -87,9 +79,8 @@ class NoteKindManager
   {
     var results:Array<NoteStyle> = [];
     for (songNoteData in songNoteDatas)
-    {
       var noteStyle:NoteStyle = getNoteStyle(songNoteData.kind, null);
-    }
+
     return results;
   }
 
@@ -101,16 +92,10 @@ class NoteKindManager
    */
   public static function getNoteStyleId(noteKind:String, ?suffix:String):Null<String>
   {
-    if (suffix == '')
-    {
-      suffix = null;
-    }
+    if (suffix == '') suffix = null;
 
     var noteStyleId:Null<String> = noteKinds.get(noteKind)?.noteStyleId;
-    if (noteStyleId != null && suffix != null)
-    {
-      noteStyleId = NoteStyleRegistry.instance.hasEntry('$noteStyleId-$suffix') ? '$noteStyleId-$suffix' : noteStyleId;
-    }
+    if (noteStyleId != null && suffix != null) noteStyleId = NoteStyleRegistry.instance.hasEntry('$noteStyleId-$suffix') ? '$noteStyleId-$suffix' : noteStyleId;
 
     return noteStyleId;
   }
@@ -122,10 +107,7 @@ class NoteKindManager
    */
   public static function getParams(noteKind:Null<String>):Array<NoteKindParam>
   {
-    if (noteKind == null)
-    {
-      return [];
-    }
+    if (noteKind == null) return [];
 
     return noteKinds.get(noteKind)?.params ?? [];
   }

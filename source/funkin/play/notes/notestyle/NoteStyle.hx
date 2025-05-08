@@ -50,37 +50,28 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
    * @return String
    */
   public function getName():String
-  {
     return _data.name;
-  }
 
   /**
    * Get the author of the note style.
    * @return String
    */
   public function getAuthor():String
-  {
     return _data.author;
-  }
 
   /**
    * Get the note style ID of the parent note style.
    * @return The string ID, or `null` if there is no parent.
    */
   public function getFallbackID():Null<String>
-  {
     return _data.fallback;
-  }
 
   public function buildNoteSprite(target:NoteSprite):Void
   {
     // Apply the note sprite frames.
     var atlas:Null<FlxAtlasFrames> = buildNoteFrames(false);
 
-    if (atlas == null)
-    {
-      throw 'Could not load spritesheet for note style: $id';
-    }
+    if (atlas == null) throw 'Could not load spritesheet for note style: $id';
 
     target.frames = atlas;
 
@@ -115,10 +106,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
       return null;
     }
 
-    if (!FunkinSprite.isTextureCached(Paths.image(noteAssetPath)))
-    {
-      FlxG.log.warn('Note texture is not cached: ${noteAssetPath}');
-    }
+    if (!FunkinSprite.isTextureCached(Paths.image(noteAssetPath))) FlxG.log.warn('Note texture is not cached: ${noteAssetPath}');
 
     // Purge the note frames if the cached atlas is invalid.
     @:nullSafety(Off)
@@ -130,10 +118,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
 
     noteFrames = Paths.getSparrowAtlas(noteAssetPath, getAssetLibrary(getNoteAssetPath(true)));
 
-    if (noteFrames == null)
-    {
-      throw 'Could not load note frames for note style: $id';
-    }
+    if (noteFrames == null) throw 'Could not load note frames for note style: $id';
 
     return noteFrames;
   }
@@ -171,14 +156,10 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function isNoteAnimated():Bool
-  {
     return _data.assets?.note?.animated ?? fallback?.isNoteAnimated() ?? false;
-  }
 
   public function getNoteScale():Float
-  {
     return _data.assets?.note?.scale ?? fallback?.getNoteScale() ?? 1.0;
-  }
 
   function fetchNoteAnimationData(dir:NoteDirection):Null<AnimationData>
   {
@@ -209,19 +190,13 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function isHoldNotePixel():Bool
-  {
     return _data?.assets?.holdNote?.isPixel ?? fallback?.isHoldNotePixel() ?? false;
-  }
 
   public function fetchHoldNoteScale():Float
-  {
     return _data?.assets?.holdNote?.scale ?? fallback?.fetchHoldNoteScale() ?? 1.0;
-  }
 
   public function getHoldNoteOffsets():Array<Float>
-  {
     return _data?.assets?.holdNote?.offsets ?? fallback?.getHoldNoteOffsets() ?? [0.0, 0.0];
-  }
 
   public function applyStrumlineFrames(target:StrumlineNote):Void
   {
@@ -230,10 +205,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
 
     var atlas:FlxAtlasFrames = Paths.getSparrowAtlas(getStrumlineAssetPath() ?? '', getAssetLibrary(getStrumlineAssetPath(true)));
 
-    if (atlas == null)
-    {
-      throw 'Could not load spritesheet for note style: $id';
-    }
+    if (atlas == null) throw 'Could not load spritesheet for note style: $id';
 
     target.frames = atlas;
 
@@ -243,10 +215,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
 
   function getStrumlineAssetPath(raw:Bool = false):Null<String>
   {
-    if (raw)
-    {
-      return _data?.assets?.noteStrumline?.assetPath ?? fallback?.getStrumlineAssetPath(true);
-    }
+    if (raw) return _data?.assets?.noteStrumline?.assetPath ?? fallback?.getStrumlineAssetPath(true);
 
     // library:path
     var parts = getStrumlineAssetPath(true)?.split(Constants.LIBRARY_SEPARATOR) ?? [];
@@ -255,9 +224,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function applyStrumlineAnimations(target:StrumlineNote, dir:NoteDirection):Void
-  {
     FlxAnimationUtil.addAtlasAnimations(target, getStrumlineAnimationData(dir));
-  }
 
   /**
    * Fetch the animation data for the strumline.
@@ -319,19 +286,13 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function getStrumlineScale():Float
-  {
     return _data?.assets?.noteStrumline?.scale ?? fallback?.getStrumlineScale() ?? 1.0;
-  }
 
   public function isNoteSplashEnabled():Bool
-  {
     return _data?.assets?.noteSplash?.data?.enabled ?? fallback?.isNoteSplashEnabled() ?? false;
-  }
 
   public function isHoldNoteCoverEnabled():Bool
-  {
     return _data?.assets?.holdNoteCover?.data?.enabled ?? fallback?.isHoldNoteCoverEnabled() ?? false;
-  }
 
   /**
    * Build a sprite for the given step of the countdown.
@@ -867,10 +828,8 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   {
     var atlas:Null<FlxAtlasFrames> = buildSplashFrames(false);
 
-    if (atlas == null)
-    {
-      throw 'Could not load spritesheet for note style: $id';
-    }
+    if (atlas == null) throw 'Could not load spritesheet for note style: $id';
+
     target.frames = atlas;
     target.antialiasing = !(_data.assets.noteSplash?.isPixel ?? false);
 
@@ -911,10 +870,8 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
 
     splashFrames = Paths.getSparrowAtlas(splashAssetPath, getAssetLibrary(getSplashAssetPath(true)));
     splashFrames.parent.persist = true;
-    if (splashFrames == null)
-    {
-      throw 'Could not load notesplash frames for note style: $id';
-    }
+    if (splashFrames == null) throw 'Could not load notesplash frames for note style: $id';
+
     return splashFrames;
   }
 
@@ -992,10 +949,8 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
     // NoteHoldCover has "glow" and "sparks". Right now it only implements "glow"
     // but "sparks" I believe is meant to be used for the ending of the hold note
     var glowAtlas:Null<FlxFramesCollection> = buildHoldCoverFrames(false);
-    if (glowAtlas == null)
-    {
-      throw 'Could not load spritesheet for note style: $id';
-    }
+    if (glowAtlas == null) throw 'Could not load spritesheet for note style: $id';
+
     target.glow.frames = glowAtlas;
 
     target.antialiasing = !(_data.assets.holdNoteCover?.isPixel ?? false);
@@ -1047,10 +1002,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
       return null;
     }
 
-    if (!FunkinSprite.isTextureCached(Paths.image(holdCoverAssetPath)))
-    {
-      FlxG.log.warn('Hold Note Cover texture not cached: ${holdCoverAssetPath}');
-    }
+    if (!FunkinSprite.isTextureCached(Paths.image(holdCoverAssetPath))) FlxG.log.warn('Hold Note Cover texture not cached: ${holdCoverAssetPath}');
 
     var atlas:FlxFramesCollection = Paths.getSparrowAtlas(holdCoverAssetPath, getAssetLibrary(getHoldCoverDirectionAssetPath(direction, true)));
     if (atlas == null) return null;
@@ -1154,9 +1106,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function getHoldCoverOffsets():Array<Float>
-  {
     return _data?.assets?.holdNoteCover?.offsets ?? fallback?.getHoldCoverOffsets() ?? [0.0, 0.0];
-  }
 
   public function destroy():Void {}
 
@@ -1176,21 +1126,14 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function toString():String
-  {
     return 'NoteStyle($id)';
-  }
 
   static function _fetchData(id:String):NoteStyleData
   {
     var result = NoteStyleRegistry.instance.parseEntryDataWithMigration(id, NoteStyleRegistry.instance.fetchEntryVersion(id));
 
-    if (result == null)
-    {
-      throw 'Could not parse note style data for id: $id';
-    }
+    if (result == null) throw 'Could not parse note style data for id: $id';
     else
-    {
       return result;
-    }
   }
 }

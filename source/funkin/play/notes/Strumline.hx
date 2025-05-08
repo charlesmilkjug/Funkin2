@@ -257,9 +257,7 @@ class Strumline extends FlxSpriteGroup
    * @return An array of `NoteSprite` objects.
    */
   public function getNotesMayHit():Array<NoteSprite>
-  {
     return notes.members.filter((note:NoteSprite) -> return note != null && note.alive && !note.hasBeenHit && note.mayHit);
-  }
 
   /**
    * Return hold notes that are within `Constants.HIT_WINDOW` ms of the strumline.
