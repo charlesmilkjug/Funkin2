@@ -180,9 +180,7 @@ class Conductor
   public var stepLengthMs(get, never):Float;
 
   function get_stepLengthMs():Float
-  {
     return beatLengthMs / Constants.STEPS_PER_BEAT;
-  }
 
   /**
    * The numerator for the current time signature (the `3` in `3/4`).
@@ -275,9 +273,7 @@ class Conductor
   public var audioVisualOffset(get, set):Int;
 
   function get_inputOffset():Int
-  {
     return Save?.instance?.options?.inputOffset ?? 0;
-  }
 
   function set_inputOffset(value:Int):Int
   {
@@ -287,9 +283,7 @@ class Conductor
   }
 
   function get_audioVisualOffset():Int
-  {
     return Save?.instance?.options?.audioVisualOffset ?? 0;
-  }
 
   function set_audioVisualOffset(value:Int):Int
   {
@@ -301,9 +295,7 @@ class Conductor
   public var combinedOffset(get, never):Float;
 
   function get_combinedOffset():Float
-  {
     return instrumentalOffset + audioVisualOffset + formatOffset;
-  }
 
   /**
    * The number of beats in a measure.
@@ -311,9 +303,7 @@ class Conductor
   public var beatsPerMeasure(get, never):Float;
 
   function get_beatsPerMeasure():Float
-  {
     return timeSignatureNumerator;
-  }
 
   /**
    * The number of steps in a measure.
@@ -321,22 +311,16 @@ class Conductor
   public var stepsPerMeasure(get, never):Int;
 
   function get_stepsPerMeasure():Int
-  {
     return Std.int(timeSignatureNumerator * Constants.STEPS_PER_BEAT);
-  }
 
   /**
    * Reset the Conductor, replacing the current instance with a fresh one.
    */
   public static function reset():Void
-  {
     set_instance(new Conductor());
-  }
 
   static function dispatchMeasureHit():Void
-  {
     Conductor.measureHit.dispatch();
-  }
 
   static function dispatchBeatHit():Void
   {
@@ -344,9 +328,7 @@ class Conductor
   }
 
   static function dispatchStepHit():Void
-  {
     Conductor.stepHit.dispatch();
-  }
 
   static function setupSingleton(input:Conductor):Void
   {

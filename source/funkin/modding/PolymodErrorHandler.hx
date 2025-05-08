@@ -13,9 +13,7 @@ class PolymodErrorHandler
    * @param desc The body text of the popup.
    */
   public static function showAlert(name:String, desc:String):Void
-  {
     lime.app.Application.current.window.alert(desc, name);
-  }
 
   public static function onPolymodError(error:PolymodError):Void
   {

@@ -209,7 +209,7 @@ class FreeplayDJ extends FlxAtlasSprite
 
   /**
    * Dynamic function, it's actually a variable you can reassign!
-   * `dj.onCharSelectComplete = function() {};`
+   * `dj.onCharSelectComplete = () -> {};`
    */
   public dynamic function onCharSelectComplete():Void
   {

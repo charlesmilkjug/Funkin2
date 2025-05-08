@@ -151,9 +151,9 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
       Preferences.unlockedFramerate = value;
     }, Preferences.unlockedFramerate);
     #else
-    createPrefItemNumber('FPS', 'The maximum framerate that the game targets.', function(value:Float) {
+    createPrefItemNumber('FPS', 'The maximum framerate that the game targets.', (value:Float) -> {
       Preferences.framerate = Std.int(value);
-    }, null, Preferences.framerate, 30, 300, 5, 0, 1);
+    }, null, Preferences.framerate, 30, 360, 5, 0, 1);
     #end
 
     addCategory('Screenshots');

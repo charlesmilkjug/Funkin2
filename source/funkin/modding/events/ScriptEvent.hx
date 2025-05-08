@@ -53,10 +53,7 @@ class ScriptEvent
    */
   public function cancelEvent():Void
   {
-    if (cancelable)
-    {
-      eventCanceled = true;
-    }
+    if (cancelable) eventCanceled = true;
   }
 
   /**
@@ -64,22 +61,16 @@ class ScriptEvent
    * This is an alias for cancelEvent() but I make this typo all the time.
    */
   public function cancel():Void
-  {
     cancelEvent();
-  }
 
   /**
    * Call this function to stop any other Scripteds from receiving the event.
    */
   public function stopPropagation():Void
-  {
     shouldPropagate = false;
-  }
 
   public function toString():String
-  {
     return 'ScriptEvent(type=$type, cancelable=$cancelable)';
-  }
 }
 
 /**

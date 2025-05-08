@@ -117,9 +117,7 @@ class PlayerSettings
       controls.fromSaveData(keyControlData, Keys);
     }
     else
-    {
       useDefault = true;
-    }
 
     if (useDefault)
     {
@@ -145,9 +143,7 @@ class PlayerSettings
       controls.addGamepadWithSaveData(gamepad.id, padControlData);
     }
     else
-    {
       useDefault = true;
-    }
 
     if (useDefault)
     {

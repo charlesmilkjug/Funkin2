@@ -16,9 +16,7 @@ class Module implements IPlayStateScriptedClass implements IStateChangingScripte
   public var active(default, set):Bool = true;
 
   function set_active(value:Bool):Bool
-  {
     return this.active = value;
-  }
 
   public var moduleId(default, null):String = 'UNKNOWN';
 
@@ -51,9 +49,7 @@ class Module implements IPlayStateScriptedClass implements IStateChangingScripte
   }
 
   public function toString()
-  {
     return 'Module(' + this.moduleId + ')';
-  }
 
   // TODO: Half of these aren't actually being called!!!!!!!
 

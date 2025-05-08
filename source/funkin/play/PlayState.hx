@@ -579,9 +579,7 @@ class PlayState extends MusicBeatSubState
   var currentSongLengthMs(get, never):Float;
 
   function get_currentSongLengthMs():Float
-  {
     return FlxG?.sound?.music?.length;
-  }
 
   // TODO: Refactor or document
   var generatedMusic:Bool = false;
@@ -651,10 +649,7 @@ class PlayState extends MusicBeatSubState
       this.cameraFollowPoint = cameraFollowPoint;
     }
     else
-    {
-      // Camera follow point is an invisible point in space.
-      cameraFollowPoint = new FlxObject(0, 0);
-    }
+      cameraFollowPoint = new FlxObject(0, 0); // Camera follow point is an invisible point in space.
 
     // This state receives update() even when a substate is active.
     this.persistentUpdate = true;
@@ -994,10 +989,8 @@ class PlayState extends MusicBeatSubState
       camHUD.zoom = FlxMath.lerp(defaultHUDCameraZoom, camHUD.zoom, 0.95);
     }
 
-    if (currentStage != null && currentStage.getBoyfriend() != null)
-    {
-      FlxG.watch.addQuick('bfAnim', currentStage.getBoyfriend().getCurrentAnimation());
-    }
+    if (currentStage != null && currentStage.getBoyfriend() != null) FlxG.watch.addQuick('bfAnim', currentStage.getBoyfriend().getCurrentAnimation());
+
     FlxG.watch.addQuick('health', health);
     FlxG.watch.addQuick('cameraBopIntensity', cameraBopIntensity);
 
@@ -1046,10 +1039,7 @@ class PlayState extends MusicBeatSubState
         isPlayerDying = true;
 
         var deathPreTransitionDelay = currentStage?.getBoyfriend()?.getDeathPreTransitionDelay() ?? 0.0;
-        if (deathPreTransitionDelay > 0)
-        {
-          new FlxTimer().start(deathPreTransitionDelay, (_) -> moveToGameOver());
-        }
+        if (deathPreTransitionDelay > 0) new FlxTimer().start(deathPreTransitionDelay, (_) -> moveToGameOver());
         else
         {
           // Transition immediately.
@@ -1490,9 +1480,7 @@ class PlayState extends MusicBeatSubState
   }
 
   public override function initConsoleHelpers():Void
-  {
     FlxG.console.registerFunction("debugUnbindCameraZoom", () -> debugUnbindCameraZoom = !debugUnbindCameraZoom);
-  };
 
   /**
      * Initializes the game and HUD cameras.
@@ -1820,7 +1808,7 @@ class PlayState extends MusicBeatSubState
   function buildDiscordRPCState():String
   {
     var discordRPCDifficulty = PlayState.instance.currentDifficulty.replace('-', ' ').toTitleCase();
-    return '${currentChart.songName} [${discordRPCDifficulty}]';
+    return '${currentChart.songName} [${PlayState.instance.currentDifficulty.replace('-', ' ').toTitleCase()}]';
   }
 
   function initPreciseInputs():Void
@@ -2120,8 +2108,7 @@ class PlayState extends MusicBeatSubState
       {
         if (note.hasMissed || note.hasBeenHit) continue;
 
-        note.tooEarly = false;
-        note.mayHit = false;
+        note.tooEarly = note.mayHit = false;
         note.hasMissed = true;
 
         if (note.holdNoteSprite != null) note.holdNoteSprite.missedNote = true;
@@ -2157,8 +2144,7 @@ class PlayState extends MusicBeatSubState
       else
       {
         note.tooEarly = true;
-        note.mayHit = false;
-        note.hasMissed = false;
+        note.mayHit = note.hasMissed = false;
         if (note.holdNoteSprite != null) note.holdNoteSprite.missedNote = false;
       }
     }
@@ -2172,10 +2158,7 @@ class PlayState extends MusicBeatSubState
       if (holdNote.hitNote && !holdNote.missedNote && holdNote.sustainLength > 0)
       {
         // Make sure the opponent keeps singing while the note is held.
-        if (currentStage != null && currentStage.getDad() != null && currentStage.getDad().isSinging())
-        {
-          currentStage.getDad().holdTimer = 0;
-        }
+        if (currentStage != null && currentStage.getDad() != null && currentStage.getDad().isSinging()) currentStage.getDad().holdTimer = 0;
       }
 
       if (holdNote.missedNote && !holdNote.handledMiss)
@@ -2578,9 +2561,7 @@ class PlayState extends MusicBeatSubState
 
       var indices:Array<Int> = [];
       for (i in 0...pressArray.length)
-      {
         if (pressArray[i]) indices.push(i);
-      }
     }
 
     if (event.playSound)
@@ -2752,8 +2733,7 @@ class PlayState extends MusicBeatSubState
         var pauseSubState:FlxSubState = new PauseSubState({mode: Conversation});
 
         persistentUpdate = false;
-        FlxTransitionableState.skipNextTransIn = true;
-        FlxTransitionableState.skipNextTransOut = true;
+        FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
         pauseSubState.camera = camCutscene;
         openSubState(pauseSubState);
       }
@@ -2768,8 +2748,7 @@ class PlayState extends MusicBeatSubState
         var pauseSubState:FlxSubState = new PauseSubState({mode: Cutscene});
 
         persistentUpdate = false;
-        FlxTransitionableState.skipNextTransIn = true;
-        FlxTransitionableState.skipNextTransOut = true;
+        FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
         pauseSubState.camera = camCutscene;
         openSubState(pauseSubState);
       }
@@ -2780,9 +2759,7 @@ class PlayState extends MusicBeatSubState
      * Handle logic for actually skipping a video cutscene after it has been held.
      */
   function skipVideoCutscene():Void
-  {
     VideoCutscene.finishVideo();
-  }
 
   /**
      * End the song. Handle saving high scores and transitioning to the results screen.
@@ -3042,6 +3019,9 @@ class PlayState extends MusicBeatSubState
       // TODO: Uncache the song.
     }
 
+    // Prevent vwoosh timer from running outside PlayState. (e.g Chart Editor)
+    vwooshTimer.cancel();
+
     if (overrideMusic)
     {
       // Stop the music. Do NOT destroy it, something still references it!
@@ -3224,11 +3204,7 @@ class PlayState extends MusicBeatSubState
     // Cancel the current tween if it's active.
     cancelCameraFollowTween();
 
-    if (duration == 0)
-    {
-      // Instant movement. Just reset the camera to force it to the follow point.
-      resetCamera(false, false);
-    }
+    if (duration == 0) resetCamera(false, false); // Instant movement. Just reset the camera to force it to the follow point.
     else
     {
       // Disable camera following for the duration of the tween.
@@ -3247,9 +3223,7 @@ class PlayState extends MusicBeatSubState
   }
 
   public function cancelCameraFollowTween()
-  {
     if (cameraFollowTween != null) cameraFollowTween.cancel();
-  }
 
   /**
      * Tweens the camera zoom to the desired amount.
@@ -3263,22 +3237,14 @@ class PlayState extends MusicBeatSubState
     // Stage mode: Set zoom as a multiplier of the current stage's default zoom.
     var targetZoom = zoom * (direct ? FlxCamera.defaultZoom : stageZoom);
 
-    if (duration == 0)
-    {
-      // Instant zoom. No tween needed.
-      currentCameraZoom = targetZoom;
-    }
+    if (duration == 0) currentCameraZoom = targetZoom; // Instant zoom. No tween needed.
     else
-    {
-      // Zoom tween! Caching it so we can cancel/pause it later if needed.
-      cameraZoomTween = FlxTween.tween(this, {currentCameraZoom: targetZoom}, duration, {ease: ease});
-    }
+      cameraZoomTween = FlxTween.tween(this, {currentCameraZoom: targetZoom}, duration,
+        {ease: ease}); // Zoom tween! Caching it so we can cancel/pause it later if needed.
   }
 
   public function cancelCameraZoomTween()
-  {
     if (cameraZoomTween != null) cameraZoomTween.cancel();
-  }
 
   /**
      * Cancel all active camera tweens simultaneously.
@@ -3331,12 +3297,8 @@ class PlayState extends MusicBeatSubState
   public function cancelScrollSpeedTweens()
   {
     for (tween in scrollSpeedTweens)
-    {
-      if (tween != null)
-      {
-        tween.cancel();
-      }
-    }
+      if (tween != null) tween.cancel();
+
     scrollSpeedTweens = [];
   }
 

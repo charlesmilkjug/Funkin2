@@ -39,9 +39,7 @@ class ModuleHandler
         addToModuleCache(module);
       }
       else
-      {
         trace('    Failed to instantiate module: ${moduleCls}');
-      }
     }
     reorderModuleCache();
 
@@ -49,19 +47,13 @@ class ModuleHandler
   }
 
   public static function buildModuleCallbacks():Void
-  {
     FlxG.signals.postStateSwitch.add(onStateSwitchComplete);
-  }
 
   static function onStateSwitchComplete():Void
-  {
     callEvent(new StateChangeScriptEvent(STATE_CHANGE_END, FlxG.state, true));
-  }
 
   static function addToModuleCache(module:Module):Void
-  {
     moduleCache.set(module.moduleId, module);
-  }
 
   static function reorderModuleCache():Void
   {
@@ -79,37 +71,24 @@ class ModuleHandler
     var aModule:Module = moduleCache.get(a);
     var bModule:Module = moduleCache.get(b);
 
-    if (aModule.priority != bModule.priority)
-    {
-      return aModule.priority - bModule.priority;
-    }
+    if (aModule.priority != bModule.priority) return aModule.priority - bModule.priority;
     else
-    {
       return SortUtil.alphabetically(a, b);
-    }
   }
 
   public static function getModule(moduleId:String):Module
-  {
     return moduleCache.get(moduleId);
-  }
 
   public static function activateModule(moduleId:String):Void
   {
     var module:Module = getModule(moduleId);
-    if (module != null)
-    {
-      module.active = true;
-    }
+    if (module != null) module.active = true;
   }
 
   public static function deactivateModule(moduleId:String):Void
   {
     var module:Module = getModule(moduleId);
-    if (module != null)
-    {
-      module.active = false;
-    }
+    if (module != null) module.active = false;
   }
 
   /**
@@ -123,9 +102,7 @@ class ModuleHandler
 
       // Note: Ignore stopPropagation()
       for (key => value in moduleCache)
-      {
         ScriptEventDispatcher.callEvent(value, event);
-      }
 
       moduleCache.clear();
       modulePriorityOrder = [];
@@ -138,15 +115,10 @@ class ModuleHandler
     {
       var module:Module = moduleCache.get(moduleId);
       // The module needs to be active to receive events.
-      if (module != null && module.active)
-      {
-        ScriptEventDispatcher.callEvent(module, event);
-      }
+      if (module != null && module.active) ScriptEventDispatcher.callEvent(module, event);
     }
   }
 
   public static inline function callOnCreate():Void
-  {
     callEvent(new ScriptEvent(CREATE, false));
-  }
 }

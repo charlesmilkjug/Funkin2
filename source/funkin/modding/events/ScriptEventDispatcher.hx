@@ -20,10 +20,7 @@ class ScriptEventDispatcher
     target.onScriptEvent(event);
 
     // If one target says to stop propagation, stop.
-    if (!event.shouldPropagate)
-    {
-      return;
-    }
+    if (!event.shouldPropagate) return;
 
     // IScriptedClass
     switch (event.type)
@@ -217,10 +214,7 @@ class ScriptEventDispatcher
       callEvent(t, event);
 
       // If one target says to stop propagation, stop.
-      if (!event.shouldPropagate)
-      {
-        return;
-      }
+      if (!event.shouldPropagate) return;
     }
   }
 }

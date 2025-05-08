@@ -238,7 +238,7 @@ function changeSection(sections:Int):Void
 
 ```haxe
 // End the song when the music is complete.
-FlxG.sound.music.onComplete = function() {
+FlxG.sound.music.onComplete = () -> {
   endSong(skipEndingTransition);
 };
 // A negative instrumental offset means the song skips the first few milliseconds of the track.
@@ -317,7 +317,7 @@ function changeSection(sections:Int):Void
 ```
 
 ```haxe
-FlxG.sound.music.onComplete = function() {
+FlxG.sound.music.onComplete = () -> {
   endSong(skipEndingTransition);
 };
 // A negative instrumental offset means the song skips the first few milliseconds of the track.
