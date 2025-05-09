@@ -326,7 +326,6 @@ class FreeplayState extends MusicBeatSubState
       add(backingCard);
       backingCard.init();
       backingCard.applyExitMovers(exitMovers, exitMoversCharSel);
-      backingCard.instance = this;
     }
 
     if (currentCharacter?.getFreeplayDJData() != null)
