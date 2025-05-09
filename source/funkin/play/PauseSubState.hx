@@ -101,6 +101,8 @@ class PauseSubState extends MusicBeatSubState
 
   static final CHARTER_FADE_DURATION:Float = 0.75;
 
+  public static var instance:PauseSubState = null;
+
   /**
    * Defines which pause music to use.
    */
@@ -110,9 +112,7 @@ class PauseSubState extends MusicBeatSubState
    * Reset the pause configuration to the default.
    */
   public static function reset():Void
-  {
     musicSuffix = '';
-  }
 
   // ===============
   // Status Variables
@@ -208,6 +208,8 @@ class PauseSubState extends MusicBeatSubState
   {
     super.create();
 
+    instance = this;
+
     startPauseMusic();
 
     buildBackground();
@@ -255,10 +257,7 @@ class PauseSubState extends MusicBeatSubState
     var pauseMusicPath:String = Paths.music('breakfast$musicSuffix/breakfast$musicSuffix');
     pauseMusic = FunkinSound.load(pauseMusicPath, true, true);
 
-    if (pauseMusic == null)
-    {
-      FlxG.log.warn('Could not play pause music: ${pauseMusicPath} does not exist!');
-    }
+    if (pauseMusic == null) FlxG.log.warn('Could not play pause music: ${pauseMusicPath} does not exist!');
 
     // Start playing at a random point in the song.
     pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));

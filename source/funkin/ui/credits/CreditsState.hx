@@ -76,6 +76,8 @@ class CreditsState extends MusicBeatState
    */
   static final CREDITS_SCROLL_PAUSE_SPEED = 0.0;
 
+  public static var instance:CreditsState = null;
+
   /**
    * The actual sprites and text used to display the credits.
    */
@@ -94,6 +96,8 @@ class CreditsState extends MusicBeatState
   public override function create():Void
   {
     super.create();
+
+    instance = this;
 
     backersToBuild = CreditsDataHandler.fetchBackerEntries();
 

@@ -25,10 +25,7 @@ class StickerPack implements IRegistryEntry<StickerData>
     this.id = id;
     this._data = _fetchData(id);
 
-    if (_data == null)
-    {
-      throw 'Could not parse sticker pack data for id: $id';
-    }
+    if (_data == null) throw 'Could not parse sticker pack data for id: $id';
   }
 
   /**
@@ -36,27 +33,21 @@ class StickerPack implements IRegistryEntry<StickerData>
    * @return The name of the sticker pack
    */
   public function getStickerPackName():String
-  {
     return _data.name;
-  }
 
   /**
    * Return the artist of the sticker pack.
    * @return The list of artists
    */
   public function getStickerPackArtist():String
-  {
     return _data.artist;
-  }
 
   /**
    * Gets a list of all the sticker assets available in the pack.
    * @return The list of stickers as raw strings.
    */
   public function getStickers():Array<String>
-  {
     return _data.stickers;
-  }
 
   /**
    * Retrieve a random sticker from the pack.
@@ -64,19 +55,13 @@ class StickerPack implements IRegistryEntry<StickerData>
    * @return An asset path to a sticker to display.
    */
   public function getRandomStickerPath(last:Bool):String
-  {
     return FlxG.random.getObject(getStickers());
-  }
 
   public function toString():String
-  {
     return 'StickerPack($id)';
-  }
 
   public function destroy():Void {}
 
   static function _fetchData(id:String):Null<StickerData>
-  {
     return StickerRegistry.instance.parseEntryDataWithMigration(id, StickerRegistry.instance.fetchEntryVersion(id));
-  }
 }

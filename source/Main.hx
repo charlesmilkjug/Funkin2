@@ -28,7 +28,7 @@ import funkin.util.WindowUtil;
  */
 class Main extends Sprite
 {
-  public static var instance:Main;
+  public static var instance:Main = null;
 
   public static var game:FlxGame;
 

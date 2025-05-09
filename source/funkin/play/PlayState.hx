@@ -349,16 +349,12 @@ class PlayState extends MusicBeatSubState
   public var isSubState(get, never):Bool;
 
   function get_isSubState():Bool
-  {
     return this._parentState != null;
-  }
 
   public var isChartingMode(get, never):Bool;
 
   function get_isChartingMode():Bool
-  {
     return this._parentState != null && Std.isOfType(this._parentState, ChartEditorState);
-  }
 
   /**
    * The current dialogue.

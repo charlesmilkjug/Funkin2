@@ -42,6 +42,8 @@ import funkin.api.newgrounds.Medals;
 @:nullSafety
 class ResultState extends MusicBeatSubState
 {
+  public static var instance:ResultState = null;
+
   final params:ResultsStateParams;
 
   final rank:ScoringRank;
@@ -131,6 +133,8 @@ class ResultState extends MusicBeatSubState
 
   override function create():Void
   {
+    instance = this;
+
     if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
     // We need multiple cameras so we can put one at an angle.

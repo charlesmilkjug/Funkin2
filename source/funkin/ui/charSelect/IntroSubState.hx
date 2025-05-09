@@ -22,8 +22,12 @@ class IntroSubState extends MusicBeatSubState
   static final LIGHTS_VIDEO_PATH:String = Paths.videos('introSelect');
   #end
 
+  public static var instance:IntroSubState = null;
+
   public override function create():Void
   {
+    instance = this;
+
     if (Save.instance.oldChar)
     {
       onLightsEnd();

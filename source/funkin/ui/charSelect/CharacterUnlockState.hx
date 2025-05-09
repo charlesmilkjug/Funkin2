@@ -26,6 +26,8 @@ class CharacterUnlockState extends MusicBeatState
 
   var nextState:FlxState;
 
+  public static var instance:CharacterUnlockState = null;
+
   static final DIALOG_BG_COLOR:FlxColor = 0xFF000000; // Iconic
   static final DIALOG_COLOR:FlxColor = 0xFF4344F6; // Iconic
   static final DIALOG_FONT_COLOR:FlxColor = 0xFFFFFFFF; // Iconic
@@ -44,6 +46,8 @@ class CharacterUnlockState extends MusicBeatState
   override function create():Void
   {
     super.create();
+
+    instance = this;
 
     handleMusic();
 

@@ -40,9 +40,13 @@ class OptionsState extends MusicBeatState
 
   var optionsCodex:Codex<OptionsMenuPageName>;
 
+  public static var instance:OptionsState = null;
+
   override function create():Void
   {
     persistentUpdate = true;
+
+    instance = this;
 
     menuBG = new FlxSprite().loadGraphic(Paths.image('menuBG'));
     hsv = new HSVShader(-0.6, 0.9, 3.6);

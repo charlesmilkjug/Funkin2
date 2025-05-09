@@ -39,6 +39,8 @@ typedef StickerSubStateParams =
 @:nullSafety
 class StickerSubState extends MusicBeatSubState
 {
+  public static var instance:StickerSubState = null;
+
   public var grpStickers:FlxTypedGroup<StickerSprite>;
 
   /**
@@ -61,6 +63,8 @@ class StickerSubState extends MusicBeatSubState
   {
     super();
 
+    instance = this;
+
     // Define the target state, with a default fallback.
     this.targetState = params?.targetState ?? (sticker) -> FreeplayState.build(null, sticker);
 
@@ -74,9 +78,7 @@ class StickerSubState extends MusicBeatSubState
     var assetsInList = Assets.list();
     var soundFilterFunc = (a:String) -> return a.startsWith('assets/shared/sounds/stickersounds/');
     soundSelections = assetsInList.filter(soundFilterFunc);
-    soundSelections = soundSelections.map((a:String) -> {
-      return a.replace('assets/shared/sounds/stickersounds/', '').split('/')[0];
-    });
+    soundSelections = soundSelections.map((a:String) -> return a.replace('assets/shared/sounds/stickersounds/', '').split('/')[0]);
 
     grpStickers = new FlxTypedGroup<StickerSprite>();
     add(grpStickers);
@@ -249,15 +251,11 @@ class StickerSubState extends MusicBeatSubState
       });
     }
 
-    grpStickers.sort((ord, a, b) -> {
-      return FlxSort.byValues(ord, a.timing, b.timing);
-    });
+    grpStickers.sort((ord, a, b) -> return FlxSort.byValues(ord, a.timing, b.timing));
   }
 
   override public function update(elapsed:Float):Void
-  {
     super.update(elapsed);
-  }
 
   var switchingState:Bool = false;
 

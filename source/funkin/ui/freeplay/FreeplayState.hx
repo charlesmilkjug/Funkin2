@@ -99,6 +99,8 @@ class FreeplayState extends MusicBeatSubState
    */
   public static final FADE_IN_DELAY:Float = 0.25;
 
+  public static var instance:FreeplayState = null;
+
   var songs:Array<Null<FreeplaySongData>> = [];
 
   var curSelected:Int = 0;
@@ -258,6 +260,8 @@ class FreeplayState extends MusicBeatSubState
 
     FlxG.state.persistentUpdate = false;
     FlxTransitionableState.skipNextTransIn = true;
+
+    instance = this;
 
     var fadeShaderFilter:ShaderFilter = new ShaderFilter(fadeShader);
     funnyCam.filters = [fadeShaderFilter];

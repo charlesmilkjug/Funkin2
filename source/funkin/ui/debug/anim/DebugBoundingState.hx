@@ -37,6 +37,8 @@ class DebugBoundingState extends FlxState
     TODAY'S TO-DO
     - Cleaner UI
    */
+  public static var instance:DebugBoundingState = null;
+
   var bg:FlxBackdrop;
   var fileInfo:FlxText;
 
@@ -73,6 +75,8 @@ class DebugBoundingState extends FlxState
   override function create()
   {
     Paths.setCurrentLevel('week1');
+
+    instance = this;
 
     hudCam = new FlxCamera();
     hudCam.bgColor.alpha = 0;

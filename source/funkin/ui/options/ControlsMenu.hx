@@ -104,10 +104,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
       var control = controlList[i];
       var name = control.getName();
       // Don't spoil that you can play different characters until the player has unlocked one
-      if (control == FREEPLAY_CHAR_SELECT && funkin.data.freeplay.player.PlayerRegistry.instance.countUnlockedCharacters() <= 1)
-      {
-        continue;
-      }
+      if (control == FREEPLAY_CHAR_SELECT && funkin.data.freeplay.player.PlayerRegistry.instance.countUnlockedCharacters() <= 1) continue;
 
       if (currentHeader != "UI_" && name.indexOf("UI_") == 0)
       {
@@ -203,9 +200,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
   {
     var item = new InputItem(x, y, currentDevice, control, index, onSelect);
     for (i in 0...controlGroups.length)
-    {
       if (controlGroups[i].contains(control)) itemGroups[i].push(item);
-    }
 
     return controlGrid.addItem(item.name, item);
   }
@@ -236,8 +231,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
     controlGrid.selectedItem.idle();
     labels.members[Std.int(controlGrid.selectedIndex / COLUMNS)].alpha = 0.6;
     controlGrid.enabled = false;
-    deviceList.enabled = true;
-    canExit = true;
+    deviceList.enabled = canExit = true;
     camFollow.y = deviceList.selectedItem.y;
     deviceListSelected = true;
   }
@@ -383,9 +377,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
     if (input == FlxKey.NONE && controlGrid.selectedIndex != 1 && rightItem.input == FlxKey.NONE)
     {
       for (group in itemGroups)
-      {
         if (group.toString() == itemGroups[1].toString() && group.contains(item)) actionPrevented = true;
-      }
     }
 
     if (actionPrevented) return;
@@ -395,9 +387,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
     {
       var column0 = Math.floor(controlGrid.selectedIndex / 2) * 2;
       for (i in 0...COLUMNS)
-      {
         if (controlGrid.members[column0 + i].input == input) return;
-      }
     }
 
     // Check if items in the same group already have the new input
@@ -409,9 +399,9 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
         {
           if (otherItem != item && otherItem.input == input)
           {
-            // replace that input with this items old input.
+            // replace that input with this item's old input.
             PlayerSettings.player1.controls.replaceBinding(otherItem.control, currentDevice, item.input, otherItem.input);
-            // Don't use resetItem() since items share names/labels
+            // Don't use resetItem() since items share names/labels.
             otherItem.input = item.input;
             otherItem.label.text = item.label.text;
           }
@@ -421,7 +411,7 @@ class ControlsMenu extends Page<OptionsState.OptionsMenuPageName>
 
     PlayerSettings.player1.controls.replaceBinding(item.control, currentDevice, input, item.input);
 
-    // Don't use resetItem() since items share names/labels
+    // Don't use resetItem() since items share names/labels.
     item.input = input;
     item.label.text = item.getLabel(input);
 

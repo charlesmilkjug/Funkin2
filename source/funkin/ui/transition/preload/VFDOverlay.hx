@@ -62,7 +62,5 @@ class VFDOverlay extends GraphicsShader
   }
 
   public function update(elapsed:Float):Void
-  {
     this.elapsedTime += elapsed;
-  }
 }

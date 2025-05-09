@@ -15,12 +15,16 @@ import flixel.tweens.FlxTween;
  */
 class ResultsDebugSubState extends MusicBeatSubState
 {
+  public static var instance:ResultsDebugSubState = null;
+
   var resultsParams:ResultsStateParams;
   var items:MenuTypedList<MenuTypedItem<FlxText>>;
 
   override function create():Void
   {
     super.create();
+
+    instance = this;
 
     persistentUpdate = false;
     persistentDraw = false;

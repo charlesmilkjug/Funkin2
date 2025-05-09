@@ -37,6 +37,8 @@ import funkin.api.newgrounds.Medals;
 
 class CharSelectSubState extends MusicBeatSubState
 {
+  public static var instance:CharSelectSubState = null;
+
   var cursor:FlxSprite;
 
   var cursorBlue:FlxSprite;
@@ -44,27 +46,38 @@ class CharSelectSubState extends MusicBeatSubState
   var grpCursors:FlxTypedGroup<FlxSprite>;
   var cursorConfirmed:FlxSprite;
   var cursorDenied:FlxSprite;
+
   var cursorX:Int = 0;
   var cursorY:Int = 0;
   var cursorFactor:Float = 110;
   var cursorOffsetX:Float = -16;
   var cursorOffsetY:Float = -48;
   var cursorLocIntended:FlxPoint = new FlxPoint(0, 0);
+
   var lerpAmnt:Float = 0.95;
   var tmrFrames:Int = 60;
+
   var currentStage:Stage;
+
   var playerChill:CharSelectPlayer;
   var playerChillOut:CharSelectPlayer;
   var gfChill:CharSelectGF;
   var gfChillOut:CharSelectGF;
+
   var barthing:FlxAtlasSprite;
+
   var dipshitBacking:FlxSprite;
   var chooseDipshit:FlxSprite;
   var dipshitBlur:FlxSprite;
+
   var transitionGradient:FlxSprite;
+
   var curChar(default, set):String = "pico";
+
   var nametag:Nametag;
+
   var camFollow:FlxObject;
+
   var autoFollow:Bool = false;
   var availableChars:Map<Int, String> = new Map<Int, String>();
   var pressedSelect:Bool = false;
@@ -119,6 +132,8 @@ class CharSelectSubState extends MusicBeatSubState
   override public function create():Void
   {
     super.create();
+
+    instance = this;
 
     bopInfo = FramesJSFLParser.parse(Paths.file("images/charSelect/iconBopInfo/iconBopInfo.txt"));
 

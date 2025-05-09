@@ -30,6 +30,8 @@ class TouchHereToPlayImage extends BitmapData {}
  */
 class FunkinPreloader extends FlxBasePreloader
 {
+  // bro i need to tryna rewrite this shit dawg.... -charlesisfeline
+
   /**
    * The logo image width at the base resolution.
    * Scaled up/down appropriately as needed.
@@ -377,10 +379,7 @@ class FunkinPreloader extends FlxBasePreloader
               return elapsedPreloadingPlayAssets / Constants.PRELOADER_MIN_STAGE_TIME;
           }
         }
-        else
-        {
-          if (preloadingPlayAssetsComplete) currentState = FunkinPreloaderState.InitializingScripts;
-        }
+        else if (preloadingPlayAssetsComplete) currentState = FunkinPreloaderState.InitializingScripts;
 
         return preloadingPlayAssetsPercent;
 
@@ -461,9 +460,7 @@ class FunkinPreloader extends FlxBasePreloader
             return 0.0;
           }
           else
-          {
             return cachingGraphicsPercent;
-          }
         }
 
       case CachingAudio:
@@ -501,14 +498,9 @@ class FunkinPreloader extends FlxBasePreloader
           else
           {
             // We need to return SIMULATED progress here.
-            if (cachingAudioPercent < (elapsedCachingAudio / Constants.PRELOADER_MIN_STAGE_TIME))
-            {
-              return cachingAudioPercent;
-            }
+            if (cachingAudioPercent < (elapsedCachingAudio / Constants.PRELOADER_MIN_STAGE_TIME)) return cachingAudioPercent;
             else
-            {
               return elapsedCachingAudio / Constants.PRELOADER_MIN_STAGE_TIME;
-            }
           }
         }
         else
@@ -519,9 +511,7 @@ class FunkinPreloader extends FlxBasePreloader
             return 0.0;
           }
           else
-          {
             return cachingAudioPercent;
-          }
         }
 
       case CachingData:
@@ -771,14 +761,9 @@ class FunkinPreloader extends FlxBasePreloader
           else
           {
             // We need to return SIMULATED progress here.
-            if (parsingSongsPercent < (elapsedParsingSongs / Constants.PRELOADER_MIN_STAGE_TIME))
-            {
-              return parsingSongsPercent;
-            }
+            if (parsingSongsPercent < (elapsedParsingSongs / Constants.PRELOADER_MIN_STAGE_TIME)) return parsingSongsPercent;
             else
-            {
               return elapsedParsingSongs / Constants.PRELOADER_MIN_STAGE_TIME;
-            }
           }
         }
         else
@@ -789,23 +774,15 @@ class FunkinPreloader extends FlxBasePreloader
             return 0.0;
           }
           else
-          {
             return parsingSongsPercent;
-          }
         }
       case FunkinPreloaderState.Complete:
-        if (completeTime < 0)
-        {
-          completeTime = elapsed;
-        }
+        if (completeTime < 0) completeTime = elapsed;
 
         return 1.0;
       #if TOUCH_HERE_TO_PLAY
       case FunkinPreloaderState.TouchHereToPlay:
-        if (completeTime < 0)
-        {
-          completeTime = elapsed;
-        }
+        if (completeTime < 0) completeTime = elapsed;
 
         if (touchHereToPlay.alpha < 1.0)
         {
@@ -895,9 +872,7 @@ class FunkinPreloader extends FlxBasePreloader
       var piecesToRender:Int = Std.int(percent * progressBarPieces.length);
 
       for (i => piece in progressBarPieces)
-      {
         piece.alpha = i <= piecesToRender ? 0.9 : 0.1;
-      }
     }
 
     // progressBar.width = barWidth;
@@ -966,10 +941,7 @@ class FunkinPreloader extends FlxBasePreloader
   {
     if (progressLeftText != null)
     {
-      if (text == null)
-      {
-        progressLeftText.alpha = 0.0;
-      }
+      if (text == null) progressLeftText.alpha = 0.0;
       else if (progressLeftText.text != text)
       {
         // We have to keep updating the text format, because the font can take a frame or two to load.
@@ -997,9 +969,7 @@ class FunkinPreloader extends FlxBasePreloader
   }
 
   function immediatelyStartGame():Void
-  {
     _loaded = true;
-  }
 
   /**
    * Fade out the logo.

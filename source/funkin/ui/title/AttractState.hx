@@ -25,8 +25,12 @@ class AttractState extends MusicBeatState
   static final ATTRACT_VIDEO_PATH:String = Paths.videos('toyCommercial');
   #end
 
+  public static var instance:AttractState = null;
+
   public override function create():Void
   {
+    instance = this;
+
     // Pause existing music.
     if (FlxG.sound.music != null)
     {

@@ -32,6 +32,8 @@ import funkin.api.newgrounds.NewgroundsClient;
 @:nullSafety
 class MainMenuState extends MusicBeatState
 {
+  public static var instance:MainMenuState = null;
+
   var menuItems:MenuTypedList<AtlasMenuItem>;
 
   var bg:FlxSprite;
@@ -58,6 +60,8 @@ class MainMenuState extends MusicBeatState
     #if FEATURE_DISCORD_RPC
     DiscordClient.instance.setPresence({state: "In the Menus", details: null});
     #end
+
+    instance = this;
 
     FlxG.cameras.reset(new FunkinCamera('mainMenu'));
 

@@ -18,6 +18,8 @@ import flixel.FlxCamera;
 
 class LatencyState extends MusicBeatSubState
 {
+  public static var instance:LatencyState = null;
+
   var visualOffsetText:FlxText;
   var offsetText:FlxText;
   var noteGrp:Array<SongNoteData> = [];
@@ -52,6 +54,8 @@ class LatencyState extends MusicBeatSubState
   override function create()
   {
     super.create();
+
+    instance = this;
 
     prevPersistentDraw = FlxG.state.persistentDraw;
     prevPersistentUpdate = FlxG.state.persistentUpdate;

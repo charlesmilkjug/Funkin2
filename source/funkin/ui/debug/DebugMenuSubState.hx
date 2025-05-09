@@ -13,6 +13,8 @@ import funkin.util.FileUtil;
 
 class DebugMenuSubState extends MusicBeatSubState
 {
+  public static var instance:DebugMenuSubState = null;
+
   var items:TextMenuList;
 
   /**
@@ -24,6 +26,8 @@ class DebugMenuSubState extends MusicBeatSubState
   {
     FlxTransitionableState.skipNextTransIn = true;
     super.create();
+
+    instance = this;
 
     bgColor = 0x00000000;
 
