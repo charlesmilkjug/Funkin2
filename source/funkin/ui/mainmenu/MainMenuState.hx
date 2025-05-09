@@ -32,7 +32,7 @@ import funkin.api.newgrounds.NewgroundsClient;
 @:nullSafety
 class MainMenuState extends MusicBeatState
 {
-  public static var instance:MainMenuState = null;
+  public static var instance:Null<MainMenuState> = null;
 
   var menuItems:MenuTypedList<AtlasMenuItem>;
 

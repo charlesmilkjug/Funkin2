@@ -32,8 +32,6 @@ import funkin.ui.freeplay.FreeplayState;
 import openfl.display.BlendMode;
 import funkin.save.Save;
 
-#if desktop
-#end
 class TitleState extends MusicBeatState
 {
   /**

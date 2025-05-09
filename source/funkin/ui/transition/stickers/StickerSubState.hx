@@ -39,8 +39,6 @@ typedef StickerSubStateParams =
 @:nullSafety
 class StickerSubState extends MusicBeatSubState
 {
-  public static var instance:StickerSubState = null;
-
   public var grpStickers:FlxTypedGroup<StickerSprite>;
 
   /**
@@ -62,8 +60,6 @@ class StickerSubState extends MusicBeatSubState
   public function new(params:StickerSubStateParams):Void
   {
     super();
-
-    instance = this;
 
     // Define the target state, with a default fallback.
     this.targetState = params?.targetState ?? (sticker) -> FreeplayState.build(null, sticker);
