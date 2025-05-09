@@ -123,4 +123,10 @@ class AttractState extends MusicBeatState
 
     FlxG.switchState(() -> new TitleState());
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

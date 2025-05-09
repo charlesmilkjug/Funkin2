@@ -334,8 +334,12 @@ class LatencyState extends MusicBeatSubState
   }
 
   function songPosToX(pos:Float):Float
-  {
     return FlxMath.remapToRange(pos, 0, swagSong.length, 0, FlxG.width);
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
   }
 }
 

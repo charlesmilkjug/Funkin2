@@ -151,4 +151,10 @@ class ResultsDebugSubState extends MusicBeatSubState
           },
       };
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

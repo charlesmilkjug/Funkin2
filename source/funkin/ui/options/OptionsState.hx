@@ -95,6 +95,12 @@ class OptionsState extends MusicBeatState
     // TODO: Animate this transition?
     FlxG.switchState(() -> new MainMenuState());
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }
 
 /**
@@ -178,9 +184,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
   }
 
   function onMenuChange(selected:TextMenuList.TextMenuItem)
-  {
     camFocusPoint.y = selected.y;
-  }
 
   function createItem(name:String, callback:Void->Void, fireInstantly = false)
   {
@@ -207,9 +211,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
    * If false, there's no reason to ever show this page.
    */
   public function hasMultipleOptions():Bool
-  {
     return items.length > 2;
-  }
 
   var prompt:Prompt;
 

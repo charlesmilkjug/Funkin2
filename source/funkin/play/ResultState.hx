@@ -867,6 +867,12 @@ class ResultState extends MusicBeatSubState
 
     super.update(elapsed);
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }
 
 typedef ResultsStateParams =

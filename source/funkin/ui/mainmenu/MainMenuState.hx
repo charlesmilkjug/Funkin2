@@ -413,4 +413,10 @@ class MainMenuState extends MusicBeatState
       FunkinSound.playOnce(Paths.sound('cancelMenu'));
     }
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

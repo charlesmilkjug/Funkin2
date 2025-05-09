@@ -99,4 +99,10 @@ class GitarooPause extends MusicBeatState
       replayButton.animation.curAnim.curFrame = 0;
     }
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

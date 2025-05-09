@@ -1095,4 +1095,10 @@ class CharSelectSubState extends MusicBeatSubState
     updateIconPositions();
     return value;
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

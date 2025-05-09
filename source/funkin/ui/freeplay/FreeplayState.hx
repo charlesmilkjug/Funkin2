@@ -1553,6 +1553,7 @@ class FreeplayState extends MusicBeatSubState
   {
     super.destroy();
     FlxG.cameras.remove(funnyCam);
+    instance = null;
   }
 
   /**

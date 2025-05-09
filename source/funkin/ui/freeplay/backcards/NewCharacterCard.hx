@@ -77,24 +77,8 @@ class NewCharacterCard extends BackingCard
 
   public override function introDone():Void
   {
-    // pinkBack.color = 0xFFFFD863;
+    darkBg.visible = friendFoe.visible = newUnlock1.visible = waiting.visible = newUnlock2.visible = friendFoe2.visible = newUnlock3.visible = multiplyBar.visible = lightLayer.visible = multiply1.visible = multiply2.visible = lightLayer2.visible = yellow.visible = lightLayer3.visible = cardGlow.visible = true;
 
-    darkBg.visible = true;
-    friendFoe.visible = true;
-    newUnlock1.visible = true;
-    waiting.visible = true;
-    newUnlock2.visible = true;
-    friendFoe2.visible = true;
-    newUnlock3.visible = true;
-    multiplyBar.visible = true;
-    lightLayer.visible = true;
-    multiply1.visible = true;
-    multiply2.visible = true;
-    lightLayer2.visible = true;
-    yellow.visible = true;
-    lightLayer3.visible = true;
-
-    cardGlow.visible = true;
     FlxTween.tween(cardGlow, {alpha: 0, "scale.x": 1.2, "scale.y": 1.2}, 0.45, {ease: FlxEase.sineOut});
   }
 
@@ -118,8 +102,7 @@ class NewCharacterCard extends BackingCard
 
     confirmGlow.blend = BlendMode.ADD;
 
-    confirmGlow.visible = false;
-    confirmGlow2.visible = false;
+    confirmGlow.visible = confirmGlow2.visible = false;
 
     friendFoe = new BGScrollingText(0, 163, "COULD IT BE A NEW FRIEND? OR FOE??", FlxG.width, true, 43);
     newUnlock1 = new BGScrollingText(-440, 215, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
@@ -188,20 +171,7 @@ class NewCharacterCard extends BackingCard
 
     add(cardGlow);
 
-    darkBg.visible = false;
-    friendFoe.visible = false;
-    newUnlock1.visible = false;
-    waiting.visible = false;
-    newUnlock2.visible = false;
-    friendFoe2.visible = false;
-    newUnlock3.visible = false;
-    multiplyBar.visible = false;
-    lightLayer.visible = false;
-    multiply1.visible = false;
-    multiply2.visible = false;
-    lightLayer2.visible = false;
-    yellow.visible = false;
-    lightLayer3.visible = false;
+    darkBg.visible = friendFoe.visible = newUnlock1.visible = waiting.visible = newUnlock2.visible = friendFoe2.visible = newUnlock3.visible = multiplyBar.visible = lightLayer.visible = multiply1.visible = multiply2.visible = lightLayer2.visible = yellow.visible = lightLayer3.visible = false;
   }
 
   var _timer:Float = 0;
@@ -221,30 +191,14 @@ class NewCharacterCard extends BackingCard
 
     yellow.alpha = FlxMath.lerp(0.2, 0.72, sinTest);
 
-    if (instance != null)
-    {
-      instance.angleMaskShader.extraColor = FlxColor.interpolate(0xFF2E2E46, 0xFF60607B, sinTest);
-    }
+    if (FreeplayState.instance != null) FreeplayState.instance.angleMaskShader.extraColor = FlxColor.interpolate(0xFF2E2E46, 0xFF60607B, sinTest);
   }
 
   public override function disappear():Void
   {
     FlxTween.color(pinkBack, 0.25, 0xFF05020E, 0xFFFFD0D5, {ease: FlxEase.quadOut});
 
-    darkBg.visible = false;
-    friendFoe.visible = false;
-    newUnlock1.visible = false;
-    waiting.visible = false;
-    newUnlock2.visible = false;
-    friendFoe2.visible = false;
-    newUnlock3.visible = false;
-    multiplyBar.visible = false;
-    lightLayer.visible = false;
-    multiply1.visible = false;
-    multiply2.visible = false;
-    lightLayer2.visible = false;
-    yellow.visible = false;
-    lightLayer3.visible = false;
+    darkBg.visible = friendFoe.visible = newUnlock1.visible = waiting.visible = newUnlock2.visible = friendFoe2.visible = newUnlock3.visible = multiplyBar.visible = lightLayer.visible = multiply1.visible = multiply2.visible = lightLayer2.visible = yellow.visible = lightLayer3.visible = false;
 
     cardGlow.visible = true;
     cardGlow.alpha = 1;

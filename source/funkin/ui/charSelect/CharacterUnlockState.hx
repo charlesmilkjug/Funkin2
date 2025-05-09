@@ -127,4 +127,10 @@ class CharacterUnlockState extends MusicBeatState
       FlxG.switchState(() -> nextState);
     });
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

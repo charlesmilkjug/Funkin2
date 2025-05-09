@@ -273,7 +273,10 @@ class CreditsState extends MusicBeatState
     FlxG.switchState(() -> new MainMenuState());
 
   public override function destroy():Void
+  {
     super.destroy();
+    instance = null;
+  }
 }
 
 enum CreditsSide

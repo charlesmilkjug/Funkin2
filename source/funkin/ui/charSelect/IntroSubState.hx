@@ -74,9 +74,7 @@ class IntroSubState extends MusicBeatSubState
       add(vid);
     }
     else
-    {
       trace('ALERT: Video is null! Could not play cutscene!');
-    }
   }
   #end
 
@@ -99,9 +97,7 @@ class IntroSubState extends MusicBeatSubState
       if (vid.load(filePath)) vid.play();
     }
     else
-    {
       trace('ALERT: Video is null! Could not play cutscene!');
-    }
   }
   #end
 
@@ -138,5 +134,11 @@ class IntroSubState extends MusicBeatSubState
     FlxG.camera.zoom = 1;
 
     close();
+  }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
   }
 }

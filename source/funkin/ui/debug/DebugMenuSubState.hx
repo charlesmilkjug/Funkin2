@@ -154,4 +154,10 @@ class DebugMenuSubState extends MusicBeatSubState
     // TODO: Add a transition?
     this.close();
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

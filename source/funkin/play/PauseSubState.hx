@@ -242,6 +242,7 @@ class PauseSubState extends MusicBeatSubState
     super.destroy();
     charterFadeTween.cancel();
     charterFadeTween = null;
+    instance = null;
     pauseMusic.stop();
   }
 

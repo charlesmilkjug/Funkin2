@@ -473,4 +473,10 @@ class TitleState extends MusicBeatState
       skippedIntro = true;
     }
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }

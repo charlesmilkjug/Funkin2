@@ -566,6 +566,12 @@ class DebugBoundingState extends FlxState
     _file = null;
     FlxG.log.error("Problem saving Level data");
   }
+
+  public override function destroy():Void
+  {
+    super.destroy();
+    instance = null;
+  }
 }
 
 enum abstract ANIMDEBUGVIEW(String)
