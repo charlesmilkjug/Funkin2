@@ -99,7 +99,7 @@ class FreeplayState extends MusicBeatSubState
    */
   public static final FADE_IN_DELAY:Float = 0.25;
 
-  public static var instance:FreeplayState = null;
+  public static var instance:Null<FreeplayState> = null;
 
   var songs:Array<Null<FreeplaySongData>> = [];
 

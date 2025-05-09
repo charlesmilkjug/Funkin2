@@ -10,7 +10,7 @@ import funkin.ui.mainmenu.MainMenuState;
 @:nullSafety
 class GitarooPause extends MusicBeatState
 {
-  public static var instance:GitarooPause = null;
+  public static var instance:Null<GitarooPause> = null;
 
   var replayButton:FlxSprite;
   var cancelButton:FlxSprite;

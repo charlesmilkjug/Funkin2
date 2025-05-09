@@ -42,7 +42,7 @@ import funkin.api.newgrounds.Medals;
 @:nullSafety
 class ResultState extends MusicBeatSubState
 {
-  public static var instance:ResultState = null;
+  public static var instance:ResultState;
 
   final params:ResultsStateParams;
 
