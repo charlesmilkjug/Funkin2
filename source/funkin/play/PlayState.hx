@@ -53,6 +53,7 @@ import funkin.ui.mainmenu.MainMenuState;
 import funkin.ui.MusicBeatSubState;
 import funkin.ui.transition.LoadingState;
 import funkin.util.SerializerUtil;
+import funkin.util.assets.SoundUtil;
 import haxe.Int64;
 #if FEATURE_DISCORD_RPC
 import funkin.api.discord.DiscordClient;
@@ -1417,19 +1418,19 @@ class PlayState extends MusicBeatSubState
         @:privateAccess // todo: maybe make the groups public :thinking:
         {
           vocals.playerVoices.forEachAlive((voice:FunkinSound) -> {
-            var currentRawVoiceTime:Float = voice.time + vocals.playerVoicesOffset;
+            var currentRawVoiceTime:Float = voice.time + vocals.playerVoicesOffset + SoundUtil.getPlaybackDeviceDelay(voice);
             if (Math.abs(currentRawVoiceTime - correctSync) > Math.abs(playerVoicesError)) playerVoicesError = currentRawVoiceTime - correctSync;
           });
 
           vocals.opponentVoices.forEachAlive((voice:FunkinSound) -> {
-            var currentRawVoiceTime:Float = voice.time + vocals.opponentVoicesOffset;
+            var currentRawVoiceTime:Float = voice.time + vocals.opponentVoicesOffset + SoundUtil.getPlaybackDeviceDelay(voice);
             if (Math.abs(currentRawVoiceTime - correctSync) > Math.abs(opponentVoicesError)) opponentVoicesError = currentRawVoiceTime - correctSync;
           });
         }
       }
 
       if (!startingSong
-        && (Math.abs(FlxG.sound.music.time - correctSync) > 100
+        && (Math.abs(FlxG.sound.music.time + SoundUtil.getPlaybackDeviceDelay(FlxG.sound.music) - correctSync) > 100
           || Math.abs(playerVoicesError) > 100
           || Math.abs(opponentVoicesError) > 100))
       {
