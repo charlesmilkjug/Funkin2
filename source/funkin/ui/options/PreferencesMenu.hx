@@ -109,30 +109,36 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     createPrefItemCheckbox('Downscroll', 'If enabled, this will make the notes move downwards.', function(value:Bool):Void {
       Preferences.downscroll = value;
     }, Preferences.downscroll);
-    createPrefItemPercentage('Strumline Background', 'The strumline background\'s transparency level.', function(value:Int):Void {
-      Preferences.strumlineBackgroundOpacity = value;
-    }, Preferences.strumlineBackgroundOpacity);
+    createPrefItemPercentage('Strumline Background', 'The strumline background\'s transparency level. Also known as "Lane Underlay"',
+      function(value:Int):Void {
+        Preferences.strumlineBackgroundOpacity = value;
+      }, Preferences.strumlineBackgroundOpacity);
     createPrefItemCheckbox('Flashing Lights', 'If disabled, it will dampen flashing effects. Useful for people with photosensitive epilepsy.',
       function(value:Bool):Void {
         Preferences.flashingLights = value;
       }, Preferences.flashingLights);
-    createPrefItemCheckbox('Camera Zooms', 'If disabled, camera stops bouncing to the song.', function(value:Bool):Void {
+    createPrefItemCheckbox('Camera Zooming', 'If disabled, the camera stops bouncing to the song (every measure).', function(value:Bool):Void {
       Preferences.zoomCamera = value;
     }, Preferences.zoomCamera);
 
     addCategory('Additional');
-    createPrefItemCheckbox('Debug Display', 'If enabled, FPS and other debug stats will be displayed.', function(value:Bool):Void {
+    createPrefItemCheckbox('Debug Display', 'If enabled, the FPS and other debug stats will be displayed.', function(value:Bool):Void {
       Preferences.debugDisplay = value;
     }, Preferences.debugDisplay);
-    createPrefItemCheckbox('Pause on Unfocus', 'If enabled, game automatically pauses when it loses focus.', function(value:Bool):Void {
+    createPrefItemCheckbox('Pause on Unfocus', 'If enabled, the game automatically pauses when it loses focus.', function(value:Bool):Void {
       Preferences.autoPause = value;
     }, Preferences.autoPause);
-    createPrefItemCheckbox('Launch in Fullscreen', 'Automatically launch the game in fullscreen on startup.', function(value:Bool):Void {
+    createPrefItemCheckbox('Launch in Fullscreen', 'If enabled, the game will automatically open in fullscreen on startup.', function(value:Bool):Void {
       Preferences.autoFullscreen = value;
     }, Preferences.autoFullscreen);
+    #if web
+    createPrefItemCheckbox('Unlocked Framerate', 'If enabled, the framerate will be unlocked.', function(value:Bool):Void {
+      Preferences.unlockedFramerate = value;
+    }, Preferences.unlockedFramerate);
+    #else
     // disabled on macos due to "error: Late swap tearing currently unsupported"
     #if !mac
-    createPrefItemEnum('VSync', 'If enabled, game will attempt to match framerate with your monitor.', [
+    createPrefItemEnum('VSync', 'If enabled, the game will attempt to match the framerate with your monitor.', [
       "Off" => WindowVSyncMode.OFF,
       "On" => WindowVSyncMode.ON,
       "Adaptive" => WindowVSyncMode.ADAPTIVE,
@@ -146,11 +152,6 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
         case WindowVSyncMode.ADAPTIVE: "Adaptive";
       });
     #end
-    #if web
-    createPrefItemCheckbox('Unlocked Framerate', 'If enabled, the framerate will be unlocked.', function(value:Bool):Void {
-      Preferences.unlockedFramerate = value;
-    }, Preferences.unlockedFramerate);
-    #else
     createPrefItemNumber('FPS', 'The maximum framerate that the game targets.', (value:Float) -> {
       Preferences.framerate = Std.int(value);
     }, null, Preferences.framerate, 30, 360, 5, 0, 1);
@@ -163,7 +164,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     createPrefItemCheckbox('Fancy Preview', 'If enabled, a preview will be shown after taking a screenshot.', function(value:Bool):Void {
       Preferences.fancyPreview = value;
     }, Preferences.fancyPreview);
-    createPrefItemCheckbox('Preview on save', 'If enabled, the preview will be shown only after a screenshot is saved.', function(value:Bool):Void {
+    createPrefItemCheckbox('Preview on Save', 'If enabled, the preview will be shown only after a screenshot is saved.', function(value:Bool):Void {
       Preferences.previewOnSave = value;
     }, Preferences.previewOnSave);
   }
@@ -175,7 +176,7 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
     // Indent the selected item.
     items.forEach((daItem:TextMenuItem) -> {
       var thyOffset:Int = 0;
-      // Initializing thy text width (if thou text present)
+      // Initializing thy text width. (if thou text present)
       var thyTextWidth:Int = 0;
       switch (Type.typeof(daItem))
       {
@@ -204,9 +205,9 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
   // Should be moved into a separate PreferenceItems class but you can't access PreferencesMenu.items and PreferencesMenu.preferenceItems from outside.
 
   /**
-   * Creates a pref item that works with booleans
-   * @param onChange Gets called every time the player changes the value; use this to apply the value
-   * @param defaultValue The value that is loaded in when the pref item is created (usually your Preferences.settingVariable)
+   * Creates a preference item that works with booleans.
+   * @param onChange Gets called every time the player changes the value; use this to apply the value.
+   * @param defaultValue The value that is loaded in when the preference item is created. (usually your `Preferences.settingVariable`)
    */
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void
   {
@@ -223,14 +224,14 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
   }
 
   /**
-   * Creates a pref item that works with general numbers
-   * @param onChange Gets called every time the player changes the value; use this to apply the value
-   * @param valueFormatter Will get called every time the game needs to display the float value; use this to change how the displayed value looks
-   * @param defaultValue The value that is loaded in when the pref item is created (usually your Preferences.settingVariable)
-   * @param min Minimum value (example: 0)
-   * @param max Maximum value (example: 10)
-   * @param step The value to increment/decrement by (default = 0.1)
-   * @param precision Rounds decimals up to a `precision` amount of digits (ex: 4 -> 0.1234, 2 -> 0.12)
+   * Creates a preference item that works with general numbers. (Floats, to be specific)
+   * @param onChange Gets called every time the player changes the value; use this to apply the value.
+   * @param valueFormatter Will get called every time the game needs to display the float value; use this to change how the displayed value looks.
+   * @param defaultValue The value that is loaded in when the preference item is created. (usually your `Preferences.settingVariable`)
+   * @param min Minimum value. (example: 0)
+   * @param max Maximum value. (example: 10)
+   * @param step The value to increment/decrement by. (default = 0.1)
+   * @param precision Rounds decimals up to a `precision` amount of digits. (ex: 4 -> 0.1234, 2 -> 0.12)
    */
   function createPrefItemNumber(prefName:String, prefDesc:String, onChange:Float->Void, ?valueFormatter:Float->String, defaultValue:Int, min:Int, max:Int,
       step:Float = 0.1, precision:Int, stepPrecise:Float = 0.1):Void
@@ -243,11 +244,11 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
   }
 
   /**
-   * Creates a pref item that works with number percentages
-   * @param onChange Gets called every time the player changes the value; use this to apply the value
-   * @param defaultValue The value that is loaded in when the pref item is created (usually your Preferences.settingVariable)
-   * @param min Minimum value (default = 0)
-   * @param max Maximum value (default = 100)
+   * Creates a preference item that works with number percentages. (Ints, to be specific)
+   * @param onChange Gets called every time the player changes the value; use this to apply the value.
+   * @param defaultValue The value that is loaded in when the preference item is created. (usually your `Preferences.settingVariable`)
+   * @param min Minimum value. (default = 0)
+   * @param max Maximum value. (default = 100)
    */
   function createPrefItemPercentage(prefName:String, prefDesc:String, onChange:Int->Void, defaultValue:Int, min:Int = 0, max:Int = 100):Void
   {
@@ -260,10 +261,10 @@ class PreferencesMenu extends Page<OptionsState.OptionsMenuPageName>
   }
 
   /**
-   * Creates a pref item that works with enums
-   * @param values Maps enum values to display strings _(ex: `NoteHitSoundType.PingPong => "Ping pong"`)_
-   * @param onChange Gets called every time the player changes the value; use this to apply the value
-   * @param defaultValue The value that is loaded in when the pref item is created (usually your Preferences.settingVariable)
+   * Creates a preference item that works with enums. (Or choices, if you call it that in a non-technical way)
+   * @param values Maps enum values to display strings. _(ex: `NoteHitSoundType.PingPong => "Ping pong"`)_
+   * @param onChange Gets called every time the player changes the value; use this to apply the value.
+   * @param defaultValue The value that is loaded in when the preference item is created. (usually your `Preferences.settingVariable`)
    */
   function createPrefItemEnum<T>(prefName:String, prefDesc:String, values:Map<String, T>, onChange:String->T->Void, defaultKey:String):Void
   {
