@@ -1372,6 +1372,10 @@ class PlayState extends MusicBeatSubState
   {
     performCleanup();
 
+    // `performCleanup()` clears the static reference to this state
+    // scripts might still need it, so we set it back to `this`
+    instance = this;
+
     funkin.modding.PolymodHandler.forceReloadAssets();
     lastParams.targetSong = SongRegistry.instance.fetchEntry(currentSong.id);
     LoadingState.loadPlayState(lastParams);
@@ -2180,9 +2184,9 @@ class PlayState extends MusicBeatSubState
         continue;
       }
 
-      var hitWindowStart = note.strumTime - Constants.HIT_WINDOW_MS;
-      var hitWindowCenter = note.strumTime;
-      var hitWindowEnd = note.strumTime + Constants.HIT_WINDOW_MS;
+      var hitWindowStart = note.strumTime + Conductor.instance.inputOffset - Constants.HIT_WINDOW_MS;
+      var hitWindowCenter = note.strumTime + Conductor.instance.inputOffset;
+      var hitWindowEnd = note.strumTime + Conductor.instance.inputOffset + Constants.HIT_WINDOW_MS;
 
       if (Conductor.instance.songPosition > hitWindowEnd)
       {

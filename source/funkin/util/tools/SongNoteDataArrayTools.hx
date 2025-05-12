@@ -30,7 +30,7 @@ class SongNoteDataArrayTools
     var lowIndex:Int = 0;
     var highIndex:Int = input.length - 1;
 
-    // When lowIndex overtakes highIndex
+    // When lowIndex overtakes highIndex.
     while (lowIndex <= highIndex)
     {
       // Get the middle index of the range.
@@ -39,32 +39,34 @@ class SongNoteDataArrayTools
       // Compare the middle note of the range to the note we're looking for.
       // If it matches, return the index, else halve the range and try again.
       var midNote = input[midIndex];
-      if (midNote.time < note.time)
-      {
-        // Search the upper half of the range.
-        lowIndex = midIndex + 1;
-      }
-      else if (midNote.time > note.time)
-      {
-        // Search the lower half of the range.
-        highIndex = midIndex - 1;
-      }
+      if (midNote.time < note.time) lowIndex = midIndex + 1; // Search the upper half of the range.
+      else if (midNote.time > note.time) highIndex = midIndex - 1; // Search the lower half of the range.
       // Found it? Do a more thorough check.
-      else if (midNote == note)
-      {
-        return midIndex;
-      }
       else
       {
-        // We may be close, so constrain the range (but only a little) and try again.
-        highIndex -= 1;
+        // Scan left from midIndex.
+        var i = midIndex;
+        while (i >= 0 && input[i].time == note.time)
+        {
+          if (input[i] == note) return i;
+          i--;
+        }
+
+        // Scan right from midIndex + 1.
+        i = midIndex + 1;
+        while (i < input.length && input[i].time == note.time)
+        {
+          if (input[i] == note) return i;
+          i++;
+        }
+
+        // No matching note found, despite time match.
+        break;
       }
     }
     return -1;
   }
 
   public static inline function fastContains(input:Array<SongNoteData>, note:SongNoteData):Bool
-  {
     return fastIndexOf(input, note) != -1;
-  }
 }

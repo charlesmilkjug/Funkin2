@@ -244,6 +244,8 @@ class PolymodHandler
     // `funkin.util.FileUtil` has unrestricted access to the file system.
     Polymod.addImportAlias('funkin.util.FileUtil', funkin.util.FileUtilSandboxed);
 
+    Polymod.addImportAlias('flixel.util.FlxColor', funkin.util.FlxColorUtil);
+
     #if FEATURE_NEWGROUNDS
     // `funkin.api.newgrounds.Leaderboards` allows for submitting cheated scores.
     Polymod.addImportAlias('funkin.api.newgrounds.Leaderboards', funkin.api.newgrounds.Leaderboards.LeaderboardsSandboxed);

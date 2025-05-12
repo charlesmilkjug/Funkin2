@@ -3493,6 +3493,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         var isSelectedAndDragged = currentNoteSelection.fastContains(noteSprite.noteData) && (dragTargetCurrentStep != 0);
 
         if ((noteSprite.isNoteVisible(viewAreaBottomPixels, viewAreaTopPixels)
+          && !displayedNoteData.fastContains(noteSprite.noteData)
           && currentSongChartNoteData.fastContains(noteSprite.noteData))
           || isSelectedAndDragged)
         {
@@ -3504,7 +3505,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         }
         else
         {
-          // This sprite is off-screen or was deleted.
+          // This sprite is off-screen, is a duplicate, or was deleted.
           // Kill the note sprite and recycle it.
           noteSprite.noteData = null;
         }
@@ -3724,18 +3725,15 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       // Recycle selection squares if possible.
       for (noteSprite in renderedNotes.members)
       {
+        if (noteSprite == null || noteSprite.noteData == null || !noteSprite.exists || !noteSprite.visible) continue;
+
         // TODO: Handle selection of hold notes.
         if (isNoteSelected(noteSprite.noteData))
         {
           var holdNoteSprite:ChartEditorHoldNoteSprite = null;
 
-          if (noteSprite.noteData != null && noteSprite.noteData.length > 0)
-          {
-            for (holdNote in renderedHoldNotes.members)
-            {
-              if (holdNote.noteData == noteSprite.noteData && holdNoteSprite == null) holdNoteSprite = holdNote;
-            }
-          }
+          if (noteSprite.noteData != null && noteSprite.noteData.length > 0) for (holdNote in renderedHoldNotes.members)
+            if (holdNote.noteData == noteSprite.noteData && holdNoteSprite == null) holdNoteSprite = holdNote;
 
           // Determine if the note is being dragged and offset the vertical position accordingly.
           if (dragTargetCurrentStep != 0.0)
@@ -3822,6 +3820,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
       for (eventSprite in renderedEvents.members)
       {
+        if (eventSprite == null || eventSprite.eventData == null || !eventSprite.exists || !eventSprite.visible) continue;
+
         if (isEventSelected(eventSprite.eventData))
         {
           // Determine if the note is being dragged and offset the position accordingly.
@@ -4022,15 +4022,10 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     // SHIFT + Scroll = Scroll Fast
     // GAMEPAD LEFT STICK CLICK + Scroll = Scroll Fast
-    if (FlxG.keys.pressed.SHIFT || (FlxG.gamepads.firstActive?.pressed?.LEFT_STICK_CLICK ?? false))
-    {
-      scrollAmount *= 2;
-    }
+    if (FlxG.keys.pressed.SHIFT || (FlxG.gamepads.firstActive?.pressed?.LEFT_STICK_CLICK ?? false)) scrollAmount *= 2;
+
     // CONTROL + Scroll = Scroll Precise
-    if (pressingControl())
-    {
-      scrollAmount /= 4;
-    }
+    if (pressingControl()) scrollAmount /= 4;
 
     // Alt + Drag = Scroll but move the playhead the same amount.
     if (FlxG.keys.pressed.ALT)
@@ -4492,13 +4487,14 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
           var dragDistanceSteps:Float = dragTargetCurrentStep;
           var dragDistanceMs:Float = 0;
           if (dragTargetNote != null && dragTargetNote.noteData != null)
-          {
-            dragDistanceMs = Conductor.instance.getStepTimeInMs(dragTargetNote.noteData.getStepTime() + dragDistanceSteps) - dragTargetNote.noteData.time;
-          }
+            dragDistanceMs = Conductor.instance.getStepTimeInMs(dragTargetNote.noteData.getStepTime()
+            + dragDistanceSteps)
+            - dragTargetNote.noteData.time;
           else if (dragTargetEvent != null && dragTargetEvent.eventData != null)
-          {
-            dragDistanceMs = Conductor.instance.getStepTimeInMs(dragTargetEvent.eventData.getStepTime() + dragDistanceSteps) - dragTargetEvent.eventData.time;
-          }
+            dragDistanceMs = Conductor.instance.getStepTimeInMs(dragTargetEvent.eventData.getStepTime()
+            + dragDistanceSteps)
+            - dragTargetEvent.eventData.time;
+
           var dragDistanceColumns:Int = dragTargetCurrentColumn;
 
           if (dragDistanceMs == 0 && dragDistanceColumns == 0)
