@@ -3493,7 +3493,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         var isSelectedAndDragged = currentNoteSelection.fastContains(noteSprite.noteData) && (dragTargetCurrentStep != 0);
 
         if ((noteSprite.isNoteVisible(viewAreaBottomPixels, viewAreaTopPixels)
-          && !displayedNoteData.fastContains(noteSprite.noteData)
           && currentSongChartNoteData.fastContains(noteSprite.noteData))
           || isSelectedAndDragged)
         {
