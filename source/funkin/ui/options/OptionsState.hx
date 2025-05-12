@@ -40,6 +40,8 @@ class OptionsState extends MusicBeatState
 
   var optionsCodex:Codex<OptionsMenuPageName>;
 
+  public static var rememberedSelectedIndex:Int = 0;
+
   public static var instance:OptionsState = null;
 
   override function create():Void
@@ -125,14 +127,15 @@ class OptionsMenu extends Page<OptionsMenuPageName>
 
     createItem("PREFERENCES", () -> codex.switchPage(Preferences));
     createItem("CONTROLS", () -> codex.switchPage(Controls));
-    createItem("INPUT OFFSETS", () ->
-      {
-        #if web
-        LoadingState.transitionToState(() -> new LatencyState());
-        #else
-        FlxG.state.openSubState(new LatencyState());
-        #end
-      });
+    createItem("INPUT OFFSETS", () -> {
+      OptionsState.rememberedSelectedIndex = items.selectedIndex;
+
+      #if web
+      LoadingState.transitionToState(() -> new LatencyState());
+      #else
+      FlxG.state.openSubState(new LatencyState());
+      #end
+    });
 
     #if FEATURE_NEWGROUNDS
     if (NewgroundsClient.instance.isLoggedIn())
@@ -167,6 +170,8 @@ class OptionsMenu extends Page<OptionsMenuPageName>
     createItem("CLEAR SAVE DATA", () -> promptClearSaveData());
 
     createItem("EXIT", exit);
+
+    items.selectItem(OptionsState.rememberedSelectedIndex);
 
     // Create an object for the camera to track.
     camFocusPoint = new FlxObject(0, 0, 140, 70);
