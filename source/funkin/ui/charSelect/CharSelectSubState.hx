@@ -138,6 +138,8 @@ class CharSelectSubState extends MusicBeatSubState
       while (availableChars.exists(targetPosition))
         targetPosition += 1;
 
+      totalSlots = Std.int(Math.max(targetPosition, totalSlots));
+
       trace('Placing player ${playerId} at position ${targetPosition}');
       availableChars.set(targetPosition, playerId);
     }
