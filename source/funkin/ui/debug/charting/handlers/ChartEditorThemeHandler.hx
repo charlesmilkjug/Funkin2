@@ -97,6 +97,7 @@ class ChartEditorThemeHandler
   static function updateBackground(state:ChartEditorState):Void
   {
     if (theme == null || state.menuBG == null) return;
+
     @:nullSafety(Off)
     state.menuBG.color = theme.getColor("background", BACKGROUND_COLOR_LIGHT);
   }
@@ -108,99 +109,97 @@ class ChartEditorThemeHandler
   static function updateGridBitmap(state:ChartEditorState):Void
   {
     if (theme == null) return;
+
     @:nullSafety(Off)
     {
       var gridColor1:FlxColor = theme.getColor("gridColors[0]", GRID_COLOR_1_LIGHT);
 
       var gridColor2:FlxColor = theme.getColor("gridColors[1]", GRID_COLOR_2_LIGHT);
-    }
-    // Draw the base grid.
 
-    // 2 * (Strumline Size) + 1 grid squares wide, by (4 * quarter notes per measure) grid squares tall.
-    // This gets reused to fill the screen.
-    var gridWidth:Int = Std.int(ChartEditorState.GRID_SIZE * TOTAL_COLUMN_COUNT);
-    var gridHeight:Int = Std.int(ChartEditorState.GRID_SIZE * Conductor.instance.stepsPerMeasure);
-    state.gridBitmap = FlxGridOverlay.createGrid(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, gridWidth, gridHeight, true, gridColor1, gridColor2);
+      // Draw the base grid.
 
-    // Selection borders
-    @:nullSafety(Off)
-    var selectionBorderColor:FlxColor = theme.getColor("gridColors[2]", GRID_COLOR_3_LIGHT);
+      // 2 * (Strumline Size) + 1 grid squares wide, by (4 * quarter notes per measure) grid squares tall.
+      // This gets reused to fill the screen.
+      var gridWidth:Int = Std.int(ChartEditorState.GRID_SIZE * TOTAL_COLUMN_COUNT);
+      var gridHeight:Int = Std.int(ChartEditorState.GRID_SIZE * Conductor.instance.stepsPerMeasure);
+      state.gridBitmap = FlxGridOverlay.createGrid(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, gridWidth, gridHeight, true, gridColor1, gridColor2);
 
-    // Selection border at top.
-    state.gridBitmap.fillRect(new Rectangle(0, -(ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), state.gridBitmap.width,
-      ChartEditorState.GRID_SELECTION_BORDER_WIDTH),
-      selectionBorderColor);
-    // Selection borders horizontally along the middle.
-    for (i in 1...(Conductor.instance.stepsPerMeasure))
-    {
-      state.gridBitmap.fillRect(new Rectangle(0, (ChartEditorState.GRID_SIZE * i) - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2),
-        state.gridBitmap.width, ChartEditorState.GRID_SELECTION_BORDER_WIDTH),
+      // Selection borders
+      var selectionBorderColor:FlxColor = theme.getColor("gridColors[2]", GRID_COLOR_3_LIGHT);
+
+      // Selection border at top.
+      state.gridBitmap.fillRect(new Rectangle(0, -(ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), state.gridBitmap.width,
+        ChartEditorState.GRID_SELECTION_BORDER_WIDTH),
         selectionBorderColor);
-    }
-    // Selection border at bottom.
-    state.gridBitmap.fillRect(new Rectangle(0, state.gridBitmap.height - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), state.gridBitmap.width,
-      ChartEditorState.GRID_SELECTION_BORDER_WIDTH),
-      selectionBorderColor);
-    // Selection border at left.
-    state.gridBitmap.fillRect(new Rectangle(-(ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), 0, ChartEditorState.GRID_SELECTION_BORDER_WIDTH,
-      state.gridBitmap.height),
-      selectionBorderColor);
-    // Selection borders vertically along the middle.
-    for (i in 1...TOTAL_COLUMN_COUNT)
-    {
-      state.gridBitmap.fillRect(new Rectangle((ChartEditorState.GRID_SIZE * i) - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), 0,
+      // Selection borders horizontally along the middle.
+      for (i in 1...(Conductor.instance.stepsPerMeasure))
+      {
+        state.gridBitmap.fillRect(new Rectangle(0, (ChartEditorState.GRID_SIZE * i) - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2),
+          state.gridBitmap.width, ChartEditorState.GRID_SELECTION_BORDER_WIDTH),
+          selectionBorderColor);
+      }
+      // Selection border at bottom.
+      state.gridBitmap.fillRect(new Rectangle(0, state.gridBitmap.height - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), state.gridBitmap.width,
+        ChartEditorState.GRID_SELECTION_BORDER_WIDTH),
+        selectionBorderColor);
+      // Selection border at left.
+      state.gridBitmap.fillRect(new Rectangle(-(ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), 0, ChartEditorState.GRID_SELECTION_BORDER_WIDTH,
+        state.gridBitmap.height),
+        selectionBorderColor);
+      // Selection borders vertically along the middle.
+      for (i in 1...TOTAL_COLUMN_COUNT)
+      {
+        state.gridBitmap.fillRect(new Rectangle((ChartEditorState.GRID_SIZE * i) - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), 0,
+          ChartEditorState.GRID_SELECTION_BORDER_WIDTH, state.gridBitmap.height),
+          selectionBorderColor);
+      }
+      // Selection border at right.
+      state.gridBitmap.fillRect(new Rectangle(state.gridBitmap.width - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), 0,
         ChartEditorState.GRID_SELECTION_BORDER_WIDTH, state.gridBitmap.height),
         selectionBorderColor);
-    }
-    // Selection border at right.
-    state.gridBitmap.fillRect(new Rectangle(state.gridBitmap.width - (ChartEditorState.GRID_SELECTION_BORDER_WIDTH / 2), 0,
-      ChartEditorState.GRID_SELECTION_BORDER_WIDTH, state.gridBitmap.height),
-      selectionBorderColor);
 
-    // Draw horizontal dividers between the measures.
+      // Draw horizontal dividers between the measures.
 
-    @:nullSafety(Off)
-    var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+      var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
-    // Divider at top
-    state.gridBitmap.fillRect(new Rectangle(0, 0, state.gridBitmap.width, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
-    // Divider at bottom
-    var dividerLineBY:Float = state.gridBitmap.height - (GRID_MEASURE_DIVIDER_WIDTH / 2);
-    state.gridBitmap.fillRect(new Rectangle(0, dividerLineBY, state.gridBitmap.width, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
+      // Divider at top
+      state.gridBitmap.fillRect(new Rectangle(0, 0, state.gridBitmap.width, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
+      // Divider at bottom
+      var dividerLineBY:Float = state.gridBitmap.height - (GRID_MEASURE_DIVIDER_WIDTH / 2);
+      state.gridBitmap.fillRect(new Rectangle(0, dividerLineBY, state.gridBitmap.width, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
 
-    // Draw horizontal dividers between the beats.
+      // Draw horizontal dividers between the beats.
 
-    @:nullSafety(Off)
-    var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
+      var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
 
-    // Selection borders horizontally in the middle.
-    for (i in 1...(Conductor.instance.stepsPerMeasure))
-    {
-      // There may be a different number of beats per measure, but there's always 4 steps per beat.
-      if ((i % Constants.STEPS_PER_BEAT) == 0)
+      // Selection borders horizontally in the middle.
+      for (i in 1...(Conductor.instance.stepsPerMeasure))
       {
-        state.gridBitmap.fillRect(new Rectangle(0, (ChartEditorState.GRID_SIZE * i) - (GRID_BEAT_DIVIDER_WIDTH / 2), state.gridBitmap.width,
-          GRID_BEAT_DIVIDER_WIDTH),
-          gridBeatDividerColor);
+        // There may be a different number of beats per measure, but there's always 4 steps per beat.
+        if ((i % Constants.STEPS_PER_BEAT) == 0)
+        {
+          state.gridBitmap.fillRect(new Rectangle(0, (ChartEditorState.GRID_SIZE * i) - (GRID_BEAT_DIVIDER_WIDTH / 2), state.gridBitmap.width,
+            GRID_BEAT_DIVIDER_WIDTH),
+            gridBeatDividerColor);
+        }
       }
+
+      // Draw vertical dividers between the strumlines.
+
+      var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
+
+      // Divider at 1 * (Strumline Size)
+      var dividerLineAX:Float = ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
+      state.gridBitmap.fillRect(new Rectangle(dividerLineAX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.gridBitmap.height), gridStrumlineDividerColor);
+
+      // Divider at 2 * (Strumline Size)
+      var dividerLineBX:Float = ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE * 2) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
+      state.gridBitmap.fillRect(new Rectangle(dividerLineBX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.gridBitmap.height), gridStrumlineDividerColor);
+
+      if (state.gridTiledSprite != null) state.gridTiledSprite.loadGraphic(state.gridBitmap);
+
+      // Else, gridTiledSprite will be built later.
     }
-
-    // Draw vertical dividers between the strumlines.
-
-    @:nullSafety(Off)
-    var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
-
-    // Divider at 1 * (Strumline Size)
-    var dividerLineAX:Float = ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
-    state.gridBitmap.fillRect(new Rectangle(dividerLineAX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.gridBitmap.height), gridStrumlineDividerColor);
-
-    // Divider at 2 * (Strumline Size)
-    var dividerLineBX:Float = ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE * 2) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
-    state.gridBitmap.fillRect(new Rectangle(dividerLineBX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.gridBitmap.height), gridStrumlineDividerColor);
-
-    if (state.gridTiledSprite != null) state.gridTiledSprite.loadGraphic(state.gridBitmap);
-
-    // Else, gridTiledSprite will be built later.
   }
 
   /**
@@ -236,62 +235,69 @@ class ChartEditorThemeHandler
       var stepsPerMeasure:Int = Constants.STEPS_PER_BEAT * currentTimeChange.timeSignatureNum;
       var ticksHeight:Int = Std.int(ChartEditorState.GRID_SIZE * stepsPerMeasure);
 
-      // Draw horizontal dividers between the measures.
       @:nullSafety(Off)
-      var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-
-      // Divider at top
-      state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
-      // Divider at bottom
-      var dividerLineBY:Float = ticksHeight - (GRID_MEASURE_DIVIDER_WIDTH / 2);
-      state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight + dividerLineBY, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2),
-        gridMeasureDividerColor);
-
-      // Measure ticks.
-      state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-      var bottomTickY:Float = ticksHeight - (measureTickWidth / 2);
-      state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight + bottomTickY, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
-
-      // Draw horizontal dividers between the beats, this is done inside the following loop.
-      @:nullSafety(Off)
-      var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
-
-      // Draw the beat ticks and dividers, and step ticks. No need for two seperate loops thankfully.
-      for (i in 1...stepsPerMeasure)
       {
-        if ((i % Constants.STEPS_PER_BEAT) == 0) // If we're on a beat, draw a beat tick and divider.
-        {
-          var beatTickY:Float = totalTicksHeight + ChartEditorState.GRID_SIZE * i - (beatTickWidth / 2);
-          var beatTickLength:Float = ticksWidth * 2 / 3;
-          state.measureTickBitmap.fillRect(new Rectangle(0, beatTickY, beatTickLength, beatTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+        // Draw horizontal dividers between the measures.
+        var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
-          // Horizontal divider.
-          state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight + (ChartEditorState.GRID_SIZE * i) - (GRID_BEAT_DIVIDER_WIDTH / 2),
-            linesWidth, GRID_BEAT_DIVIDER_WIDTH),
-            gridBeatDividerColor);
-        }
-        else // Else, draw a step tick.
+        // Divider at top
+        state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
+        // Divider at bottom
+        var dividerLineBY:Float = ticksHeight - (GRID_MEASURE_DIVIDER_WIDTH / 2);
+        state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight + dividerLineBY, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2),
+          gridMeasureDividerColor);
+
+        // Measure ticks.
+        state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+        var bottomTickY:Float = ticksHeight - (measureTickWidth / 2);
+        state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight + bottomTickY, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+
+        // Draw horizontal dividers between the beats, this is done inside the following loop.
+
+        var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
+
+        // Draw the beat ticks and dividers, and step ticks. No need for two seperate loops thankfully.
+        for (i in 1...stepsPerMeasure)
         {
-          var stepTickY:Float = totalTicksHeight + ChartEditorState.GRID_SIZE * i - (stepTickWidth / 2);
-          var stepTickLength:Float = ticksWidth * 1 / 3;
-          state.measureTickBitmap.fillRect(new Rectangle(0, stepTickY, stepTickLength, stepTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+          if ((i % Constants.STEPS_PER_BEAT) == 0) // If we're on a beat, draw a beat tick and divider.
+          {
+            var beatTickY:Float = totalTicksHeight + ChartEditorState.GRID_SIZE * i - (beatTickWidth / 2);
+            var beatTickLength:Float = ticksWidth * 2 / 3;
+            state.measureTickBitmap.fillRect(new Rectangle(0, beatTickY, beatTickLength, beatTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+
+            // Horizontal divider.
+            state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight + (ChartEditorState.GRID_SIZE * i) - (GRID_BEAT_DIVIDER_WIDTH / 2),
+              linesWidth, GRID_BEAT_DIVIDER_WIDTH),
+              gridBeatDividerColor);
+          }
+          else // Else, draw a step tick.
+          {
+            var stepTickY:Float = totalTicksHeight + ChartEditorState.GRID_SIZE * i - (stepTickWidth / 2);
+            var stepTickLength:Float = ticksWidth * 1 / 3;
+            state.measureTickBitmap.fillRect(new Rectangle(0, stepTickY, stepTickLength, stepTickWidth), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
+          }
         }
       }
+
       measureLengthsInPixels.push(totalTicksHeight);
       totalTicksHeight += ticksHeight;
     }
     previousMeasure = currentMeasure;
 
-    // Finally, draw vertical dividers between the strumlines.
     @:nullSafety(Off)
-    var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
+    {
+      // Finally, draw vertical dividers between the strumlines.
+      var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
 
-    // Divider at 1 * (Strumline Size)
-    var dividerLineAX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
-    state.measureTickBitmap.fillRect(new Rectangle(dividerLineAX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.measureTickBitmap.height), gridStrumlineDividerColor);
-    // Divider at 2 * (Strumline Size)
-    var dividerLineBX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE * 2) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
-    state.measureTickBitmap.fillRect(new Rectangle(dividerLineBX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.measureTickBitmap.height), gridStrumlineDividerColor);
+      // Divider at 1 * (Strumline Size)
+      var dividerLineAX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
+      state.measureTickBitmap.fillRect(new Rectangle(dividerLineAX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.measureTickBitmap.height),
+        gridStrumlineDividerColor);
+      // Divider at 2 * (Strumline Size)
+      var dividerLineBX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE * 2) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);
+      state.measureTickBitmap.fillRect(new Rectangle(dividerLineBX, 0, GRID_STRUMLINE_DIVIDER_WIDTH, state.measureTickBitmap.height),
+        gridStrumlineDividerColor);
+    }
 
     if (state.measureTicks != null)
     {
@@ -346,61 +352,63 @@ class ChartEditorThemeHandler
   static function updateSelectionSquare(state:ChartEditorState):Void
   {
     if (theme == null) return;
+
     @:nullSafety(Off)
     {
       var selectionSquareBorderColor:FlxColor = theme.getColor("selectionSquareBorder", SELECTION_SQUARE_BORDER_COLOR_LIGHT);
 
       var selectionSquareFillColor:FlxColor = theme.getColor("selectionSquareFill", SELECTION_SQUARE_FILL_COLOR_LIGHT);
+
+      state.selectionSquareBitmap = new BitmapData(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, true);
+
+      state.selectionSquareBitmap.fillRect(new Rectangle(0, 0, ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE), selectionSquareBorderColor);
+      state.selectionSquareBitmap.fillRect(new Rectangle(SELECTION_SQUARE_BORDER_WIDTH, SELECTION_SQUARE_BORDER_WIDTH,
+        ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2), ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2)),
+        selectionSquareFillColor);
+      state.selectionBoxSprite = new FlxSliceSprite(state.selectionSquareBitmap,
+        new FlxRect(SELECTION_SQUARE_BORDER_WIDTH
+          + 4, SELECTION_SQUARE_BORDER_WIDTH
+          + 4,
+          ChartEditorState.GRID_SIZE
+          - (2 * SELECTION_SQUARE_BORDER_WIDTH + 8), ChartEditorState.GRID_SIZE
+          - (2 * SELECTION_SQUARE_BORDER_WIDTH + 8)),
+        32, 32);
+      state.selectionBoxSprite.scrollFactor.set(0, 0);
+      state.selectionBoxSprite.zIndex = 30;
+      state.add(state.selectionBoxSprite);
+      state.setSelectionBoxBounds();
     }
-
-    state.selectionSquareBitmap = new BitmapData(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, true);
-
-    state.selectionSquareBitmap.fillRect(new Rectangle(0, 0, ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE), selectionSquareBorderColor);
-    state.selectionSquareBitmap.fillRect(new Rectangle(SELECTION_SQUARE_BORDER_WIDTH, SELECTION_SQUARE_BORDER_WIDTH,
-      ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2), ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2)),
-      selectionSquareFillColor);
-    state.selectionBoxSprite = new FlxSliceSprite(state.selectionSquareBitmap,
-      new FlxRect(SELECTION_SQUARE_BORDER_WIDTH
-        + 4, SELECTION_SQUARE_BORDER_WIDTH
-        + 4, ChartEditorState.GRID_SIZE
-        - (2 * SELECTION_SQUARE_BORDER_WIDTH + 8),
-        ChartEditorState.GRID_SIZE
-        - (2 * SELECTION_SQUARE_BORDER_WIDTH + 8)),
-      32, 32);
-    state.selectionBoxSprite.scrollFactor.set(0, 0);
-    state.selectionBoxSprite.zIndex = 30;
-    state.add(state.selectionBoxSprite);
-    state.setSelectionBoxBounds();
   }
 
   static function updateNotePreview(state:ChartEditorState):Void
   {
     if (theme == null) return;
+
     @:nullSafety(Off)
     {
       var viewportBorderColor:FlxColor = theme.getColor("notePreviewViewportBorder", NOTE_PREVIEW_VIEWPORT_BORDER_COLOR_LIGHT);
 
       var viewportFillColor:FlxColor = theme.getColor("notePreviewViewportFill", NOTE_PREVIEW_VIEWPORT_FILL_COLOR_LIGHT);
-    }
 
-    state.notePreviewViewportBitmap = new BitmapData(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, true);
+      state.notePreviewViewportBitmap = new BitmapData(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, true);
 
-    state.notePreviewViewportBitmap.fillRect(new Rectangle(0, 0, ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE), viewportBorderColor);
-    state.notePreviewViewportBitmap.fillRect(new Rectangle(SELECTION_SQUARE_BORDER_WIDTH, SELECTION_SQUARE_BORDER_WIDTH,
-      ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2), ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2)),
-      viewportFillColor);
+      state.notePreviewViewportBitmap.fillRect(new Rectangle(0, 0, ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE), viewportBorderColor);
+      state.notePreviewViewportBitmap.fillRect(new Rectangle(SELECTION_SQUARE_BORDER_WIDTH, SELECTION_SQUARE_BORDER_WIDTH,
+        ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2), ChartEditorState.GRID_SIZE - (SELECTION_SQUARE_BORDER_WIDTH * 2)),
+        viewportFillColor);
 
-    if (state.notePreviewViewport != null) state.notePreviewViewport.loadGraphic(state.notePreviewViewportBitmap);
-    else
-    {
-      state.notePreviewViewport = new FlxSliceSprite(state.notePreviewViewportBitmap,
-        new FlxRect(SELECTION_SQUARE_BORDER_WIDTH
-          + 1, SELECTION_SQUARE_BORDER_WIDTH
-          + 1,
-          ChartEditorState.GRID_SIZE
-          - (2 * SELECTION_SQUARE_BORDER_WIDTH + 2), ChartEditorState.GRID_SIZE
-          - (2 * SELECTION_SQUARE_BORDER_WIDTH + 2)),
-        32, 32);
+      if (state.notePreviewViewport != null) state.notePreviewViewport.loadGraphic(state.notePreviewViewportBitmap);
+      else
+      {
+        state.notePreviewViewport = new FlxSliceSprite(state.notePreviewViewportBitmap,
+          new FlxRect(SELECTION_SQUARE_BORDER_WIDTH
+            + 1, SELECTION_SQUARE_BORDER_WIDTH
+            + 1,
+            ChartEditorState.GRID_SIZE
+            - (2 * SELECTION_SQUARE_BORDER_WIDTH + 2), ChartEditorState.GRID_SIZE
+            - (2 * SELECTION_SQUARE_BORDER_WIDTH + 2)),
+          32, 32);
+      }
     }
   }
 
