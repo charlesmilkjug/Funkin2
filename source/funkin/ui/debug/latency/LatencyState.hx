@@ -184,10 +184,13 @@ class LatencyState extends MusicBeatSubState
     strumLine.releaseKey(event.noteDirection);
   }
 
-  override public function close():Void
+  override public function destroy():Void
   {
     cleanup();
-    super.close();
+
+    instance = null;
+
+    super.destroy();
   }
 
   function cleanup():Void
@@ -310,17 +313,10 @@ class LatencyState extends MusicBeatSubState
 
   function generateBeatStuff(event:PreciseInputEvent)
   {
-    // localConductor.update(swagSong.getTimeWithDiff());
-
     var inputLatencyMs:Float = haxe.Int64.toInt(PreciseInputManager.getCurrentTimestamp() - event.timestamp) / 1000.0 / 1000.0;
-    // trace("input latency: " + inputLatencyMs + "ms");
-    // trace("cur timestamp: " + PreciseInputManager.getCurrentTimestamp() + "ns");
-    // trace("event timestamp: " + event.timestamp + "ns");
-    // trace("songtime: " + localConductor.getTimeWithDiff(swagSong) + "ms");
 
     var closestBeat:Int = Math.round(localConductor.getTimeWithDiff(swagSong) / (localConductor.stepLengthMs * 2)) % diffGrp.members.length;
     var getDiff:Float = localConductor.getTimeWithDiff(swagSong) - (closestBeat * (localConductor.stepLengthMs * 2));
-    // getDiff -= localConductor.inputOffset;
     getDiff -= inputLatencyMs;
     getDiff -= localConductor.audioVisualOffset;
 

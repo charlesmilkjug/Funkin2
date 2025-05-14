@@ -371,10 +371,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     if (value + playheadPositionInPixels < 0) playheadPositionInPixels = -value;
     if (value + playheadPositionInPixels > songLengthInPixels) playheadPositionInPixels = songLengthInPixels - value;
 
-    // Make sure playhead doesn't scroll outside the song.
-    if (value + playheadPositionInPixels < 0) playheadPositionInPixels = -value;
-    if (value + playheadPositionInPixels > songLengthInPixels) playheadPositionInPixels = songLengthInPixels - value;
-
     if (value > songLengthInPixels) value = songLengthInPixels;
 
     if (value == scrollPositionInPixels) return value;
@@ -2506,7 +2502,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     add(gridPlayhead);
     gridPlayhead.zIndex = 30;
 
-    var playheadWidth:Int = GRID_SIZE * (STRUMLINE_SIZE * 2 + 1) + (PLAYHEAD_SCROLL_AREA_WIDTH * 2);
+    var playheadWidth:Int = GRID_SIZE * (STRUMLINE_SIZE * 2 + 1) + PLAYHEAD_SCROLL_AREA_WIDTH;
     var playheadBaseYPos:Float = GRID_INITIAL_Y_POS;
     gridPlayhead.setPosition(GRID_X_POS, playheadBaseYPos);
     var playheadSprite:FunkinSprite = new FunkinSprite().makeSolidColor(playheadWidth, PLAYHEAD_HEIGHT, PLAYHEAD_COLOR);
