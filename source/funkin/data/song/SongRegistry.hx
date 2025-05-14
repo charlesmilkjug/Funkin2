@@ -359,11 +359,12 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
       throw '[${registryId}] Chart entry ${id}:${variation} does not support migration to version ${SONG_CHART_DATA_VERSION_RULE}.';
   }
 
-  public function parseEntryChartDataRawWithMigration(contents:String, ?fileName:String = 'raw', version:thx.semver.Version):Null<SongChartData>
+  public function parseEntryChartDataRawWithMigration(contents:String, ?fileName:String = 'raw', version:thx.semver.Version,
+      ?variation:String):Null<SongChartData>
   {
     // If a version rule is not specified, do not check against it.
     if (SONG_CHART_DATA_VERSION_RULE == null
-      || VersionUtil.validateVersion(version, SONG_CHART_DATA_VERSION_RULE)) return parseEntryChartDataRaw(contents, fileName);
+      || VersionUtil.validateVersion(version, SONG_CHART_DATA_VERSION_RULE)) return parseEntryChartDataRaw(contents, fileName, variation);
     else
       throw '[${registryId}] Chart entry "${fileName}" does not support migration to version ${SONG_CHART_DATA_VERSION_RULE}.';
   }
