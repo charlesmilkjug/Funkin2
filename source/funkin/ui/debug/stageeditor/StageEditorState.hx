@@ -47,6 +47,8 @@ import haxe.ui.notifications.NotificationManager;
 import funkin.util.logging.CrashHandler;
 import funkin.graphics.shaders.Grayscale;
 import funkin.data.stage.StageRegistry;
+import funkin.ui.debug.theme.EditorTheme;
+import funkin.data.theme.ThemeRegistry;
 
 /**
  * Da Stage Editor woo!!
@@ -56,10 +58,12 @@ import funkin.data.stage.StageRegistry;
 class StageEditorState extends UIState
 {
   // i aint documenting allat
+  // the theme
+  public static var theme:Null<EditorTheme>;
+
   // the uh finals
   public static final BACKUPS_PATH:String = "./stagebackups/";
   public static final LIGHT_MODE_COLORS:Array<FlxColor> = [0xFFE7E6E6, 0xFFF8F8F8];
-  public static final DARK_MODE_COLORS:Array<FlxColor> = [0xFF181919, 0xFF202020];
 
   public static final DEFAULT_POSITIONS:Map<CharacterType, Array<Float>> = [
     CharacterType.BF => [989.5, 885],
@@ -89,6 +93,7 @@ class StageEditorState extends UIState
   var menubarItemSaveStage:MenuItem; // save
   var menubarItemSaveStageAs:MenuItem; // save as
   var menubarItemClearAssets:MenuItem; // clear assets
+  var menubarItemPreferences:MenuItem; // preferences
   var menubarItemExit:MenuItem; // exit
 
   var menubarMenuEdit:Menu;
@@ -133,6 +138,28 @@ class StageEditorState extends UIState
 
   var bg:FlxSprite;
 
+  var welcomeMusic:FunkinSound = new FunkinSound();
+
+  var isWelcomeMusic:Bool = false;
+
+  /**
+   * The current theme used by the editor.
+   * Dictates the appearance of many UI elements.
+   */
+  public var themeId(default, set):String;
+
+  function set_themeId(value:String):String
+  {
+    if (value == null || value == themeId) return themeId;
+
+    themeId = value;
+    updateTheme();
+    return value;
+  }
+
+  function get_themeId():String
+    return themeId ?? Constants.DEFAULT_EDITOR_THEME;
+
   public var selectedSprite(default, set):StageEditorObject = null;
 
   function set_selectedSprite(value:StageEditorObject)
@@ -166,9 +193,7 @@ class StageEditorState extends UIState
   var isCursorOverHaxeUI(get, never):Bool;
 
   function get_isCursorOverHaxeUI():Bool
-  {
     return Screen.instance.hasSolidComponentUnderPoint(Screen.instance.currentMouseX, Screen.instance.currentMouseY);
-  }
 
   public var spriteMarker:FlxSprite;
   public var spriteArray:Array<StageEditorObject> = [];
@@ -191,14 +216,11 @@ class StageEditorState extends UIState
 
     updateWindowTitle();
 
-    if (!autoSaveTimer.finished)
-    {
-      autoSaveTimer.cancel();
-    }
+    if (!autoSaveTimer.finished) autoSaveTimer.cancel();
 
     if (!saved)
     {
-      autoSaveTimer.start(Constants.AUTOSAVE_TIMER_DELAY_SEC, function(tmr:FlxTimer) {
+      autoSaveTimer.start(Constants.AUTOSAVE_TIMER_DELAY_SEC, (tmr:FlxTimer) -> {
         FileUtil.createDirIfNotExists(BACKUPS_PATH);
 
         var data = this.packShitToZip();
@@ -275,9 +297,7 @@ class StageEditorState extends UIState
   var allowInput(get, never):Bool;
 
   function get_allowInput()
-  {
     return FocusManager.instance.focus == null;
-  }
 
   var testingMode:Bool = false;
 
@@ -313,6 +333,8 @@ class StageEditorState extends UIState
 
     AssetDataHandler.init(this);
 
+    setupWelcomeMusic();
+
     camGame = new FlxCamera();
     camHUD = new FlxCamera();
     camHUD.bgColor.alpha = 0;
@@ -327,7 +349,9 @@ class StageEditorState extends UIState
     bg.scrollFactor.set();
     add(bg);
 
-    updateBGColors();
+    loadPreferences();
+
+    updateTheme();
 
     super.create();
     root.scrollFactor.set();
@@ -443,9 +467,7 @@ class StageEditorState extends UIState
         objNameDialog = new NewObjDialog(this, data);
         objNameDialog.showDialog();
 
-        objNameDialog.onDialogClosed = function(_) {
-          objNameDialog = null;
-        }
+        objNameDialog.onDialogClosed = (_) -> objNameDialog = null;
 
         return;
       }
@@ -519,8 +541,51 @@ class StageEditorState extends UIState
     Save.instance.stageEditorHasBackup = false;
 
     Cursor.show();
-    FlxG.sound.playMusic(Paths.music('chartEditorLoop/chartEditorLoop'));
-    FlxG.sound.music.fadeIn(10, 0, 1);
+    fadeInWelcomeMusic();
+  }
+
+  function setupWelcomeMusic()
+  {
+    this.welcomeMusic.loadEmbedded(Paths.music('chartEditorLoop/chartEditorLoop'));
+    FlxG.sound.list.add(this.welcomeMusic);
+    this.welcomeMusic.looped = true;
+  }
+
+  function fadeInWelcomeMusic(?fadeInTime:Float = 10)
+  {
+    if (!isWelcomeMusic)
+    {
+      stopWelcomeMusic();
+      return;
+    }
+
+    this.welcomeMusic.volume = 0;
+    if (isWelcomeMusic)
+    {
+      this.welcomeMusic.play();
+      this.welcomeMusic.fadeIn(fadeInTime, 0, 1.0);
+    }
+  }
+
+  function stopWelcomeMusic():Void
+  {
+    this.welcomeMusic.pause();
+  }
+
+  public function loadPreferences():Void
+  {
+    var save:Save = Save.instance;
+
+    themeId = save.stageEditorTheme;
+    isWelcomeMusic = save.stageEditorThemeMusic;
+  }
+
+  public function writePreferences():Void
+  {
+    var save:Save = Save.instance;
+
+    save.stageEditorTheme = themeId;
+    save.stageEditorThemeMusic = isWelcomeMusic;
   }
 
   var curTestChar:Int = 0;
@@ -536,9 +601,7 @@ class StageEditorState extends UIState
       }
 
       for (asset in spriteArray)
-      {
         if (asset.danceEvery > 0 && conductorInUse.currentBeat % asset.danceEvery == 0) asset.dance(true);
-      }
 
       if (conductorInUse.currentBeat % 8 == 0 && !FlxG.keys.pressed.SHIFT) curTestChar++;
     }
@@ -660,24 +723,20 @@ class StageEditorState extends UIState
           camFollow.velocity.x = 0;
       }
       else
-      {
         camFollow.velocity.set();
-      }
     }
     else
-    {
       camFollow.velocity.set();
-    }
 
     // movement handling
     if (FlxG.mouse.justReleased && moveOffset.length > 0) moveOffset = [];
 
     if (moveMode == "assets")
     {
-      if (selectedSprite != null && !FlxG.mouse.overlaps(selectedSprite) && FlxG.mouse.justPressed && !isCursorOverHaxeUI)
-      {
-        selectedSprite = null;
-      }
+      if (selectedSprite != null
+        && !FlxG.mouse.overlaps(selectedSprite)
+        && FlxG.mouse.justPressed
+        && !isCursorOverHaxeUI) selectedSprite = null;
 
       for (spr in spriteArray)
       {
@@ -685,10 +744,7 @@ class StageEditorState extends UIState
         {
           if (spr.visible && !FlxG.keys.pressed.SHIFT) nameTxt.text = spr.name;
 
-          if (FlxG.mouse.justPressed && allowInput && spr.visible && !FlxG.keys.pressed.SHIFT && !isCursorOverHaxeUI)
-          {
-            selectedSprite = spr;
-          }
+          if (FlxG.mouse.justPressed && allowInput && spr.visible && !FlxG.keys.pressed.SHIFT && !isCursorOverHaxeUI) selectedSprite = spr;
         }
 
         if (spr == selectedSprite)
@@ -810,13 +866,13 @@ class StageEditorState extends UIState
   }
 
   public function getCharacters()
-  {
     return [gf, dad, bf];
-  }
 
   function autosavePerCrash(message:String)
   {
     trace("Crashed the game for the reason: " + message);
+
+    writePreferences();
 
     if (!saved)
     {
@@ -910,10 +966,7 @@ class StageEditorState extends UIState
       }
 
       if ((FlxG.keys.justReleased.UP || FlxG.keys.justReleased.DOWN || FlxG.keys.justReleased.LEFT || FlxG.keys.justReleased.RIGHT)
-        && moveUndoed)
-      {
-        moveUndoed = false;
-      }
+        && moveUndoed) moveUndoed = false;
 
       if (FlxG.keys.pressed.SHIFT)
       {
@@ -946,9 +999,7 @@ class StageEditorState extends UIState
   }
 
   public function sortAssets()
-  {
     sort(funkin.util.SortUtil.byZIndex, flixel.util.FlxSort.ASCENDING);
-  }
 
   public function updateDialog(type:StageEditorDialogType)
   {
@@ -977,21 +1028,25 @@ class StageEditorState extends UIState
     WindowUtil.setWindowTitle(defaultTitle);
   }
 
-  function resetWindowTitle():Void
+  public function updateTheme():Void
   {
-    WindowUtil.setWindowTitle('Friday Night Funkin\'');
+    theme = ThemeRegistry.instance.fetchEntry(themeId);
+    if (theme == null) theme = ThemeRegistry.instance.fetchDefault();
+
+    updateBGColors();
   }
 
   function updateBGColors():Void
   {
-    var colArray = Save.instance.stageEditorTheme == StageEditorTheme.Dark ? DARK_MODE_COLORS : LIGHT_MODE_COLORS;
+    var color1:FlxColor = theme.getColor("backgroundColors[0]", LIGHT_MODE_COLORS[0], true);
+    var color2:FlxColor = theme.getColor("backgroundColors[1]", LIGHT_MODE_COLORS[1], true);
 
     var index = members.indexOf(bg);
     bg.kill();
     remove(bg);
     bg.destroy();
 
-    bg = FlxGridOverlay.create(10, 10, -1, -1, true, colArray[0], colArray[1]);
+    bg = FlxGridOverlay.create(10, 10, -1, -1, true, color1, color2);
     bg.scrollFactor.set();
     members.insert(index, bg);
   }
@@ -1018,32 +1073,33 @@ class StageEditorState extends UIState
 
   function addUI():Void
   {
-    menubarItemNewStage.onClick = function(_) onMenuItemClick("new stage");
-    menubarItemOpenStage.onClick = function(_) onMenuItemClick("open stage");
-    menubarItemSaveStage.onClick = function(_) onMenuItemClick("save stage");
-    menubarItemSaveStageAs.onClick = function(_) onMenuItemClick("save stage as");
-    menubarItemClearAssets.onClick = function(_) onMenuItemClick("clear assets");
-    menubarItemExit.onClick = function(_) onMenuItemClick("exit");
-    menubarItemUndo.onClick = function(_) onMenuItemClick("undo");
-    menubarItemRedo.onClick = function(_) onMenuItemClick("redo");
-    menubarItemCopy.onClick = function(_) onMenuItemClick("copy object");
-    menubarItemCut.onClick = function(_) onMenuItemClick("cut object");
-    menubarItemPaste.onClick = function(_) onMenuItemClick("paste object");
-    menubarItemDelete.onClick = function(_) onMenuItemClick("delete object");
-    menubarItemNewObj.onClick = function(_) onMenuItemClick("new object");
-    menubarItemFindObj.onClick = function(_) onMenuItemClick("find object");
-    menubarButtonText.onClick = function(_) onMenuItemClick("test stage");
-    menubarItemUserGuide.onClick = function(_) onMenuItemClick("user guide");
-    menubarItemGoToBackupsFolder.onClick = function(_) onMenuItemClick("open folder");
-    menubarItemAbout.onClick = function(_) onMenuItemClick("about");
+    menubarItemNewStage.onClick = (_) -> onMenuItemClick("new stage");
+    menubarItemOpenStage.onClick = (_) -> onMenuItemClick("open stage");
+    menubarItemSaveStage.onClick = (_) -> onMenuItemClick("save stage");
+    menubarItemSaveStageAs.onClick = (_) -> onMenuItemClick("save stage as");
+    menubarItemClearAssets.onClick = (_) -> onMenuItemClick("clear assets");
+    menubarItemPreferences.onClick = (_) -> this.openPreferencesDialog(true);
+    menubarItemExit.onClick = (_) -> onMenuItemClick("exit");
+    menubarItemUndo.onClick = (_) -> onMenuItemClick("undo");
+    menubarItemRedo.onClick = (_) -> onMenuItemClick("redo");
+    menubarItemCopy.onClick = (_) -> onMenuItemClick("copy object");
+    menubarItemCut.onClick = (_) -> onMenuItemClick("cut object");
+    menubarItemPaste.onClick = (_) -> onMenuItemClick("paste object");
+    menubarItemDelete.onClick = (_) -> onMenuItemClick("delete object");
+    menubarItemNewObj.onClick = (_) -> onMenuItemClick("new object");
+    menubarItemFindObj.onClick = (_) -> onMenuItemClick("find object");
+    menubarButtonText.onClick = (_) -> onMenuItemClick("test stage");
+    menubarItemUserGuide.onClick = (_) -> onMenuItemClick("user guide");
+    menubarItemGoToBackupsFolder.onClick = (_) -> onMenuItemClick("open folder");
+    menubarItemAbout.onClick = (_) -> onMenuItemClick("about");
 
-    bottomBarModeText.onClick = function(_) onMenuItemClick("switch mode");
-    bottomBarSelectText.onClick = function(_) onMenuItemClick("switch focus");
+    bottomBarModeText.onClick = (_) -> onMenuItemClick("switch mode");
+    bottomBarSelectText.onClick = (_) -> onMenuItemClick("switch focus");
 
     var stepOptions = ["1px", "2px", "3px", "5px", "10px", "25px", "50px", "100px"];
     bottomBarMoveStepText.text = stepOptions.contains(Save.instance.stageEditorMoveStep) ? Save.instance.stageEditorMoveStep : "1px";
 
-    var changeStep = function(change:Int = 0) {
+    var changeStep = (change:Int = 0) -> {
       var id = stepOptions.indexOf(bottomBarMoveStepText.text);
       id += change;
 
@@ -1059,15 +1115,15 @@ class StageEditorState extends UIState
       updateDialog(StageEditorDialogType.STAGE);
     }
 
-    bottomBarMoveStepText.onClick = function(_) changeStep(1);
-    bottomBarMoveStepText.onRightClick = function(_) changeStep(-1);
+    bottomBarMoveStepText.onClick = (_) -> changeStep(1);
+    bottomBarMoveStepText.onRightClick = (_) -> changeStep(-1);
 
     changeStep(); // update
 
     var angleOptions = [0.5, 1, 2, 5, 10, 15, 45, 75, 90, 180];
     bottomBarAngleStepText.text = (angleOptions.contains(Save.instance.stageEditorAngleStep) ? Save.instance.stageEditorAngleStep : 5) + "°";
 
-    var changeAngle = function(change:Int = 0) {
+    var changeAngle = (change:Int = 0) -> {
       var id = angleOptions.indexOf(Save.instance.stageEditorAngleStep);
       id += change;
 
@@ -1080,8 +1136,8 @@ class StageEditorState extends UIState
       updateDialog(StageEditorDialogType.OBJECT_PROPERTIES);
     }
 
-    bottomBarAngleStepText.onClick = function(_) changeAngle(1);
-    bottomBarAngleStepText.onRightClick = function(_) changeAngle(-1);
+    bottomBarAngleStepText.onClick = (_) -> changeAngle(1);
+    bottomBarAngleStepText.onRightClick = (_) -> changeAngle(-1);
 
     changeAngle(); // update
 
@@ -1091,35 +1147,25 @@ class StageEditorState extends UIState
     dialogs.set(StageEditorDialogType.CHARACTER, new StageEditorCharacterToolbox(this));
     dialogs.set(StageEditorDialogType.STAGE, new StageEditorStageToolbox(this));
 
-    menubarItemWindowObjectGraphic.onChange = function(_) toggleDialog(StageEditorDialogType.OBJECT_GRAPHIC, menubarItemWindowObjectGraphic.selected);
-    menubarItemWindowObjectAnims.onChange = function(_) toggleDialog(StageEditorDialogType.OBJECT_ANIMS, menubarItemWindowObjectAnims.selected);
-    menubarItemWindowObjectProps.onChange = function(_) toggleDialog(StageEditorDialogType.OBJECT_PROPERTIES, menubarItemWindowObjectProps.selected);
-    menubarItemWindowCharacter.onChange = function(_) toggleDialog(StageEditorDialogType.CHARACTER, menubarItemWindowCharacter.selected);
-    menubarItemWindowStage.onChange = function(_) toggleDialog(StageEditorDialogType.STAGE, menubarItemWindowStage.selected);
-
-    menubarItemThemeLight.onClick = function(_) {
-      Save.instance.stageEditorTheme = StageEditorTheme.Light;
-      updateBGColors();
-    }
-
-    menubarItemThemeDark.onClick = function(_) {
-      Save.instance.stageEditorTheme = StageEditorTheme.Dark;
-      updateBGColors();
-    }
+    menubarItemWindowObjectGraphic.onChange = (_) -> toggleDialog(StageEditorDialogType.OBJECT_GRAPHIC, menubarItemWindowObjectGraphic.selected);
+    menubarItemWindowObjectAnims.onChange = (_) -> toggleDialog(StageEditorDialogType.OBJECT_ANIMS, menubarItemWindowObjectAnims.selected);
+    menubarItemWindowObjectProps.onChange = (_) -> toggleDialog(StageEditorDialogType.OBJECT_PROPERTIES, menubarItemWindowObjectProps.selected);
+    menubarItemWindowCharacter.onChange = (_) -> toggleDialog(StageEditorDialogType.CHARACTER, menubarItemWindowCharacter.selected);
+    menubarItemWindowStage.onChange = (_) -> toggleDialog(StageEditorDialogType.STAGE, menubarItemWindowStage.selected);
 
     menubarItemThemeDark.selected = Save.instance.stageEditorTheme == StageEditorTheme.Dark;
     menubarItemThemeLight.selected = Save.instance.stageEditorTheme == StageEditorTheme.Light;
 
-    menubarItemViewChars.onChange = function(_) showChars = menubarItemViewChars.selected;
-    menubarItemViewNameText.onChange = function(_) nameTxt.visible = menubarItemViewNameText.selected;
-    menubarItemViewCamBounds.onChange = function(_) camFields.visible = menubarItemViewCamBounds.selected;
+    menubarItemViewChars.onChange = (_) -> showChars = menubarItemViewChars.selected;
+    menubarItemViewNameText.onChange = (_) -> nameTxt.visible = menubarItemViewNameText.selected;
+    menubarItemViewCamBounds.onChange = (_) -> camFields.visible = menubarItemViewCamBounds.selected;
 
-    menubarItemViewFloorLines.onChange = function(_) {
+    menubarItemViewFloorLines.onChange = (_) -> {
       for (awesome in floorLines)
         awesome.visible = menubarItemViewFloorLines.selected;
     }
 
-    menubarItemViewPosMarkers.onChange = function(_) {
+    menubarItemViewPosMarkers.onChange = (_) -> {
       for (coolbeans in posCircles)
         coolbeans.visible = menubarItemViewPosMarkers.selected;
     }
@@ -1140,7 +1186,7 @@ class StageEditorState extends UIState
       item.text = filePath.file + "." + filePath.ext;
       item.disabled = !FileUtil.fileExists(file);
 
-      var load = function(file:String) {
+      var load = (file:String) -> {
         currentFile = file;
 
         this.unpackShitFromZip(FileUtil.readBytesFromPath(file));
@@ -1148,22 +1194,20 @@ class StageEditorState extends UIState
         reloadRecentFiles();
       }
 
-      item.onClick = function(_) {
+      item.onClick = (_) -> {
         if (!saved)
         {
           Dialogs.messageBox("Opening a new Stage will reset all your progress for this Stage.\n\nAre you sure you want to proceed?", "Open Stage",
-            MessageBoxType.TYPE_YESNO, true, function(btn:DialogButton) {
+            MessageBoxType.TYPE_YESNO, true, (btn:DialogButton) -> {
               if (btn == DialogButton.YES)
               {
                 saved = true;
                 load(file);
               }
-          });
+            });
         }
         else
-        {
           load(file);
-        }
       }
 
       menubarItemOpenRecent.addComponent(item);
@@ -1248,6 +1292,8 @@ class StageEditorState extends UIState
             // This function does nothing, it's there for crash prevention.
           });
 
+      case "preferences": // oh look nothing!
+
       case "exit":
         if (!saved)
         {
@@ -1265,13 +1311,15 @@ class StageEditorState extends UIState
 
         resetWindowTitle();
 
+        writePreferences();
+
         WindowUtil.windowExit.remove(windowClose);
         CrashHandler.errorSignal.remove(autosavePerCrash);
         CrashHandler.criticalErrorSignal.remove(autosavePerCrash);
 
         Cursor.hide();
         FlxG.switchState(() -> new DebugMenuSubState());
-        FlxG.sound.music.stop();
+        if (welcomeMusic != null) welcomeMusic.destroy();
 
       case "switch mode":
         if (testingMode) return;

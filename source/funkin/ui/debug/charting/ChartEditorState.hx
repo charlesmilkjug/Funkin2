@@ -44,6 +44,8 @@ import funkin.play.notes.NoteSprite;
 import funkin.play.PlayStatePlaylist;
 import funkin.play.song.Song;
 import funkin.save.Save;
+import funkin.ui.debug.theme.EditorTheme;
+import funkin.data.theme.ThemeRegistry;
 import funkin.ui.debug.charting.commands.AddEventsCommand;
 import funkin.ui.debug.charting.commands.AddNotesCommand;
 import funkin.ui.debug.charting.commands.AddNewTimeChangeCommand;
@@ -92,6 +94,9 @@ import haxe.ui.backend.flixel.UIState;
 import haxe.ui.components.Button;
 import haxe.ui.components.Label;
 import haxe.ui.components.Slider;
+import haxe.ui.containers.dialogs.Dialogs;
+import haxe.ui.containers.dialogs.Dialog.DialogButton;
+import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
 import haxe.ui.containers.dialogs.CollapsibleDialog;
 import haxe.ui.containers.dialogs.Dialogs;
 import haxe.ui.containers.menus.Menu;
@@ -368,8 +373,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     }
 
     // Make sure playhead doesn't scroll outside the song.
-    if (value + playheadPositionInPixels < 0) playheadPositionInPixels = -value;
-    if (value + playheadPositionInPixels > songLengthInPixels) playheadPositionInPixels = songLengthInPixels - value;
+    playheadPositionInPixels = FlxMath.bound(playheadPositionInPixels, -value, songLengthInPixels - value);
 
     if (value > songLengthInPixels) value = songLengthInPixels;
 
@@ -642,18 +646,20 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   /**
    * The current theme used by the editor.
    * Dictates the appearance of many UI elements.
-   * Currently hardcoded to just Light and Dark.
    */
-  var currentTheme(default, set):ChartEditorTheme = ChartEditorTheme.Light;
+  public var themeId(default, set):String;
 
-  function set_currentTheme(value:ChartEditorTheme):ChartEditorTheme
+  function set_themeId(value:String):String
   {
-    if (value == null || value == currentTheme) return currentTheme;
+    if (value == null || value == themeId) return themeId;
 
-    currentTheme = value;
+    themeId = value;
     this.updateTheme();
     return value;
   }
+
+  function get_themeId():String
+    return themeId ?? Constants.DEFAULT_EDITOR_THEME;
 
   /**
    * The character sprite in the Player Preview window.
@@ -676,9 +682,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   var isHaxeUIFocused(get, never):Bool;
 
   function get_isHaxeUIFocused():Bool
-  {
     return FocusManager.instance.focus != null;
-  }
 
   /**
    * Whether the user's mouse cursor is hovering over a SOLID component of the HaxeUI.
@@ -687,9 +691,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   var isCursorOverHaxeUI(get, never):Bool;
 
   function get_isCursorOverHaxeUI():Bool
-  {
     return Screen.instance.hasSolidComponentUnderPoint(FlxG.mouse.viewX, FlxG.mouse.viewY);
-  }
 
   /**
    * The value of `isCursorOverHaxeUI` from the previous frame.
@@ -940,7 +942,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     if (value)
     {
       // Start the auto-save timer.
-      autoSaveTimer = new FlxTimer().start(Constants.AUTOSAVE_TIMER_DELAY_SEC, (_) -> autoSave());
+      autoSaveTimer = new FlxTimer().start(Save.instance.chartEditorAutoSaveTimer * Constants.SECS_PER_MIN, (_) -> autoSave());
     }
     else
     {
@@ -961,14 +963,10 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   var shouldShowBackupAvailableDialog(get, set):Bool;
 
   function get_shouldShowBackupAvailableDialog():Bool
-  {
     return Save.instance.chartEditorHasBackup;
-  }
 
   function set_shouldShowBackupAvailableDialog(value:Bool):Bool
-  {
     return Save.instance.chartEditorHasBackup = value;
-  }
 
   /**
    * A list of previous working file paths.
@@ -994,9 +992,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   public var currentWorkingFilePath(get, set):Null<String>;
 
   function get_currentWorkingFilePath():Null<String>
-  {
     return previousWorkingFilePaths[0];
-  }
 
   function set_currentWorkingFilePath(value:Null<String>):Null<String>
   {
@@ -1402,9 +1398,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentSongChartEventData(value:Array<SongEventData>):Array<SongEventData>
-  {
     return currentSongChartData.events = value;
-  }
 
   /**
    * Convenience property to get the rating for this difficulty in the Freeplay menu.
@@ -1444,33 +1438,23 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentSongNoteStyle(value:String):String
-  {
     return currentSongMetadata.playData.noteStyle = value;
-  }
 
   var currentSongFreeplayPreviewStart(get, set):Int;
 
   function get_currentSongFreeplayPreviewStart():Int
-  {
     return currentSongMetadata.playData.previewStart;
-  }
 
   function set_currentSongFreeplayPreviewStart(value:Int):Int
-  {
     return currentSongMetadata.playData.previewStart = value;
-  }
 
   var currentSongFreeplayPreviewEnd(get, set):Int;
 
   function get_currentSongFreeplayPreviewEnd():Int
-  {
     return currentSongMetadata.playData.previewEnd;
-  }
 
   function set_currentSongFreeplayPreviewEnd(value:Int):Int
-  {
     return currentSongMetadata.playData.previewEnd = value;
-  }
 
   var currentSongStage(get, set):String;
 
@@ -1485,9 +1469,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentSongStage(value:String):String
-  {
     return currentSongMetadata.playData.stage = value;
-  }
 
   var currentSongName(get, set):String;
 
@@ -1502,16 +1484,12 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentSongName(value:String):String
-  {
     return currentSongMetadata.songName = value;
-  }
 
   var currentSongId(get, never):String;
 
   function get_currentSongId():String
-  {
     return currentSongName.toLowerKebabCase().replace(' ', '-').sanitize();
-  }
 
   var currentSongArtist(get, set):String;
 
@@ -1526,9 +1504,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentSongArtist(value:String):String
-  {
     return currentSongMetadata.artist = value;
-  }
 
   /**
    * Convenience property to get the player charId for the current variation.
@@ -1546,9 +1522,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentPlayerChar(value:String):String
-  {
     return currentSongMetadata.playData.characters.player = value;
-  }
 
   /**
    * Convenience property to get the opponent charId for the current variation.
@@ -1566,9 +1540,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentOpponentChar(value:String):String
-  {
     return currentSongMetadata.playData.characters.opponent = value;
-  }
 
   /**
    * Convenience property to get the song offset data for the current variation.
@@ -1586,9 +1558,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentSongOffsets(value:SongOffsets):SongOffsets
-  {
     return currentSongMetadata.offsets = value;
-  }
 
   var currentInstrumentalOffset(get, set):Float;
 
@@ -1608,9 +1578,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   var currentVocalOffsetPlayer(get, set):Float;
 
   function get_currentVocalOffsetPlayer():Float
-  {
     return currentSongOffsets.getVocalOffset(currentPlayerChar);
-  }
 
   function set_currentVocalOffsetPlayer(value:Float):Float
   {
@@ -1621,9 +1589,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   var currentVocalOffsetOpponent(get, set):Float;
 
   function get_currentVocalOffsetOpponent():Float
-  {
     return currentSongOffsets.getVocalOffset(currentOpponentChar);
-  }
 
   function set_currentVocalOffsetOpponent(value:Float):Float
   {
@@ -1694,9 +1660,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function set_currentInstrumentalId(value:String):String
-  {
     return currentSongMetadata.playData.characters.instrumental = value;
-  }
 
   /**
    * HAXEUI COMPONENTS
@@ -1870,11 +1834,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    * The `Audio -> Metronome Volume` slider.
    */
   var menubarItemVolumeMetronome:Slider;
-
-  /**
-   * The `Audio -> Play Theme Music` menu checkbox.
-   */
-  var menubarItemThemeMusic:MenuCheckBox;
 
   /**
    * The `Audio -> Player Hitsound Volume` label.
@@ -2324,7 +2283,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     currentLiveInputStyle = save.chartEditorLiveInputStyle;
     isViewDownscroll = save.chartEditorDownscroll;
     playtestStartTime = save.chartEditorPlaytestStartTime;
-    currentTheme = save.chartEditorTheme;
+    themeId = save.chartEditorTheme;
     metronomeVolume = save.chartEditorMetronomeVolume;
     hitsoundVolumePlayer = save.chartEditorHitsoundVolumePlayer;
     hitsoundVolumeOpponent = save.chartEditorHitsoundVolumeOpponent;
@@ -2353,7 +2312,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     save.chartEditorLiveInputStyle = currentLiveInputStyle;
     save.chartEditorDownscroll = isViewDownscroll;
     save.chartEditorPlaytestStartTime = playtestStartTime;
-    save.chartEditorTheme = currentTheme;
+    save.chartEditorTheme = themeId;
     save.chartEditorMetronomeVolume = metronomeVolume;
     save.chartEditorHitsoundVolumePlayer = hitsoundVolumePlayer;
     save.chartEditorHitsoundVolumeOpponent = hitsoundVolumeOpponent;
@@ -2622,10 +2581,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       bounds.height -= notePreview.y - bounds.y;
       bounds.y = notePreview.y;
     }
-    else if (bounds.y + bounds.height > notePreview.y + notePreview.height)
-    {
-      bounds.height -= (bounds.y + bounds.height) - (notePreview.y + notePreview.height);
-    }
+    else if (bounds.y + bounds.height > notePreview.y + notePreview.height) bounds.height -= (bounds.y + bounds.height) - (notePreview.y + notePreview.height);
 
     var MIN_HEIGHT:Int = 8;
     if (bounds.height < MIN_HEIGHT)
@@ -2899,6 +2855,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         this.exportAllSongData(false, null);
     };
     menubarItemSaveChartAs.onClick = _ -> this.exportAllSongData(false, null);
+    menubarItemPreferences.onClick = _ -> this.openPreferencesDialog(true);
     menubarItemExit.onClick = _ -> quitChartEditor();
 
     // Edit
@@ -2953,13 +2910,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       if (noteSnapQuantIndex >= SNAP_QUANTS.length) noteSnapQuantIndex = 0;
     };
 
-    menuBarItemInputStyleNone.onClick = (event:UIEvent) -> currentLiveInputStyle = None;
-    menuBarItemInputStyleNone.selected = currentLiveInputStyle == None;
-    menuBarItemInputStyleNumberKeys.onClick = (event:UIEvent) -> currentLiveInputStyle = NumberKeys;
-    menuBarItemInputStyleNumberKeys.selected = currentLiveInputStyle == NumberKeys;
-    menuBarItemInputStyleWASD.onClick = (event:UIEvent) -> currentLiveInputStyle = WASDKeys;
-    menuBarItemInputStyleWASD.selected = currentLiveInputStyle == WASDKeys;
-
     menubarItemAbout.onClick = _ -> this.openAboutDialog();
     menubarItemWelcomeDialog.onClick = _ -> this.openWelcomeDialog(true);
 
@@ -2977,12 +2927,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     menubarItemDifficultyUp.onClick = _ -> incrementDifficulty(1);
     menubarItemDifficultyDown.onClick = _ -> incrementDifficulty(-1);
-
-    menuBarItemThemeLight.onChange = (event:UIEvent) -> if (event.target.value) currentTheme = ChartEditorTheme.Light;
-    menuBarItemThemeLight.selected = currentTheme == ChartEditorTheme.Light;
-
-    menuBarItemThemeDark.onChange = (event:UIEvent) -> if (event.target.value) currentTheme = ChartEditorTheme.Dark;
-    menuBarItemThemeDark.selected = currentTheme == ChartEditorTheme.Dark;
 
     menubarItemPlayPause.onClick = _ -> toggleAudioPlayback();
 
@@ -3013,12 +2957,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     };
     menubarItemVolumeMetronome.value = Std.int(metronomeVolume * 100);
     previousAudioVolumes[0] = Std.int(metronomeVolume * 100);
-
-    menubarItemThemeMusic.onChange = event -> {
-      this.welcomeMusic.active = event.value;
-      fadeInWelcomeMusic(WELCOME_MUSIC_FADE_IN_DELAY, WELCOME_MUSIC_FADE_IN_DURATION);
-    };
-    menubarItemThemeMusic.selected = this.welcomeMusic.active;
 
     menubarItemVolumeHitsoundPlayer.onChange = event -> {
       var volume:Float = event.value.toFloat() / 100.0;
@@ -3106,10 +3044,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     // Calculate a single time offset for all the notes and events.
     var timeOffset:Null<Int> = currentNoteSelection.length > 0 ? Std.int(currentNoteSelection[0].time) : null;
-    if (currentEventSelection.length > 0)
-    {
-      if (timeOffset == null || currentEventSelection[0].time < timeOffset) timeOffset = Std.int(currentEventSelection[0].time);
-    }
+    if (currentEventSelection.length > 0) if (timeOffset == null
+      || currentEventSelection[0].time < timeOffset) timeOffset = Std.int(currentEventSelection[0].time);
 
     SongDataUtils.writeItemsToClipboard(
       {
@@ -3187,10 +3123,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     if (needsAutoSave)
     {
       this.exportAllSongData(true, null);
-      if (beforePlaytest)
-      {
-        displayAutosavePopup = true;
-      }
+      if (beforePlaytest) displayAutosavePopup = true;
       else
       {
         displayAutosavePopup = false;
@@ -5346,7 +5279,20 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   @:nullSafety(Off)
   function quitChartEditor():Void
   {
-    autoSave();
+    if (saveDataDirty)
+    {
+      Dialogs.messageBox("You are about to leave the editor without saving.\n\nAre you sure?", "Leave Editor", MessageBoxType.TYPE_YESNO, true,
+        function(button:DialogButton) {
+          if (button == DialogButton.YES)
+          {
+            if (Save.instance.chartEditorAutoSaveExit) autoSave();
+            quitChartEditor();
+          }
+        });
+
+      return;
+    }
+
     stopWelcomeMusic();
     // TODO: PR Flixel to make onComplete nullable.
     if (audioInstTrack != null) audioInstTrack.onComplete = null;

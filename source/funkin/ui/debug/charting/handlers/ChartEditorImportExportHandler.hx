@@ -13,6 +13,7 @@ import funkin.data.song.SongData.SongMetadata;
 import funkin.data.song.SongRegistry;
 import funkin.data.song.importer.ChartManifestData;
 import thx.semver.Version as SemverVersion;
+import funkin.save.Save;
 
 /**
  * Contains functions for importing, loading, saving, and exporting charts.
@@ -108,22 +109,16 @@ class ChartEditorImportExportHandler
     trace('===============END');
   }
 
-  /**
-   * Loads a chart from parsed song metadata and chart data into the editor.
-   * @param newSongMetadata The song metadata to load.
-   * @param newSongChartData The song chart data to load.
-   */
   public static function loadSong(state:ChartEditorState, newSongMetadata:Map<String, SongMetadata>, newSongChartData:Map<String, SongChartData>):Void
   {
+    state.selectedVariation = Save.instance.chartEditorStartingVariation;
+    state.selectedDifficulty = Save.instance.chartEditorStartingDifficulty;
     state.songMetadata = newSongMetadata;
     state.songChartData = newSongChartData;
 
-    if (!state.songMetadata.exists(state.selectedVariation))
-    {
-      state.selectedVariation = Constants.DEFAULT_VARIATION;
-    }
-    // Use the first available difficulty as a fallback if the currently selected one cannot be found.
-    if (state.availableDifficulties.indexOf(state.selectedDifficulty) < 0) state.selectedDifficulty = state.availableDifficulties[0];
+    // this should be fixed by https://github.com/FunkinCrew/Funkin/pull/4949 instead! show lasercar some love!
+    if (!newSongMetadata.exists(state.selectedVariation)) state.selectedVariation = Constants.DEFAULT_VARIATION;
+    if (!state.availableDifficulties.contains(state.selectedDifficulty)) state.selectedDifficulty = state.availableDifficulties[0];
 
     Conductor.instance.forceBPM(null); // Disable the forced BPM.
     Conductor.instance.instrumentalOffset = state.currentInstrumentalOffset; // Loads from the metadata.

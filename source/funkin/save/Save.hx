@@ -166,17 +166,17 @@ class Save
           previousFiles: [],
           noteQuant: 3,
           chartEditorLiveInputStyle: ChartEditorLiveInputStyle.None,
-          theme: ChartEditorTheme.Light,
+          theme: Constants.DEFAULT_EDITOR_THEME,
+          startingDifficulty: Constants.DEFAULT_DIFFICULTY,
+          startingVariation: Constants.DEFAULT_VARIATION,
           playtestStartTime: false,
           downscroll: false,
           metronomeVolume: 1.0,
           hitsoundVolumePlayer: 1.0,
           hitsoundVolumeOpponent: 1.0,
-          instVolume: 1.0,
-          playerVoiceVolume: 1.0,
-          opponentVoiceVolume: 1.0,
-          playbackSpeed: 0.5,
-          themeMusic: true
+          themeMusic: true,
+          autoSaveExit: true,
+          autoSaveTimer: 5.0
         },
 
       optionsStageEditor:
@@ -184,10 +184,8 @@ class Save
           previousFiles: [],
           moveStep: "1px",
           angleStep: 5,
-          theme: StageEditorTheme.Light,
-          bfChar: "bf",
-          gfChar: "gf",
-          dadChar: "dad"
+          themeMusic: true,
+          theme: Constants.DEFAULT_EDITOR_THEME
         }
     };
   }
@@ -345,16 +343,50 @@ class Save
     return data.optionsChartEditor.playtestStartTime;
   }
 
-  public var chartEditorTheme(get, set):ChartEditorTheme;
+  public var chartEditorStartingDifficulty(get, set):String;
 
-  function get_chartEditorTheme():ChartEditorTheme
+  function get_chartEditorStartingDifficulty():String
   {
-    if (data.optionsChartEditor.theme == null) data.optionsChartEditor.theme = ChartEditorTheme.Light;
+    if (data.optionsChartEditor.startingDifficulty == null) data.optionsChartEditor.startingDifficulty = Constants.DEFAULT_DIFFICULTY;
+
+    return data.optionsChartEditor.startingDifficulty;
+  }
+
+  function set_chartEditorStartingDifficulty(value:String):String
+  {
+    // Set and apply.
+    data.optionsChartEditor.startingDifficulty = value;
+    flush();
+    return data.optionsChartEditor.startingDifficulty;
+  }
+
+  public var chartEditorStartingVariation(get, set):String;
+
+  function get_chartEditorStartingVariation():String
+  {
+    if (data.optionsChartEditor.startingVariation == null) data.optionsChartEditor.startingVariation = Constants.DEFAULT_VARIATION;
+
+    return data.optionsChartEditor.startingVariation;
+  }
+
+  function set_chartEditorStartingVariation(value:String):String
+  {
+    // Set and apply.
+    data.optionsChartEditor.startingVariation = value;
+    flush();
+    return data.optionsChartEditor.startingVariation;
+  }
+
+  public var chartEditorTheme(get, set):String;
+
+  function get_chartEditorTheme():String
+  {
+    if (data.optionsChartEditor.theme == null) data.optionsChartEditor.theme = Constants.DEFAULT_EDITOR_THEME;
 
     return data.optionsChartEditor.theme;
   }
 
-  function set_chartEditorTheme(value:ChartEditorTheme):ChartEditorTheme
+  function set_chartEditorTheme(value:String):String
   {
     // Set and apply.
     data.optionsChartEditor.theme = value;
@@ -481,6 +513,40 @@ class Save
     return data.optionsChartEditor.themeMusic;
   }
 
+  public var chartEditorAutoSaveExit(get, set):Bool;
+
+  function get_chartEditorAutoSaveExit():Bool
+  {
+    if (data.optionsChartEditor.autoSaveExit == null) data.optionsChartEditor.autoSaveExit = true;
+
+    return data.optionsChartEditor.autoSaveExit;
+  }
+
+  function set_chartEditorAutoSaveExit(value:Bool):Bool
+  {
+    // Set and apply.
+    data.optionsChartEditor.autoSaveExit = value;
+    flush();
+    return data.optionsChartEditor.autoSaveExit;
+  }
+
+  public var chartEditorAutoSaveTimer(get, set):Float;
+
+  function get_chartEditorAutoSaveTimer():Float
+  {
+    if (data.optionsChartEditor.autoSaveTimer == null) data.optionsChartEditor.autoSaveTimer = 5.0;
+
+    return data.optionsChartEditor.autoSaveTimer;
+  }
+
+  function set_chartEditorAutoSaveTimer(value:Float):Float
+  {
+    // Set and apply.
+    data.optionsChartEditor.autoSaveTimer = value;
+    flush();
+    return data.optionsChartEditor.autoSaveTimer;
+  }
+
   public var chartEditorPlaybackSpeed(get, set):Float;
 
   function get_chartEditorPlaybackSpeed():Float
@@ -590,16 +656,33 @@ class Save
     return data.optionsStageEditor.angleStep;
   }
 
-  public var stageEditorTheme(get, set):StageEditorTheme;
+  public var stageEditorThemeMusic(get, set):Bool;
 
-  function get_stageEditorTheme():StageEditorTheme
+  function get_stageEditorThemeMusic():Bool
   {
-    if (data.optionsStageEditor.theme == null) data.optionsStageEditor.theme = StageEditorTheme.Light;
+    if (data.optionsStageEditor.themeMusic == null) data.optionsStageEditor.themeMusic = true;
+
+    return data.optionsStageEditor.themeMusic;
+  }
+
+  function set_stageEditorThemeMusic(value:Bool):Bool
+  {
+    // Set and apply.
+    data.optionsStageEditor.themeMusic = value;
+    flush();
+    return data.optionsStageEditor.themeMusic;
+  }
+
+  public var stageEditorTheme(get, set):String;
+
+  function get_stageEditorTheme():String
+  {
+    if (data.optionsStageEditor.theme == null) data.optionsStageEditor.theme = Constants.DEFAULT_EDITOR_THEME;
 
     return data.optionsStageEditor.theme;
   }
 
-  function set_stageEditorTheme(value:StageEditorTheme):StageEditorTheme
+  function set_stageEditorTheme(value:String):String
   {
     // Set and apply.
     data.optionsStageEditor.theme = value;
@@ -1662,9 +1745,21 @@ typedef SaveDataChartEditorOptions =
 
   /**
    * Theme in the Chart Editor.
-   * @default `ChartEditorTheme.Light`
+   * @default `Constants.DEFAULT_EDITOR_THEME`
    */
-  var ?theme:ChartEditorTheme;
+  var ?theme:String;
+
+  /**
+   * Starting difficulty in the Chart Editor.
+   * @default `Constants.DEFAULT_DIFFICULTY`
+   */
+  var ?startingDifficulty:String;
+
+  /**
+   * Starting variation in the Chart Editor.
+   * @default `Constants.DEFAULT_VARIATION`
+   */
+  var ?startingVariation:String;
 
   /**
    * Downscroll in the Chart Editor.
@@ -1701,6 +1796,18 @@ typedef SaveDataChartEditorOptions =
    * @default `true`
    */
   var ?themeMusic:Bool;
+
+  /**
+   * Auto-save on exit in the Chart Editor.
+   * @default `true`
+   */
+  var ?autoSaveExit:Bool;
+
+  /**
+   * Auto-save timer in the Chart Editor.
+   * @default `5.0`
+   */
+  var ?autoSaveTimer:Float;
 
   /**
    * Instrumental volume in the Chart Editor.
