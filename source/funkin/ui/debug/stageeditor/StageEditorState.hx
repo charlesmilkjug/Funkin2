@@ -1153,9 +1153,6 @@ class StageEditorState extends UIState
     menubarItemWindowCharacter.onChange = (_) -> toggleDialog(StageEditorDialogType.CHARACTER, menubarItemWindowCharacter.selected);
     menubarItemWindowStage.onChange = (_) -> toggleDialog(StageEditorDialogType.STAGE, menubarItemWindowStage.selected);
 
-    menubarItemThemeDark.selected = Save.instance.stageEditorTheme == StageEditorTheme.Dark;
-    menubarItemThemeLight.selected = Save.instance.stageEditorTheme == StageEditorTheme.Light;
-
     menubarItemViewChars.onChange = (_) -> showChars = menubarItemViewChars.selected;
     menubarItemViewNameText.onChange = (_) -> nameTxt.visible = menubarItemViewNameText.selected;
     menubarItemViewCamBounds.onChange = (_) -> camFields.visible = menubarItemViewCamBounds.selected;
