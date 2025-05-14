@@ -155,6 +155,7 @@ class ChartEditorThemeHandler
 
     // Draw horizontal dividers between the measures.
 
+    @:nullSafety(Off)
     var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
     // Divider at top
@@ -165,6 +166,7 @@ class ChartEditorThemeHandler
 
     // Draw horizontal dividers between the beats.
 
+    @:nullSafety(Off)
     var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
 
     // Selection borders horizontally in the middle.
@@ -181,6 +183,7 @@ class ChartEditorThemeHandler
 
     // Draw vertical dividers between the strumlines.
 
+    @:nullSafety(Off)
     var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
 
     // Divider at 1 * (Strumline Size)
