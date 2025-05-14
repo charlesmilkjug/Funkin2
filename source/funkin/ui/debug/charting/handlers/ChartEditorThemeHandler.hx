@@ -97,6 +97,7 @@ class ChartEditorThemeHandler
   static function updateBackground(state:ChartEditorState):Void
   {
     if (theme == null || state.menuBG == null) return;
+    @:nullSafety(Off)
     state.menuBG.color = theme.getColor("background", BACKGROUND_COLOR_LIGHT);
   }
 
@@ -107,10 +108,12 @@ class ChartEditorThemeHandler
   static function updateGridBitmap(state:ChartEditorState):Void
   {
     if (theme == null) return;
-    var gridColor1:FlxColor = theme.getColor("gridColors[0]", GRID_COLOR_1_LIGHT);
+    @:nullSafety(Off)
+    {
+      var gridColor1:FlxColor = theme.getColor("gridColors[0]", GRID_COLOR_1_LIGHT);
 
-    var gridColor2:FlxColor = theme.getColor("gridColors[1]", GRID_COLOR_2_LIGHT);
-
+      var gridColor2:FlxColor = theme.getColor("gridColors[1]", GRID_COLOR_2_LIGHT);
+    }
     // Draw the base grid.
 
     // 2 * (Strumline Size) + 1 grid squares wide, by (4 * quarter notes per measure) grid squares tall.
@@ -120,6 +123,7 @@ class ChartEditorThemeHandler
     state.gridBitmap = FlxGridOverlay.createGrid(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, gridWidth, gridHeight, true, gridColor1, gridColor2);
 
     // Selection borders
+    @:nullSafety(Off)
     var selectionBorderColor:FlxColor = theme.getColor("gridColors[2]", GRID_COLOR_3_LIGHT);
 
     // Selection border at top.
@@ -233,6 +237,7 @@ class ChartEditorThemeHandler
       var ticksHeight:Int = Std.int(ChartEditorState.GRID_SIZE * stepsPerMeasure);
 
       // Draw horizontal dividers between the measures.
+      @:nullSafety(Off)
       var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
       // Divider at top
@@ -248,6 +253,7 @@ class ChartEditorThemeHandler
       state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight + bottomTickY, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
       // Draw horizontal dividers between the beats, this is done inside the following loop.
+      @:nullSafety(Off)
       var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
 
       // Draw the beat ticks and dividers, and step ticks. No need for two seperate loops thankfully.
@@ -277,6 +283,7 @@ class ChartEditorThemeHandler
     previousMeasure = currentMeasure;
 
     // Finally, draw vertical dividers between the strumlines.
+    @:nullSafety(Off)
     var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
 
     // Divider at 1 * (Strumline Size)
@@ -339,9 +346,12 @@ class ChartEditorThemeHandler
   static function updateSelectionSquare(state:ChartEditorState):Void
   {
     if (theme == null) return;
-    var selectionSquareBorderColor:FlxColor = theme.getColor("selectionSquareBorder", SELECTION_SQUARE_BORDER_COLOR_LIGHT);
+    @:nullSafety(Off)
+    {
+      var selectionSquareBorderColor:FlxColor = theme.getColor("selectionSquareBorder", SELECTION_SQUARE_BORDER_COLOR_LIGHT);
 
-    var selectionSquareFillColor:FlxColor = theme.getColor("selectionSquareFill", SELECTION_SQUARE_FILL_COLOR_LIGHT);
+      var selectionSquareFillColor:FlxColor = theme.getColor("selectionSquareFill", SELECTION_SQUARE_FILL_COLOR_LIGHT);
+    }
 
     state.selectionSquareBitmap = new BitmapData(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, true);
 
@@ -366,9 +376,12 @@ class ChartEditorThemeHandler
   static function updateNotePreview(state:ChartEditorState):Void
   {
     if (theme == null) return;
-    var viewportBorderColor:FlxColor = theme.getColor("notePreviewViewportBorder", NOTE_PREVIEW_VIEWPORT_BORDER_COLOR_LIGHT);
+    @:nullSafety(Off)
+    {
+      var viewportBorderColor:FlxColor = theme.getColor("notePreviewViewportBorder", NOTE_PREVIEW_VIEWPORT_BORDER_COLOR_LIGHT);
 
-    var viewportFillColor:FlxColor = theme.getColor("notePreviewViewportFill", NOTE_PREVIEW_VIEWPORT_FILL_COLOR_LIGHT);
+      var viewportFillColor:FlxColor = theme.getColor("notePreviewViewportFill", NOTE_PREVIEW_VIEWPORT_FILL_COLOR_LIGHT);
+    }
 
     state.notePreviewViewportBitmap = new BitmapData(ChartEditorState.GRID_SIZE, ChartEditorState.GRID_SIZE, true);
 
