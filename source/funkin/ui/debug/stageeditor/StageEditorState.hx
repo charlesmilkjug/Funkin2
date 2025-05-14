@@ -1523,6 +1523,9 @@ class StageEditorState extends UIState
     removeUnusedBitmaps();
   }
 
+  function resetWindowTitle():Void
+    WindowUtil.setWindowTitle('Friday Night Funkin\'');
+
   public function removeUnusedBitmaps()
   {
     var usedBitmaps:Array<String> = [];

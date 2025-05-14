@@ -6385,9 +6385,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   function resetWindowTitle():Void
-  {
     WindowUtil.setWindowTitle('Friday Night Funkin\'');
-  }
 
   /**
    * Convert a note data value into a chart editor grid column number.

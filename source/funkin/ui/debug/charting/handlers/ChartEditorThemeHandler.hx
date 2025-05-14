@@ -230,12 +230,7 @@ class ChartEditorThemeHandler
       var ticksHeight:Int = Std.int(ChartEditorState.GRID_SIZE * stepsPerMeasure);
 
       // Draw horizontal dividers between the measures.
-      var gridMeasureDividerColor:FlxColor = switch (state.currentTheme)
-      {
-        case Light: GRID_MEASURE_DIVIDER_COLOR_LIGHT;
-        case Dark: GRID_MEASURE_DIVIDER_COLOR_DARK;
-        default: GRID_MEASURE_DIVIDER_COLOR_LIGHT;
-      };
+      var gridMeasureDividerColor:FlxColor = theme.getColor("gridMeasureDivider", GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
       // Divider at top
       state.measureTickBitmap.fillRect(new Rectangle(ticksWidth, totalTicksHeight, linesWidth, GRID_MEASURE_DIVIDER_WIDTH / 2), gridMeasureDividerColor);
@@ -250,12 +245,7 @@ class ChartEditorThemeHandler
       state.measureTickBitmap.fillRect(new Rectangle(0, totalTicksHeight + bottomTickY, ticksWidth, measureTickWidth / 2), GRID_MEASURE_DIVIDER_COLOR_LIGHT);
 
       // Draw horizontal dividers between the beats, this is done inside the following loop.
-      var gridBeatDividerColor:FlxColor = switch (state.currentTheme)
-      {
-        case Light: GRID_BEAT_DIVIDER_COLOR_LIGHT;
-        case Dark: GRID_BEAT_DIVIDER_COLOR_DARK;
-        default: GRID_BEAT_DIVIDER_COLOR_LIGHT;
-      };
+      var gridBeatDividerColor:FlxColor = theme.getColor("gridBeatDivider", GRID_BEAT_DIVIDER_COLOR_LIGHT);
 
       // Draw the beat ticks and dividers, and step ticks. No need for two seperate loops thankfully.
       for (i in 1...stepsPerMeasure)
@@ -284,12 +274,7 @@ class ChartEditorThemeHandler
     previousMeasure = currentMeasure;
 
     // Finally, draw vertical dividers between the strumlines.
-    var gridStrumlineDividerColor:FlxColor = switch (state.currentTheme)
-    {
-      case Light: GRID_STRUMLINE_DIVIDER_COLOR_LIGHT;
-      case Dark: GRID_STRUMLINE_DIVIDER_COLOR_DARK;
-      default: GRID_STRUMLINE_DIVIDER_COLOR_LIGHT;
-    };
+    var gridStrumlineDividerColor:FlxColor = theme.getColor("gridStrumlineDivider", GRID_STRUMLINE_DIVIDER_COLOR_LIGHT);
 
     // Divider at 1 * (Strumline Size)
     var dividerLineAX:Float = ticksWidth + ChartEditorState.GRID_SIZE * (ChartEditorState.STRUMLINE_SIZE) - (GRID_STRUMLINE_DIVIDER_WIDTH / 2);

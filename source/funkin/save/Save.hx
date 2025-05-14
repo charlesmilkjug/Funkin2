@@ -1864,10 +1864,16 @@ typedef SaveDataStageEditorOptions =
   var ?angleStep:Float;
 
   /**
-   * Theme in the Stage Editor.
-   * @default `StageEditorTheme.Light`
+   * Theme music in the Stage Editor.
+   * @default `true`
    */
-  var ?theme:StageEditorTheme;
+  var ?themeMusic:Bool;
+
+  /**
+   * Theme in the Stage Editor.
+   * @default `Constants.DEFAULT_EDITOR_THEME`
+   */
+  var ?theme:String;
 
   /**
    * The BF character ID used in testing stages.
