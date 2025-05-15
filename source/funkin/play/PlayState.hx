@@ -919,7 +919,8 @@ class PlayState extends MusicBeatSubState
         }
       }
       else
-        Conductor.instance.update(Conductor.instance.songPosition + elapsed * 1000, false); // Normal conductor update.
+        Conductor.instance.update((FlxG.sound.music.pitch != 1) ? FlxG.sound.music.time + elapsed * 1000 : (Conductor.instance.songPosition + elapsed * 1000),
+          false); // Normal conductor update.
 
       // Conductor.instance.update(FlxG.sound?.music?.time ?? 0.0);
       // If, after updating the conductor, the instrumental has finished, end the song immediately.
