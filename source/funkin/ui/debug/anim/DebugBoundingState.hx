@@ -227,9 +227,6 @@ class DebugBoundingState extends FlxState
           txtOffsetShit.text = 'Offset: ' + swagChar?.animOffsets;
           txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
         }
-
-        txtOffsetShit.text = 'Offset: ' + swagChar.animOffsets;
-        txtOffsetShit.y = FlxG.height - 20 - txtOffsetShit.height;
       }
 
       if (FlxG.mouse.justReleased) movingCharacter = false;
@@ -252,8 +249,6 @@ class DebugBoundingState extends FlxState
 
       txtGrp.add(swagText);
     }
-
-    txtGrp.add(swagText);
 
     swagText.text = str + ": " + Std.string(value);
   }
