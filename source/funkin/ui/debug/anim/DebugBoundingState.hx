@@ -448,6 +448,22 @@ class DebugBoundingState extends FlxState
     return outputString;
   }
 
+  function buildOutputStringNew():String
+  {
+    var charData:Null<CharacterData> = Reflect.copy(swagChar?._data);
+
+    var animations = charData?.animations;
+    if (animations != null)
+    {
+      for (charDataAnim in animations)
+      {
+        var animName:String = charDataAnim.name;
+        charDataAnim.offsets = swagChar?.animationOffsets.get(animName);
+      }
+    }
+    return SerializerUtil.toJSON(charData, true);
+  }
+
   var swagChar:Null<BaseCharacter>;
 
   /*
