@@ -440,6 +440,12 @@ class PlayState extends MusicBeatSubState
   var initialized:Bool = false;
 
   /**
+   * True if we just started the playback for instrumentals.
+   * Used to make sure the time within the music is passing before updating Conductor to it.
+   */
+  var justStartedInstrumentals:Bool = false;
+
+  /**
    * A group of audio tracks, used to play the song's vocals.
    */
   public var vocals:VoicesGroup;
@@ -900,12 +906,22 @@ class PlayState extends MusicBeatSubState
       if (Constants.EXT_SOUND == 'mp3') Conductor.instance.formatOffset = Constants.MP3_DELAY_MS;
       else
         Conductor.instance.formatOffset = 0.0;
-      @:privateAccess
-      if (!FlxG.game._lostFocus && Preferences.autoPause || !Preferences.autoPause)
-        Conductor.instance.update((FlxG.sound.music.pitch != 1) ? FlxG.sound.music.time
-        + elapsed * 1000 : (Conductor.instance.songPosition + elapsed * 1000),
-        false); // Normal conductor update.
 
+      if (justStartedInstrumentals)
+      {
+        var initialStartTime:Float = Math.max(0, startTimestamp - Conductor.instance.combinedOffset);
+        var currentTime:Null<Float> = FlxG.sound?.music?.time;
+
+        if (currentTime != null && currentTime != initialStartTime)
+        {
+          Conductor.instance.update(currentTime, false);
+          justStartedInstrumentals = false;
+        }
+      }
+      else
+        Conductor.instance.update(Conductor.instance.songPosition + elapsed * 1000, false); // Normal conductor update.
+
+      // Conductor.instance.update(FlxG.sound?.music?.time ?? 0.0);
       // If, after updating the conductor, the instrumental has finished, end the song immediately.
       // This helps prevent a major bug where the level suddenly loops back to the start or middle.
       if (Conductor.instance.songPosition >= (FlxG.sound.music.endTime ?? FlxG.sound.music.length)) if (mayPauseGame) endSong(skipEndingTransition);
@@ -1422,21 +1438,22 @@ class PlayState extends MusicBeatSubState
         @:privateAccess // todo: maybe make the groups public :thinking:
         {
           vocals.playerVoices.forEachAlive((voice:FunkinSound) -> {
-            var currentRawVoiceTime:Float = voice.time + vocals.playerVoicesOffset + SoundUtil.getPlaybackDeviceDelay(voice);
+            var currentRawVoiceTime:Float = voice.time + vocals.playerVoicesOffset; // + SoundUtil.getPlaybackDeviceDelay(voice);
             if (Math.abs(currentRawVoiceTime - correctSync) > Math.abs(playerVoicesError)) playerVoicesError = currentRawVoiceTime - correctSync;
           });
 
           vocals.opponentVoices.forEachAlive((voice:FunkinSound) -> {
-            var currentRawVoiceTime:Float = voice.time + vocals.opponentVoicesOffset + SoundUtil.getPlaybackDeviceDelay(voice);
+            var currentRawVoiceTime:Float = voice.time + vocals.opponentVoicesOffset; // + SoundUtil.getPlaybackDeviceDelay(voice);
             if (Math.abs(currentRawVoiceTime - correctSync) > Math.abs(opponentVoicesError)) opponentVoicesError = currentRawVoiceTime - correctSync;
           });
         }
       }
 
+      var hardwareDelay = SoundUtil.getPlaybackDeviceDelay(FlxG.sound.music);
       if (!startingSong
-        && (Math.abs(FlxG.sound.music.time + SoundUtil.getPlaybackDeviceDelay(FlxG.sound.music) - correctSync) > 100
-          || Math.abs(playerVoicesError) > 100
-          || Math.abs(opponentVoicesError) > 100))
+        && (!FlxMath.inBounds(FlxG.sound.music.time - correctSync, -100, 100 + hardwareDelay)
+          || !FlxMath.inBounds(playerVoicesError, -100, 100 + hardwareDelay)
+          || !FlxMath.inBounds(opponentVoicesError, -100, 100 + hardwareDelay)))
       {
         trace("VOCALS NEED RESYNC");
 
@@ -1978,6 +1995,7 @@ class PlayState extends MusicBeatSubState
     FlxG.sound.music.pause();
     FlxG.sound.music.time = Math.max(0, startTimestamp - Conductor.instance.instrumentalOffset);
     FlxG.sound.music.pitch = playbackRate;
+    justStartedInstrumentals = true;
 
     // Prevent the volume from being wrong.
     FlxG.sound.music.volume = 1.0;
@@ -1988,6 +2006,8 @@ class PlayState extends MusicBeatSubState
     vocals.volume = 1.0;
     vocals.pitch = playbackRate;
     vocals.time = FlxG.sound.music.time;
+    Conductor.instance.update(FlxG.sound?.music?.time ?? 0.0);
+    // resyncVocals();
 
     FlxG.sound.music.play();
     vocals.play();
@@ -2028,12 +2048,14 @@ class PlayState extends MusicBeatSubState
     // Skip this if the music is paused (GameOver, Pause menu, start-of-song offset, etc.)
     if (!(FlxG.sound.music?.playing ?? false)) return;
 
-    var timeToPlayAt:Float = Math.min(FlxG.sound.music.length,
-      Math.max(Math.min(Conductor.instance.combinedOffset, 0), Conductor.instance.songPosition) - Conductor.instance.combinedOffset);
+    var delay:Float = SoundUtil.getPlaybackDeviceDelay(FlxG.sound.music);
+    var timeToPlayAt:Float = Math.min(FlxG.sound.music.length, Math.max(0, Conductor.instance.songPosition - Conductor.instance.combinedOffset));
     trace('Resyncing vocals to ${timeToPlayAt}');
     FlxG.sound.music.pause();
     vocals.pause();
 
+    timeToPlayAt += delay;
+    trace('With delay it\'s ${timeToPlayAt}');
     FlxG.sound.music.time = timeToPlayAt;
     FlxG.sound.music.play(false, timeToPlayAt);
 
