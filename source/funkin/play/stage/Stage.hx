@@ -40,6 +40,25 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
   function get_camZoom():Float
     return _data?.cameraZoom ?? 1.0;
 
+  /**
+   * The animation speed of objects.
+   */
+  public var animationSpeed(default, set):Float = 1.0;
+
+  function set_animationSpeed(value:Float)
+  {
+    for (member in this.members)
+    {
+      if (member?.animation == null) continue;
+      member.animation.timeScale /= this.animationSpeed;
+      member.animation.timeScale *= value;
+    }
+
+    this.animationSpeed = value;
+
+    return animationSpeed;
+  }
+
   var frameBufferMan:FrameBufferManager;
 
   /**
@@ -724,9 +743,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
   public override function kill()
   {
     _skipTransformChildren = true;
-    alive = false;
-    exists = false;
-    _skipTransformChildren = false;
+    alive = exists = _skipTransformChildren = false;
     if (group != null) group.kill();
   }
 
@@ -791,9 +808,7 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
     // Ensure all custom events get broadcast to the elements of the stage.
     // If we do it here, we don't have to add a handler to EACH script event function.
     for (bopper in boppers)
-    {
       ScriptEventDispatcher.callEvent(bopper, event);
-    }
   }
 
   public function onPause(event:PauseScriptEvent) {}

@@ -653,8 +653,7 @@ class CharSelectSubState extends MusicBeatSubState
 
   function goToFreeplay():Void
   {
-    allowInput = false;
-    autoFollow = false;
+    allowInput = autoFollow = false;
 
     for (cur in [cursor, cursorBlue, cursorDarkBlue, cursorConfirmed])
       FlxTween.tween(cur, {alpha: 0}, 0.8, {ease: FlxEase.expoOut});
@@ -914,8 +913,7 @@ class CharSelectSubState extends MusicBeatSubState
   {
     if (bopFr >= bopInfo.frames.length)
     {
-      bopRefX = 0;
-      bopRefY = 0;
+      bopRefX = bopRefY = 0;
       bopPlay = false;
       bopFr = 0;
       return;
@@ -1004,8 +1002,6 @@ class CharSelectSubState extends MusicBeatSubState
 
           if (index == curSelected)
           {
-            // memb.pixels = memb.withDropShadow.clone();
-
             if (bopPlay)
             {
               if (bopRefX == 0)
@@ -1036,7 +1032,6 @@ class CharSelectSubState extends MusicBeatSubState
           }
           else
           {
-            // memb.pixels = memb.noDropShadow.clone();
             memb.filters = null;
             memb.scale.set(2, 2);
           }

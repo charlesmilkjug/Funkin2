@@ -50,9 +50,7 @@ class MemoryUtil
    * @return Float
    */
   public static function getMemoryUsed():Float
-  {
     return openfl.system.System.totalMemoryNumber;
-  }
 
   /**
    * Enable garbage collection if it was previously disabled.

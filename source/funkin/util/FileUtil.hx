@@ -78,9 +78,7 @@ class FileUtil
 
     #if sys
     for (i in 0...protected.length)
-    {
       protected[i] = sys.FileSystem.fullPath(Path.join([gameDirectory, protected[i]]));
-    }
     #end
 
     return protected;
@@ -97,10 +95,7 @@ class FileUtil
 
   public static function get_gameDirectory():String
   {
-    if (_gameDirectory != null)
-    {
-      return _gameDirectory;
-    }
+    if (_gameDirectory != null) return _gameDirectory;
 
     return _gameDirectory = sys.FileSystem.fullPath(Path.directory(Sys.programPath()));
   }
@@ -174,10 +169,7 @@ class FileUtil
     var filter:Null<String> = convertTypeFilter(typeFilter);
     var fileDialog:FileDialog = new FileDialog();
     fileDialog.onSelect.add(onSelect);
-    if (onCancel != null)
-    {
-      fileDialog.onCancel.add(onCancel);
-    }
+    if (onCancel != null) fileDialog.onCancel.add(onCancel);
 
     fileDialog.browse(OPEN_DIRECTORY, filter, defaultPath, dialogTitle);
 
@@ -185,10 +177,7 @@ class FileUtil
     #else
     trace('WARNING: browseForDirectory not implemented for this platform');
 
-    if (onCancel != null)
-    {
-      onCancel();
-    }
+    if (onCancel != null) onCancel();
 
     return false;
     #end
@@ -207,10 +196,7 @@ class FileUtil
     var filter:Null<String> = convertTypeFilter(typeFilter);
     var fileDialog:FileDialog = new FileDialog();
     fileDialog.onSelectMultiple.add(onSelect);
-    if (onCancel != null)
-    {
-      fileDialog.onCancel.add(onCancel);
-    }
+    if (onCancel != null) fileDialog.onCancel.add(onCancel);
 
     fileDialog.browse(OPEN_MULTIPLE, filter, defaultPath, dialogTitle);
 
@@ -218,10 +204,7 @@ class FileUtil
     #else
     trace('WARNING: browseForMultipleFiles not implemented for this platform');
 
-    if (onCancel != null)
-    {
-      onCancel();
-    }
+    if (onCancel != null) onCancel();
 
     return false;
     #end
@@ -241,10 +224,7 @@ class FileUtil
     var filter:Null<String> = convertTypeFilter(typeFilter);
     var fileDialog:FileDialog = new FileDialog();
     fileDialog.onSelect.add(onSelect);
-    if (onCancel != null)
-    {
-      fileDialog.onCancel.add(onCancel);
-    }
+    if (onCancel != null) fileDialog.onCancel.add(onCancel);
 
     fileDialog.browse(SAVE, filter, defaultPath, dialogTitle);
 
@@ -252,10 +232,7 @@ class FileUtil
     #else
     trace('WARNING: browseForSaveFile not implemented for this platform');
 
-    if (onCancel != null)
-    {
-      onCancel();
-    }
+    if (onCancel != null) onCancel();
 
     return false;
     #end
@@ -273,15 +250,9 @@ class FileUtil
     #if desktop
     var filter:Null<String> = convertTypeFilter(typeFilter);
     var fileDialog:FileDialog = new FileDialog();
-    if (onSave != null)
-    {
-      fileDialog.onSave.add(onSave);
-    }
+    if (onSave != null) fileDialog.onSave.add(onSave);
 
-    if (onCancel != null)
-    {
-      fileDialog.onCancel.add(onCancel);
-    }
+    if (onCancel != null) fileDialog.onCancel.add(onCancel);
 
     fileDialog.save(data, filter, defaultFileName, dialogTitle);
 
@@ -289,15 +260,9 @@ class FileUtil
     #elseif html5
     var filter:String = defaultFileName != null ? Path.extension(defaultFileName) : null;
     var fileDialog:FileDialog = new FileDialog();
-    if (onSave != null)
-    {
-      fileDialog.onSave.add(onSave);
-    }
+    if (onSave != null) fileDialog.onSave.add(onSave);
 
-    if (onCancel != null)
-    {
-      fileDialog.onCancel.add(onCancel);
-    }
+    if (onCancel != null) fileDialog.onCancel.add(onCancel);
 
     fileDialog.save(data, filter, defaultFileName, dialogTitle);
 
@@ -305,10 +270,7 @@ class FileUtil
     #else
     trace('WARNING: saveFile not implemented for this platform');
 
-    if (onCancel != null)
-    {
-      onCancel();
-    }
+    if (onCancel != null) onCancel();
 
     return false;
     #end
@@ -331,25 +293,6 @@ class FileUtil
       var paths:Array<String> = new Array<String>();
       for (resource in resources)
       {
-        /*
-          var filePath:String = Path.join([targetPath, resource.fileName]);
-          try
-          {
-            if (resource.data == null)
-            {
-              trace('WARNING: File $filePath has no data or content. Skipping.');
-              continue;
-            }
-            else
-            {
-              writeBytesToPath(filePath, resource.data, force ? Force : Skip);
-            }
-          }
-          catch (e:Dynamic)
-          {
-            throw 'Failed to write file (probably already exists): $filePath';
-          }
-         */
         if (resource.data == null)
         {
           trace('WARNING: File ${resource.fileName} has no data or content. Skipping.');
@@ -508,9 +451,7 @@ class FileUtil
     var file = new FileReference();
 
     file.addEventListener(Event.COMPLETE, (e:Event) -> trace('Successfully wrote file: "$path"'));
-
     file.addEventListener(Event.CANCEL, (e:Event) -> trace('Cancelled writing file: "$path"'));
-
     file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> trace('IO error writing file: "$path"'));
 
     file.save(data, path);
@@ -543,10 +484,7 @@ class FileUtil
   public static function writeStringToPath(path:String, data:String, mode:FileWriteMode = Skip):Void
   {
     #if sys
-    if (directoryExists(path))
-    {
-      throw 'Target path is a directory, not a file: "$path"';
-    }
+    if (directoryExists(path)) throw 'Target path is a directory, not a file: "$path"';
 
     createDirIfNotExists(Path.directory(path));
 
@@ -555,10 +493,8 @@ class FileUtil
       case Force:
         sys.io.File.saveContent(path, data);
       case Skip:
-        if (!pathExists(path))
-        {
-          sys.io.File.saveContent(path, data);
-        }
+        if (!pathExists(path)) sys.io.File.saveContent(path, data);
+
       case Ask:
         if (pathExists(path))
         {
@@ -566,9 +502,7 @@ class FileUtil
           throw 'Entry at path already exists: $path';
         }
         else
-        {
           sys.io.File.saveContent(path, data);
-        }
     }
     #else
     throw 'Direct file writing by path is not supported on this platform.';
@@ -586,10 +520,7 @@ class FileUtil
   public static function writeBytesToPath(path:String, data:Bytes, mode:FileWriteMode = Skip):Void
   {
     #if sys
-    if (directoryExists(path))
-    {
-      throw 'Target path is a directory, not a file: "$path"';
-    }
+    if (directoryExists(path)) throw 'Target path is a directory, not a file: "$path"';
 
     var shouldWrite:Bool = true;
     switch (mode)
@@ -597,10 +528,8 @@ class FileUtil
       case Force:
         shouldWrite = true;
       case Skip:
-        if (!pathExists(path))
-        {
-          shouldWrite = true;
-        }
+        if (!pathExists(path)) shouldWrite = true;
+
       case Ask:
         if (pathExists(path))
         {
@@ -608,9 +537,7 @@ class FileUtil
           throw 'Entry at path already exists: "$path"';
         }
         else
-        {
           shouldWrite = true;
-        }
     }
 
     if (shouldWrite)
@@ -638,10 +565,7 @@ class FileUtil
       writeStringToPath(path, data, Force);
       return;
     }
-    else if (directoryExists(path))
-    {
-      throw 'Target path is a directory, not a file: "$path"';
-    }
+    else if (directoryExists(path)) throw 'Target path is a directory, not a file: "$path"';
 
     var output:Null<sys.io.FileOutput> = null;
     try
@@ -652,10 +576,7 @@ class FileUtil
     }
     catch (e:Dynamic)
     {
-      if (output != null)
-      {
-        output.close();
-      }
+      if (output != null) output.close();
 
       throw 'Failed to append to file: "$path"';
     }
@@ -674,10 +595,7 @@ class FileUtil
   public static function moveFile(path:String, destination:String):Void
   {
     #if sys
-    if (Path.extension(destination) != '')
-    {
-      destination = Path.directory(destination);
-    }
+    if (Path.extension(destination) != '') destination = Path.directory(destination);
 
     sys.FileSystem.rename(path, Path.join([destination, Path.withoutDirectory(path)]));
     #else
@@ -817,20 +735,14 @@ class FileUtil
   public static function moveDir(path:String, destination:String, ?ignore:Array<String>, strict:Bool = true):Void
   {
     #if sys
-    if (!directoryExists(path))
-    {
-      throw 'Path is not a directory: "$path"';
-    }
+    if (!directoryExists(path)) throw 'Path is not a directory: "$path"';
 
     createDirIfNotExists(destination);
     if (strict)
     {
       // Ensure the destination is empty if strict mode is enabled.
       var entries:Array<String> = readDir(destination);
-      if (entries.length > 0)
-      {
-        throw 'Destination directory "$destination" is not empty.';
-      }
+      if (entries.length > 0) throw 'Destination directory "$destination" is not empty.';
     }
 
     var stack:Array<String> = [path];
@@ -844,21 +756,13 @@ class FileUtil
       {
         var entryPath:String = Path.join([currentPath, entry]);
         if (ignore != null && ignore.contains(entryPath)) continue;
-        if (directoryExists(entryPath))
-        {
-          stack.push(entryPath);
-        }
+        if (directoryExists(entryPath)) stack.push(entryPath);
         else
-        {
           moveFile(entryPath, Path.join([destination, entry]));
-        }
       }
     }
 
-    if (readDir(path)?.length == 0)
-    {
-      deleteDir(path);
-    }
+    if (readDir(path)?.length == 0) deleteDir(path);
     #else
     throw 'Directory moving is not supported on this platform.';
     #end
@@ -875,10 +779,7 @@ class FileUtil
   public static function deleteDir(path:String, recursive:Bool = false, ?ignore:Array<String>):Void
   {
     #if sys
-    if (!directoryExists(path))
-    {
-      throw 'Path is not a valid directory: "$path"';
-    }
+    if (!directoryExists(path)) throw 'Path is not a valid directory: "$path"';
 
     if (recursive)
     {
@@ -893,21 +794,14 @@ class FileUtil
         {
           var entryPath:String = Path.join([currentPath, entry]);
           if (ignore != null && ignore.contains(entryPath)) continue;
-          if (directoryExists(entryPath))
-          {
-            stack.push(entryPath);
-          }
+          if (directoryExists(entryPath)) stack.push(entryPath);
           else
-          {
             deleteFile(entryPath);
-          }
         }
       }
     }
     else
-    {
       sys.FileSystem.deleteDirectory(path);
-    }
     #else
     throw 'Directory deletion is not supported on this platform.';
     #end
@@ -923,10 +817,7 @@ class FileUtil
   public static function getDirSize(path:String):Int
   {
     #if sys
-    if (!directoryExists(path))
-    {
-      throw 'Path is not a valid directory path: $path';
-    }
+    if (!directoryExists(path)) throw 'Path is not a valid directory path: $path';
 
     var stack:Array<String> = [path];
     var total:Int = 0;
@@ -938,14 +829,9 @@ class FileUtil
       for (entry in readDir(currentPath))
       {
         var entryPath:String = Path.join([currentPath, entry]);
-        if (directoryExists(entryPath))
-        {
-          stack.push(entryPath);
-        }
+        if (directoryExists(entryPath)) stack.push(entryPath);
         else
-        {
           total += getFileSize(entryPath);
-        }
       }
     }
 
@@ -998,27 +884,15 @@ class FileUtil
   public static function rename(path:String, newName:String, keepExtension:Bool = true):Void
   {
     #if sys
-    if (!pathExists(path))
-    {
-      throw 'Path does not exist: "$path"';
-    }
+    if (!pathExists(path)) throw 'Path does not exist: "$path"';
 
     final isDirectory:Bool = directoryExists(path);
     newName = Path.withoutDirectory(newName);
-    if (isDirectory)
-    {
-      newName = Path.withoutExtension(newName);
-    }
-    else if (keepExtension)
-    {
-      newName = Path.withExtension(newName, Path.extension(path));
-    }
+    if (isDirectory) newName = Path.withoutExtension(newName);
+    else if (keepExtension) newName = Path.withExtension(newName, Path.extension(path));
 
     newName = Path.join([Path.directory(path), newName]);
-    if (newName == path)
-    {
-      return;
-    }
+    if (newName == path) return;
 
     if (pathExists(newName))
     {
@@ -1053,10 +927,7 @@ class FileUtil
     var results:Array<Entry> = new Array<Entry>();
     for (entry in zippedEntries)
     {
-      if (entry.compressed)
-      {
-        entry.data = haxe.zip.Reader.unzip(entry);
-      }
+      if (entry.compressed) entry.data = haxe.zip.Reader.unzip(entry);
 
       results.push(entry);
     }
@@ -1068,9 +939,7 @@ class FileUtil
   {
     var results:Map<String, Entry> = new Map<String, Entry>();
     for (entry in input)
-    {
       results.set(entry.fileName, entry);
-    }
 
     return results;
   }
@@ -1119,14 +988,8 @@ class FileUtil
   {
     #if sys
     pathFolder = pathFolder.trim();
-    if (createIfNotExists)
-    {
-      createDirIfNotExists(pathFolder);
-    }
-    else if (!directoryExists(pathFolder))
-    {
-      throw 'Path is not a directory: "$pathFolder"';
-    }
+    if (createIfNotExists) createDirIfNotExists(pathFolder);
+    else if (!directoryExists(pathFolder)) throw 'Path is not a directory: "$pathFolder"';
 
     #if windows
     Sys.command('explorer', [pathFolder.replace('/', '\\')]);
@@ -1155,10 +1018,7 @@ class FileUtil
   {
     #if sys
     path = path.trim();
-    if (!pathExists(path))
-    {
-      throw 'Path does not exist: "$path"';
-    }
+    if (!pathExists(path)) throw 'Path does not exist: "$path"';
 
     #if windows
     Sys.command('explorer', ['/select,', path.replace('/', '\\')]);
@@ -1180,9 +1040,7 @@ class FileUtil
     {
       var filters:Array<String> = new Array<String>();
       for (type in typeFilter)
-      {
         filters.push(type.extension.replace('*.', '').replace(';', ','));
-      }
 
       filter = filters.join(';');
     }
@@ -1216,16 +1074,11 @@ class FileUtilSandboxed
       #end
     }
 
-    if (path.contains(':'))
-    {
-      path = path.substring(path.lastIndexOf(':') + 1);
-    }
+    if (path.contains(':')) path = path.substring(path.lastIndexOf(':') + 1);
 
     path = path.replace('\\', '/');
     while (path.contains('//'))
-    {
       path = path.replace('//', '/');
-    }
 
     final parts:Array<String> = FileUtil.INVALID_CHARS.replace(path, '').split('/');
     final sanitized:Array<String> = new Array<String>();
@@ -1254,10 +1107,7 @@ class FileUtilSandboxed
     #if sys
     // TODO: figure out how to get "real" path of symlinked paths
     final realPath:String = sys.FileSystem.fullPath(Path.join([FileUtil.gameDirectory, sanitized.join('/')]));
-    if (!realPath.startsWith(FileUtil.gameDirectory))
-    {
-      return FileUtil.gameDirectory;
-    }
+    if (!realPath.startsWith(FileUtil.gameDirectory)) return FileUtil.gameDirectory;
 
     return realPath;
     #else
@@ -1275,10 +1125,7 @@ class FileUtilSandboxed
     if (sanitizeFirst) path = sanitizePath(path);
     @:privateAccess for (protected in FileUtil.PROTECTED_PATHS)
     {
-      if (path == protected || (protected.contains('*') && path.startsWith(protected.substring(0, protected.indexOf('*')))))
-      {
-        return true;
-      }
+      if (path == protected || (protected.contains('*') && path.startsWith(protected.substring(0, protected.indexOf('*'))))) return true;
     }
 
     return false;
@@ -1295,57 +1142,39 @@ class FileUtilSandboxed
 
   public static function browseForBinaryFile(dialogTitle:String, ?typeFilter:Array<FileDialogExtensionInfo>, onSelect:(SelectedFileInfo) -> Void,
       ?onCancel:() -> Void)
-  {
     FileUtil.browseForBinaryFile(dialogTitle, typeFilter, onSelect, onCancel);
-  }
 
   public static function browseForTextFile(dialogTitle:String, ?typeFilter:Array<FileDialogExtensionInfo>, onSelect:(SelectedFileInfo) -> Void,
       ?onCancel:() -> Void):Void
-  {
     FileUtil.browseForTextFile(dialogTitle, typeFilter, onSelect, onCancel);
-  }
 
   public static function browseForDirectory(?typeFilter:Array<FileFilter>, onSelect:(String) -> Void, ?onCancel:() -> Void, ?defaultPath:String,
       ?dialogTitle:String):Bool
-  {
     return FileUtil.browseForDirectory(typeFilter, onSelect, onCancel, defaultPath, dialogTitle);
-  }
 
   public static function browseForMultipleFiles(?typeFilter:Array<FileFilter>, onSelect:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String,
       ?dialogTitle:String):Bool
-  {
     return FileUtil.browseForMultipleFiles(typeFilter, onSelect, onCancel, defaultPath, dialogTitle);
-  }
 
   public static function browseForSaveFile(?typeFilter:Array<FileFilter>, onSelect:(String) -> Void, ?onCancel:() -> Void, ?defaultPath:String,
       ?dialogTitle:String):Bool
-  {
     return FileUtil.browseForSaveFile(typeFilter, onSelect, onCancel, defaultPath, dialogTitle);
-  }
 
   public static function saveFile(data:Bytes, ?typeFilter:Array<FileFilter>, ?onSave:(String) -> Void, ?onCancel:() -> Void, ?defaultFileName:String,
       ?dialogTitle:String):Bool
-  {
     return FileUtil.saveFile(data, typeFilter, onSave, onCancel, defaultFileName, dialogTitle);
-  }
 
   public static function saveMultipleFiles(resources:Array<Entry>, ?onSaveAll:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String,
       force:Bool = false):Bool
-  {
     return FileUtil.saveMultipleFiles(resources, onSaveAll, onCancel, defaultPath, force);
-  }
 
   public static function saveFilesAsZIP(resources:Array<Entry>, ?onSave:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String,
       force:Bool = false):Bool
-  {
     return FileUtil.saveFilesAsZIP(resources, onSave, onCancel, defaultPath, force);
-  }
 
   public static function saveChartAsFNFC(resources:Array<Entry>, ?onSave:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String,
       force:Bool = false):Bool
-  {
     return FileUtil.saveChartAsFNFC(resources, onSave, onCancel, defaultPath, force);
-  }
 
   public static function saveFilesAsZIPToPath(resources:Array<Entry>, path:String, mode:FileWriteMode = Skip):Bool
   {
@@ -1354,29 +1183,19 @@ class FileUtilSandboxed
   }
 
   public static function readStringFromPath(path:String):String
-  {
     return FileUtil.readStringFromPath(sanitizePath(path));
-  }
 
   public static function readBytesFromPath(path:String):Bytes
-  {
     return FileUtil.readBytesFromPath(sanitizePath(path));
-  }
 
   public static function browseFileReference(callback:(FileReference) -> Void):Void
-  {
     FileUtil.browseFileReference(callback);
-  }
 
   public static function writeFileReference(path:String, data:String):Void
-  {
     FileUtil.writeFileReference(path, data);
-  }
 
   public static function readJSONFromPath(path:String):Dynamic
-  {
     return FileUtil.readJSONFromPath(sanitizePath(path));
-  }
 
   public static function writeStringToPath(path:String, data:String, mode:FileWriteMode = Skip):Void
   {
@@ -1410,34 +1229,22 @@ class FileUtilSandboxed
   }
 
   public static function getFileSize(path:String):Int
-  {
     return FileUtil.getFileSize(sanitizePath(path));
-  }
 
   public static function pathExists(path:String):Bool
-  {
     return FileUtil.pathExists(sanitizePath(path));
-  }
 
   public static function fileExists(path:String):Bool
-  {
     return FileUtil.fileExists(sanitizePath(path));
-  }
 
   public static function directoryExists(path:String):Bool
-  {
     return FileUtil.directoryExists(sanitizePath(path));
-  }
 
   public static function createDirIfNotExists(dir:String):Void
-  {
     FileUtil.createDirIfNotExists(sanitizePath(dir));
-  }
 
   public static function readDir(path:String):Array<String>
-  {
     return FileUtil.readDir(sanitizePath(path));
-  }
 
   public static function moveDir(path:String, destination:String, ?ignore:Array<String>, strict:Bool = true):Void
   {
@@ -1453,14 +1260,10 @@ class FileUtilSandboxed
   }
 
   public static function getDirSize(path:String):Int
-  {
     return FileUtil.getDirSize(sanitizePath(path));
-  }
 
   public static function getTempDir():Null<String>
-  {
     return FileUtil.getTempDir();
-  }
 
   public static function rename(path:String, newName:String, keepExtension:Bool = true):Void
   {
@@ -1469,39 +1272,25 @@ class FileUtilSandboxed
   }
 
   public static function createZIPFromEntries(entries:Array<Entry>):Bytes
-  {
     return FileUtil.createZIPFromEntries(entries);
-  }
 
   public static function readZIPFromBytes(input:Bytes):Array<Entry>
-  {
     return FileUtil.readZIPFromBytes(input);
-  }
 
   public static function mapZIPEntriesByName(input:Array<Entry>):Map<String, Entry>
-  {
     return FileUtil.mapZIPEntriesByName(input);
-  }
 
   public static function makeZIPEntry(name:String, content:String):Entry
-  {
     return FileUtil.makeZIPEntry(name, content);
-  }
 
   public static function makeZIPEntryFromBytes(name:String, data:haxe.io.Bytes):Entry
-  {
     return FileUtil.makeZIPEntryFromBytes(name, data);
-  }
 
   public static function openFolder(pathFolder:String, createIfNotExists:Bool = true):Void
-  {
     FileUtil.openFolder(sanitizePath(pathFolder), createIfNotExists);
-  }
 
   public static function openSelectFile(path:String):Void
-  {
     FileUtil.openSelectFile(sanitizePath(path));
-  }
 }
 
 enum FileWriteMode

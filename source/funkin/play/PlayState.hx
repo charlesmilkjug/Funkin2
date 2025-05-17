@@ -688,6 +688,9 @@ class PlayState extends MusicBeatSubState
     {
       initStage();
       initCharacters();
+
+      // Set animation speed AFTER initializing the characters, so that their animation speeds get updated too.
+      currentStage.animationSpeed = playbackRate;
     }
     else
       initMinimalMode();
@@ -809,8 +812,7 @@ class PlayState extends MusicBeatSubState
 
       var fromDeathState = isPlayerDying;
 
-      persistentUpdate = true;
-      persistentDraw = true;
+      persistentUpdate = persistentDraw = true;
 
       startingSong = true;
       isPlayerDying = false;
@@ -839,16 +841,18 @@ class PlayState extends MusicBeatSubState
       vocals.playerVolume = 1;
       vocals.opponentVolume = 1;
 
-      if (currentStage != null) currentStage.resetStage();
-
-      if (!fromDeathState)
+      if (currentStage != null)
       {
-        playerStrumline.vwooshNotes();
-        opponentStrumline.vwooshNotes();
+        currentStage.resetStage();
+        currentStage.animationSpeed = playbackRate;
       }
 
-      playerStrumline.clean();
-      opponentStrumline.clean();
+      for (strumline in [playerStrumline, opponentStrumline])
+      {
+        if (!fromDeathState) strumline.vwooshNotes();
+
+        strumline.clean();
+      }
 
       // Delete all notes and reset the arrays.
       regenNoteData();
@@ -866,11 +870,11 @@ class PlayState extends MusicBeatSubState
       Highscore.tallies.combo = 0;
       // timer for vwoosh
       vwooshTimer.start(0.5, (t:FlxTimer) -> {
-        if (playerStrumline.notes.length == 0) playerStrumline.updateNotes();
-        if (opponentStrumline.notes.length == 0) opponentStrumline.updateNotes();
-
-        playerStrumline.vwooshInNotes();
-        opponentStrumline.vwooshInNotes();
+        for (strumline in [playerStrumline, opponentStrumline])
+        {
+          if (strumline.notes.length == 0) strumline.updateNotes();
+          strumline.vwooshInNotes();
+        }
 
         Countdown.performCountdown();
       });
@@ -919,8 +923,7 @@ class PlayState extends MusicBeatSubState
         }
       }
       else
-        Conductor.instance.update((FlxG.sound.music.pitch != 1) ? FlxG.sound.music.time + elapsed * 1000 : (Conductor.instance.songPosition + elapsed * 1000),
-          false); // Normal conductor update.
+        Conductor.instance.update(Conductor.instance.songPosition + elapsed * 1000 * playbackRate, false); // Normal conductor update.
 
       // Conductor.instance.update(FlxG.sound?.music?.time ?? 0.0);
       // If, after updating the conductor, the instrumental has finished, end the song immediately.

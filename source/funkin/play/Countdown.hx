@@ -149,9 +149,7 @@ class Countdown
    * If you want to call this from a module, it's better to use the event system and cancel the onCountdownStep event.
    */
   public static function pauseCountdown():Void
-  {
     if (countdownTimer != null && !countdownTimer.finished) countdownTimer.active = false;
-  }
 
   /**
    * Resumes the countdown at the current step. Only makes sense if you called pauseCountdown() first.
@@ -159,9 +157,7 @@ class Countdown
    * If you want to call this from a module, it's better to use the event system and cancel the onCountdownStep event.
    */
   public static function resumeCountdown():Void
-  {
     if (countdownTimer != null && !countdownTimer.finished) countdownTimer.active = true;
-  }
 
   /**
    * Stops the countdown at the current step. You will have to restart it again later.
@@ -204,9 +200,7 @@ class Countdown
    * Resets the countdown. Only works if it's already running.
    */
   public static function resetCountdown()
-  {
     if (countdownTimer != null) countdownTimer.reset();
-  }
 
   /**
    * Reset the countdown configuration to the default.
