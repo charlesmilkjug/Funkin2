@@ -148,8 +148,6 @@ class BaseCharacter extends Bopper
 
     this.characterId = id;
 
-    ignoreExclusionPref = ["sing"];
-
     _data = CharacterDataParser.fetchCharacterData(this.characterId);
     if (_data == null) throw 'Could not find character data for characterId: $characterId';
     else if (_data.renderType != renderType) throw 'Render type mismatch for character ($characterId): expected ${renderType}, got ${_data.renderType}';
