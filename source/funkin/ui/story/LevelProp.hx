@@ -31,9 +31,7 @@ class LevelProp extends Bopper
   }
 
   public function playConfirm():Void
-  {
     if (hasAnimation('confirm')) playAnimation('confirm', true, true);
-  }
 
   function applyData():Void
   {
@@ -43,9 +41,7 @@ class LevelProp extends Bopper
       return;
     }
     else
-    {
       this.visible = true;
-    }
 
     // Reset animation state.
     this.shouldAlternate = null;
@@ -81,9 +77,7 @@ class LevelProp extends Bopper
 
     FlxAnimationUtil.addAtlasAnimations(this, propData.animations);
     for (propAnim in propData.animations)
-    {
       this.setAnimationOffsets(propAnim.name, propAnim.offsets[0], propAnim.offsets[1]);
-    }
 
     this.dance();
     this.animation.paused = true;

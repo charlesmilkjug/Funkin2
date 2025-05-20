@@ -32,14 +32,9 @@ class LevelTitle extends FlxSpriteGroup
   {
     if (length == 0) return 0;
 
-    if (lock.visible)
-    {
-      return title.width + lock.width + LOCK_PAD;
-    }
+    if (lock.visible) return title.width + lock.width + LOCK_PAD;
     else
-    {
       return title.width;
-    }
   }
 
   public var isFlashing:Bool = false;

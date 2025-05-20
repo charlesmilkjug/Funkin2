@@ -23,10 +23,7 @@ class Level implements IRegistryEntry<LevelData>
     this.id = id;
     _data = _fetchData(id);
 
-    if (_data == null)
-    {
-      throw 'Could not parse level data for id: $id';
-    }
+    if (_data == null) throw 'Could not parse level data for id: $id';
   }
 
   /**
@@ -87,9 +84,7 @@ class Level implements IRegistryEntry<LevelData>
    * @return Whether this level is unlocked
    */
   public function isUnlocked():Bool
-  {
     return true;
-  }
 
   /**
    * Whether this level is visible. If not, it will not be shown on the menu at all.
@@ -98,9 +93,7 @@ class Level implements IRegistryEntry<LevelData>
    * @return Whether this level is visible in the menu
    */
   public function isVisible():Bool
-  {
     return _data.visible;
-  }
 
   /**
    * Build a sprite for the background of the level.
@@ -127,9 +120,7 @@ class Level implements IRegistryEntry<LevelData>
    * @return Whether the background is a simple color
    */
   public function isBackgroundSimple():Bool
-  {
     return _data.background.startsWith('#');
-  }
 
   /**
    * Returns true if the background is a solid color.
@@ -137,9 +128,7 @@ class Level implements IRegistryEntry<LevelData>
    * @return The background as a simple color. May not be valid if `isBackgroundSimple` returns false.
    */
   public function getBackgroundColor():FlxColor
-  {
     return FlxColor.fromString(_data.background);
-  }
 
   /**
    * The list of difficulties the player can select from for this level.
@@ -158,9 +147,7 @@ class Level implements IRegistryEntry<LevelData>
     {
       // Don't display alternate characters in Story Mode. Only show `default` and `erect` variations.
       for (difficulty in firstSong.listDifficulties([Constants.DEFAULT_VARIATION, 'erect'], false, false))
-      {
         difficulties.push(difficulty);
-      }
     }
 
     // Sort in a specific order! Fall back to alphabetical.
@@ -176,10 +163,7 @@ class Level implements IRegistryEntry<LevelData>
 
       for (difficulty in difficulties)
       {
-        if (!song.hasDifficulty(difficulty, [Constants.DEFAULT_VARIATION, 'erect']))
-        {
-          difficulties.remove(difficulty);
-        }
+        if (!song.hasDifficulty(difficulty, [Constants.DEFAULT_VARIATION, 'erect'])) difficulties.remove(difficulty);
       }
     }
 
@@ -201,9 +185,7 @@ class Level implements IRegistryEntry<LevelData>
 
     var hiddenProps:Array<LevelProp> = props.splice(_data.props.length - 1, props.length - 1);
     for (hiddenProp in hiddenProps)
-    {
       hiddenProp.visible = false;
-    }
 
     for (propIndex in 0..._data.props.length)
     {
@@ -215,10 +197,7 @@ class Level implements IRegistryEntry<LevelData>
       if (existingProp != null)
       {
         existingProp.propData = propData;
-        if (existingProp.propData == null)
-        {
-          existingProp.visible = false;
-        }
+        if (existingProp.propData == null) existingProp.visible = false;
         else
         {
           existingProp.visible = true;

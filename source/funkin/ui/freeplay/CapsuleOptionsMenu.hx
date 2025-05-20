@@ -42,14 +42,14 @@ class CapsuleOptionsMenu extends FlxSpriteGroup
     capsuleMenuBG.animation.addByPrefix('open', 'open0', 24, false);
 
     currentOption = new FlxText(0, 36, capsuleMenuBG.width, '');
-    currentOption.setFormat('VCR OSD Mono', 40, FlxTextAlign.CENTER, true);
+    currentOption.setFormat(Paths.font("vcr.ttf"), 40, FlxTextAlign.CENTER, true);
 
     final PAD = 4;
     leftArrow = new OptionSelector(parent, PAD, 30, false, parent.getControls());
     rightArrow = new OptionSelector(parent, capsuleMenuBG.width - leftArrow.width - PAD, 30, true, parent.getControls());
 
     var label:FlxText = new FlxText(0, 5, capsuleMenuBG.width, labelText);
-    label.setFormat('VCR OSD Mono', 24, FlxTextAlign.CENTER, true);
+    label.setFormat(Paths.font("vcr.ttf"), 24, FlxTextAlign.CENTER, true);
 
     add(capsuleMenuBG);
     add(leftArrow);
@@ -57,9 +57,7 @@ class CapsuleOptionsMenu extends FlxSpriteGroup
     add(label);
     add(currentOption);
 
-    capsuleMenuBG.animation.finishCallback = (_) -> {
-      capsuleMenuBG.animation.play('idle', true);
-    };
+    capsuleMenuBG.animation.finishCallback = (_) -> .animation.play('idle', true);
     capsuleMenuBG.animation.play('open', true);
   }
 
@@ -125,14 +123,13 @@ class CapsuleOptionsMenu extends FlxSpriteGroup
    * Override this with `capsuleOptionsMenu.onConfirm = myFunction;`
    */
   public dynamic function onConfirm(targetOption:String):Void
-  {
     throw 'onConfirm not implemented!';
-  }
 }
 
 /**
  * The difficulty selector arrows to the left and right of the difficulty.
  */
+@:nullSafety
 class OptionSelector extends FunkinSprite
 {
   var controls:Controls;
@@ -142,7 +139,7 @@ class OptionSelector extends FunkinSprite
 
   var baseScale:Float = 0.6;
 
-  public var moveShitDownTimer:FlxTimer;
+  public var moveShitDownTimer:Null<FlxTimer> = null;
 
   public function new(parent:FreeplayState, x:Float, y:Float, flipped:Bool, controls:Controls)
   {
@@ -152,11 +149,11 @@ class OptionSelector extends FunkinSprite
 
     this.controls = controls;
 
+    whiteShader = new PureColor(FlxColor.WHITE);
+
     frames = Paths.getSparrowAtlas('freeplay/freeplaySelector');
     animation.addByPrefix('shine', 'arrow pointer loop', 24);
     animation.play('shine');
-
-    whiteShader = new PureColor(FlxColor.WHITE);
 
     shader = whiteShader;
 

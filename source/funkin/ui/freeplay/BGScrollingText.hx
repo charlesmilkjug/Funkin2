@@ -6,6 +6,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxSort;
 
 // its kinda like marqeee html lol!
+@:nullSafety
 class BGScrollingText extends FlxSpriteGroup
 {
   var grpTexts:FlxTypedSpriteGroup<FlxText>;
@@ -21,15 +22,15 @@ class BGScrollingText extends FlxSpriteGroup
   {
     super(x, y);
 
-    this.widthShit = widthShit;
-    if (size != null) this.size = size;
-
     grpTexts = new FlxTypedSpriteGroup<FlxText>();
     add(grpTexts);
 
+    this.widthShit = widthShit;
+    if (size != null) this.size = size;
+
     var testText:FlxText = new FlxText(0, 0, 0, text, this.size);
     testText.font = Paths.font("5by7.ttf");
-    testText.bold = bold;
+    testText.bold = bold ?? false;
     testText.updateHitbox();
     grpTexts.add(testText);
 
@@ -40,7 +41,7 @@ class BGScrollingText extends FlxSpriteGroup
       var coolText:FlxText = new FlxText(((i + 1) * testText.frameWidth) + ((i + 1) * 20), 0, 0, text, this.size);
 
       coolText.font = Paths.font("5by7.ttf");
-      coolText.bold = bold;
+      coolText.bold = bold ?? false;
       coolText.updateHitbox();
       grpTexts.add(coolText);
     }
@@ -64,6 +65,7 @@ class BGScrollingText extends FlxSpriteGroup
   {
     for (txt in grpTexts.group)
     {
+      if (txt == null) continue;
       txt.x -= 1 * (speed * (elapsed / (1 / 60)));
 
       if (speed > 0)

@@ -20,10 +20,7 @@ class PlayableCharacter implements IRegistryEntry<PlayerData>
     this.id = id;
     _data = _fetchData(id);
 
-    if (_data == null)
-    {
-      throw 'Could not parse playable character data for id: $id';
-    }
+    if (_data == null) throw 'Could not parse playable character data for id: $id';
   }
 
   /**
@@ -40,25 +37,18 @@ class PlayableCharacter implements IRegistryEntry<PlayerData>
    * @return The list of associated character IDs
    */
   public function getOwnedCharacterIds():Array<String>
-  {
     return _data?.ownedChars ?? [];
-  }
 
   /**
    * Return `true` if, when this character is selected in Freeplay,
    * songs unassociated with a specific character should appear.
    */
   public function shouldShowUnownedChars():Bool
-  {
     return _data?.showUnownedChars ?? false;
-  }
 
   public function shouldShowCharacter(id:String):Bool
   {
-    if (getOwnedCharacterIds().contains(id))
-    {
-      return true;
-    }
+    if (getOwnedCharacterIds().contains(id)) return true;
 
     if (shouldShowUnownedChars())
     {
@@ -70,19 +60,13 @@ class PlayableCharacter implements IRegistryEntry<PlayerData>
   }
 
   public function getStickerPackID():String
-  {
     return _data?.stickerPack ?? Constants.DEFAULT_STICKER_PACK;
-  }
 
   public function getFreeplayStyleID():String
-  {
     return _data?.freeplayStyle ?? Constants.DEFAULT_FREEPLAY_STYLE;
-  }
 
   public function getFreeplayDJData():Null<PlayerFreeplayDJData>
-  {
     return _data?.freeplayDJ;
-  }
 
   public function getFreeplayDJText(index:Int):String
   {
@@ -91,9 +75,7 @@ class PlayableCharacter implements IRegistryEntry<PlayerData>
   }
 
   public function getCharSelectData():Null<PlayerCharSelectData>
-  {
     return _data?.charSelect;
-  }
 
   /**
    * @param rank Which rank to get info for
@@ -101,10 +83,7 @@ class PlayableCharacter implements IRegistryEntry<PlayerData>
    */
   public function getResultsAnimationDatas(rank:ScoringRank):Array<PlayerResultsAnimationData>
   {
-    if (_data == null || _data.results == null)
-    {
-      return [];
-    }
+    if (_data == null || _data.results == null) return [];
 
     switch (rank)
     {
@@ -148,7 +127,5 @@ class PlayableCharacter implements IRegistryEntry<PlayerData>
    * Returns whether this character is unlocked.
    */
   public function isUnlocked():Bool
-  {
     return _data?.unlocked ?? true;
-  }
 }

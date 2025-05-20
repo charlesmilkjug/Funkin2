@@ -12,13 +12,14 @@ import flixel.tweens.FlxTween;
 import openfl.display.BlendMode;
 import flixel.util.FlxColor;
 
+@:nullSafety
 class CapsuleText extends FlxSpriteGroup
 {
   public var blurredText:FlxText;
 
   var whiteText:FlxText;
 
-  public var text(default, set):String;
+  public var text(default, set):Null<String>;
 
   var maskShaderSongName:LeftMaskShader = new LeftMaskShader();
 
@@ -35,9 +36,9 @@ class CapsuleText extends FlxSpriteGroup
   {
     super(x, y);
 
-    blurredText = initText(songTitle, size);
+    blurredText = CapsuleText.initText(songTitle, size);
     blurredText.shader = new GaussianBlurShader(1);
-    whiteText = initText(songTitle, size);
+    whiteText = CapsuleText.initText(songTitle, size);
     // whiteText.shader = new GaussianBlurShader(0.3);
     text = songTitle;
 
@@ -47,7 +48,7 @@ class CapsuleText extends FlxSpriteGroup
     add(whiteText);
   }
 
-  function initText(songTitle, size:Float):FlxText
+  static function initText(songTitle:String, size:Float):FlxText
   {
     var text:FlxText = new FlxText(0, 0, 0, songTitle, Std.int(size));
     text.font = Paths.font("5by7.ttf");
@@ -81,6 +82,7 @@ class CapsuleText extends FlxSpriteGroup
   function checkClipWidth(?wid:Int):Void
   {
     if (wid == null) wid = clipWidth;
+    if (whiteText == null || blurredText == null) return;
 
     if (whiteText.width > wid)
     {
@@ -93,7 +95,9 @@ class CapsuleText extends FlxSpriteGroup
     {
       tooLong = false;
 
+      @:nullSafety(Off)
       blurredText.clipRect = null;
+      @:nullSafety(Off)
       whiteText.clipRect = null;
     }
   }
@@ -118,13 +122,11 @@ class CapsuleText extends FlxSpriteGroup
   }
 
   var moveTimer:FlxTimer = new FlxTimer();
-  var moveTween:FlxTween;
+  var moveTween:Null<FlxTween>;
 
   public function initMove():Void
   {
-    moveTimer.start(0.6, (timer) -> {
-      moveTextRight();
-    });
+    moveTimer.start(0.6, (timer) -> moveTextRight());
   }
 
   function moveTextRight():Void
@@ -173,7 +175,7 @@ class CapsuleText extends FlxSpriteGroup
   }
 
   var flickerState:Bool = false;
-  var flickerTimer:FlxTimer;
+  var flickerTimer:Null<FlxTimer>;
 
   public function flickerText():Void
   {
