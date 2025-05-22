@@ -209,9 +209,7 @@ class FlxFilteredSprite extends FlxSprite
   }
 
   override public function destroy()
-  {
     super.destroy();
-  }
 }
 
 @:noCompletion

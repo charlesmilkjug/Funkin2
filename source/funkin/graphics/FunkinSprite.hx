@@ -199,9 +199,7 @@ class FunkinSprite extends FlxSprite
    * @return Whether the texture is cached.
    */
   public static function isTextureCached(key:String):Bool
-  {
     return FlxG.bitmap.get(key) != null;
-  }
 
   /**
    * Ensure the texture with the given key is cached.
@@ -223,10 +221,7 @@ class FunkinSprite extends FlxSprite
 
     // Else, texture is currently uncached.
     var graphic:FlxGraphic = FlxGraphic.fromAssetKey(key, false, null, true);
-    if (graphic == null)
-    {
-      FlxG.log.warn('Failed to cache graphic: $key');
-    }
+    if (graphic == null) FlxG.log.warn('Failed to cache graphic: $key');
     else
     {
       trace('Successfully cached graphic: $key');
@@ -236,9 +231,7 @@ class FunkinSprite extends FlxSprite
   }
 
   public static function cacheSparrow(key:String):Void
-  {
     cacheTexture(Paths.image(key));
-  }
 
   public static function cachePacker(key:String):Void
     cacheTexture(Paths.image(key));

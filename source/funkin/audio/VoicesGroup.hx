@@ -95,14 +95,10 @@ class VoicesGroup extends SoundGroup
   }
 
   public function getPlayerVoice(index:Int = 0):Null<FunkinSound>
-  {
     return playerVoices.members[index];
-  }
 
   public function getOpponentVoice(index:Int = 0):Null<FunkinSound>
-  {
     return opponentVoices.members[index];
-  }
 
   public function getPlayerVoiceWaveform():Null<WaveformData>
   {
@@ -140,8 +136,8 @@ class VoicesGroup extends SoundGroup
 
   public override function clear():Void
   {
-    playerVoices.clear();
-    opponentVoices.clear();
+    for (voices in [playerVoices, opponentVoices])
+      voices.clear();
     super.clear();
   }
 

@@ -45,9 +45,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     if (_onVolumeChanged == null)
     {
       _onVolumeChanged = new FlxTypedSignal<Float->Void>();
-      FlxG.sound.volumeHandler = (volume:Float) -> {
-        _onVolumeChanged.dispatch(volume);
-      }
+      FlxG.sound.volumeHandler = (volume:Float) -> _onVolumeChanged.dispatch(volume);
     }
     return _onVolumeChanged;
   }
@@ -423,14 +421,9 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     // Sets `exists = true` as a side effect.
     sound.loadEmbedded(embeddedSound, looped, autoDestroy, onComplete);
 
-    if (embeddedSound is String)
-    {
-      sound._label = embeddedSound;
-    }
+    if (embeddedSound is String) sound._label = embeddedSound;
     else
-    {
       sound._label = 'unknown';
-    }
 
     if (autoPlay) sound.play();
     sound.volume = volume;
@@ -580,9 +573,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
    * Produces a string representation suitable for debugging.
    */
   public override function toString():String
-  {
     return 'FunkinSound(${this._label})';
-  }
 }
 
 /**

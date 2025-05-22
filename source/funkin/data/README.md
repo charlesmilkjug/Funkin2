@@ -18,4 +18,3 @@ The properties of these anonymous structures can have their behavior changed wit
   - Make sure to provide the FULLY QUALIFIED path to the custom function.
 - `@:jcustomwrite`: Provide a custom function for serializing the property into a string for storage as JSON.
   - Functions must be of the signature `(T) -> String`, where `T` is the type of the property.
-

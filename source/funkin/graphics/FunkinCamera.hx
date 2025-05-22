@@ -55,15 +55,14 @@ class FunkinCamera extends FlxCamera
     super(x, y, width, height, zoom);
     this.id = id;
 
-    if(Lib.current.stage.context3D != null)
+    if (Lib.current.stage.context3D != null)
     {
       bgTexture = pickTexture(width, height);
       bgBitmap = FixedBitmapData.fromTexture(bgTexture);
     }
     else
-    {
       bgBitmap = new BitmapData(width, height);
-    }
+
     bgFrame = new FlxFrame(new FlxGraphic('', null));
     bgFrame.parent.bitmap = bgBitmap;
     bgFrame.frame = new FlxRect();
@@ -109,21 +108,16 @@ class FunkinCamera extends FlxCamera
 
   function squashTo(bitmap:BitmapData, applyFilters:Bool, isolate:Bool, clearScreen:Bool = false):Void
   {
-    if (applyFilters && isolate)
-    {
-      FlxG.log.error('cannot apply filters while isolating!');
-    }
-    if (filtersApplied && applyFilters)
-    {
-      FlxG.log.warn('filters already applied!');
-    }
+    if (applyFilters && isolate) FlxG.log.error('cannot apply filters while isolating!');
+
+    if (filtersApplied && applyFilters) FlxG.log.warn('filters already applied!');
+
     static final matrix = new FlxMatrix();
 
     // resize the background bitmap if needed
     if (bgBitmap.width != width || bgBitmap.height != height)
     {
-      if(Lib.current.stage.context3D != null)
-        BitmapDataUtil.resizeTexture(bgTexture, width, height);
+      if (Lib.current.stage.context3D != null) BitmapDataUtil.resizeTexture(bgTexture, width, height);
 
       bgBitmap.__resize(width, height);
       bgFrame.parent.bitmap = bgBitmap;
@@ -212,9 +206,7 @@ class FunkinCamera extends FlxCamera
       applyFilter(customBlendFilter);
     }
     else
-    {
       super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
-    }
   }
 
   override function destroy():Void
@@ -256,18 +248,15 @@ class FunkinCamera extends FlxCamera
   {
     trace('disposing textures');
     for (bitmap in grabbed)
-    {
       bitmap.dispose();
-    }
+
     grabbed.clear();
     for (texture in texturePool)
-    {
       texture.dispose();
-    }
+
     texturePool.resize(0);
 
-    if(Lib.current.stage.context3D != null)
-      bgTexture.dispose();
+    if (Lib.current.stage.context3D != null) bgTexture.dispose();
 
     bgBitmap.dispose();
   }

@@ -56,10 +56,7 @@ class FlxVideo extends FunkinSprite
    */
   public function pauseVideo():Void
   {
-    if (netStream != null)
-    {
-      netStream.pause();
-    }
+    if (netStream != null) netStream.pause();
   }
 
   /**
@@ -68,10 +65,7 @@ class FlxVideo extends FunkinSprite
   public function resumeVideo():Void
   {
     // Resume playing the video.
-    if (netStream != null)
-    {
-      netStream.resume();
-    }
+    if (netStream != null) netStream.resume();
   }
 
   var videoAvailable:Bool = false;
@@ -100,10 +94,7 @@ class FlxVideo extends FunkinSprite
   public function restartVideo():Void
   {
     // Seek to the beginning of the video.
-    if (netStream != null)
-    {
-      netStream.seek(0);
-    }
+    if (netStream != null) netStream.seek(0);
   }
 
   /**
@@ -154,12 +145,8 @@ class FlxVideo extends FunkinSprite
   }
 
   function onVolumeChanged(volume:Float):Void
-  {
     netStream.soundTransform = new SoundTransform(volume);
-  }
 
   function onNetConnectionNetStatus(event:NetStatusEvent):Void
-  {
     if (event.info.code == 'NetStream.Play.Complete') finishVideo();
-  }
 }

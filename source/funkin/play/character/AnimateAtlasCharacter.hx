@@ -336,10 +336,8 @@ class AnimateAtlasCharacter extends BaseCharacter
   public override function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, Camera:FlxCamera = null):Bool
   {
     var result:Bool = false;
-    if (this.mainSprite != null && this.mainSprite.exists && this.mainSprite.visible)
-    {
-      result = this.mainSprite.pixelsOverlapPoint(point, Mask, Camera);
-    }
+    if (this.mainSprite != null && this.mainSprite.exists && this.mainSprite.visible) result = this.mainSprite.pixelsOverlapPoint(point, Mask, Camera);
+
     return result;
   }
 

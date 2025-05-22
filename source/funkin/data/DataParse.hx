@@ -84,9 +84,7 @@ class DataParse
    * @return The value of the property.
    */
   public static function dynamicValue(json:Json, name:String):Dynamic
-  {
     return Tools.getValue(json);
-  }
 
   /**
    * Parser which outputs a `Either<Array<LegacyNoteSection>, LegacyNoteData>`.
@@ -210,9 +208,8 @@ class DataParse
   {
     var result:Dynamic = {};
     for (field in fields)
-    {
       Reflect.setField(result, field.name, Tools.getValue(field.value));
-    }
+
     return result;
   }
 
@@ -222,9 +219,7 @@ class DataParse
    * @return Array<Dynamic>
    */
   static function jsonArrayToDynamicArray(jsons:Array<Json>):Array<Null<Dynamic>>
-  {
     return [for (json in jsons) Tools.getValue(json)];
-  }
 
   static function legacyNoteSectionArray(json:Json, name:String):Array<LegacyNoteSection>
   {

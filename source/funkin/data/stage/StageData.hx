@@ -70,9 +70,7 @@ class StageData
   }
 
   public function updateVersionToLatest():Void
-  {
     this.version = StageRegistry.STAGE_DATA_VERSION;
-  }
 }
 
 typedef StageDataCharacters =

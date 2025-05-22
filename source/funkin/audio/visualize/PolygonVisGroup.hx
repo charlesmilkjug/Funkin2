@@ -100,14 +100,9 @@ class PolygonVisGroup extends FlxTypedGroup<PolygonSpectogram>
 
   public override function destroy():Void
   {
-    if (playerVis != null)
-    {
-      playerVis.destroy();
-    }
-    if (opponentVis != null)
-    {
-      opponentVis.destroy();
-    }
+    for (vis in [playerVis, opponentVis])
+      if (vis != null) vis.destroy();
+
     super.destroy();
   }
 }

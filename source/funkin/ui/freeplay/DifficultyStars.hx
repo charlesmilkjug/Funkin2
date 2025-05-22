@@ -4,7 +4,6 @@ import flixel.group.FlxSpriteGroup;
 import funkin.graphics.adobeanimate.FlxAtlasSprite;
 import funkin.graphics.shaders.HSVShader;
 
-@:nullSafety
 class DifficultyStars extends FlxSpriteGroup
 {
   /**

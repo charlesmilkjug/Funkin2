@@ -81,9 +81,8 @@ class FrameBuffer
   public function render():Void
   {
     for (spriteCopy in spriteCopies)
-    {
       spriteCopy.render(camera);
-    }
+
     camera.render();
   }
 
@@ -116,9 +115,7 @@ class FrameBuffer
    * @param spriteCopy the sprite copy
    */
   public function addSpriteCopy(spriteCopy:SpriteCopy):Void
-  {
     spriteCopies.push(spriteCopy);
-  }
 
   /**
    * Adds the sprite to the frame buffer. The sprite will only be seen from
@@ -126,7 +123,5 @@ class FrameBuffer
    * @param sprite the sprite
    */
   public function moveSprite(sprite:FlxSprite):Void
-  {
     sprite.cameras = [camera];
-  }
 }

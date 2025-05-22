@@ -61,10 +61,7 @@ class ABotVis extends FlxTypedSpriteGroup<FlxSprite>
 
   override public function destroy():Void
   {
-    if (analyzer != null)
-    {
-      analyzer.cleanup();
-    }
+    if (analyzer != null) analyzer.cleanup();
 
     super.destroy();
   }
@@ -107,14 +104,10 @@ class ABotVis extends FlxTypedSpriteGroup<FlxSprite>
   var visTimeMax:Float = 1 / 30;
 
   override function update(elapsed:Float)
-  {
     super.update(elapsed);
-  }
 
   static inline function min(x:Int, y:Int):Int
-  {
     return x > y ? y : x;
-  }
 
   override function draw()
   {
@@ -157,9 +150,7 @@ class ABotVis extends FlxTypedSpriteGroup<FlxSprite>
     var result:Array<Bar> = [];
 
     for (i in 0...BAR_COUNT)
-    {
       result.push({value: 0, peak: 0.0});
-    }
 
     return result;
   }

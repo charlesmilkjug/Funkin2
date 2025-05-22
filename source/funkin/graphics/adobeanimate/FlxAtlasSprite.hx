@@ -87,17 +87,13 @@ class FlxAtlasSprite extends FlxAnimate
    * @return Whether the animation was found on this sprite.
    */
   public function hasAnimation(id:String):Bool
-  {
     return getLabelIndex(id) != -1 || anim.symbolDictionary.exists(id);
-  }
 
   /**
    * @return The current animation being played.
    */
   public function getCurrentAnimation():String
-  {
     return this.currentAnimation;
-  }
 
   var _completeAnim:Bool = false;
 
@@ -196,18 +192,14 @@ class FlxAtlasSprite extends FlxAnimate
   }
 
   override public function update(elapsed:Float):Void
-  {
     super.update(elapsed);
-  }
 
   /**
    * Returns true if the animation has finished playing.
    * @return Whether the animation has finished playing.
    */
   public function isAnimationFinished():Bool
-  {
     return isLoopComplete();
-  }
 
   /**
    * Returns true if the animation has reached the last frame.
@@ -251,9 +243,7 @@ class FlxAtlasSprite extends FlxAnimate
   }
 
   function goToFrameLabel(label:String):Void
-  {
     this.anim.goToFrameLabel(label);
-  }
 
   function getFrameLabelNames(?layer:haxe.extern.EitherType<Int, String>):Array<String>
   {
@@ -268,19 +258,13 @@ class FlxAtlasSprite extends FlxAnimate
   }
 
   function getNextFrameLabel(label:String):String
-  {
     return listAnimations()[(getLabelIndex(label) + 1) % listAnimations().length];
-  }
 
   function getLabelIndex(label:String):Int
-  {
     return listAnimations().indexOf(label);
-  }
 
   function goToFrameIndex(index:Int):Void
-  {
     this.anim.curFrame = index;
-  }
 
   public function cleanupAnimation(_:String):Void
   {
@@ -378,9 +362,7 @@ class FlxAtlasSprite extends FlxAnimate
   }
 
   public function getPivotPosition():Null<FlxPoint>
-  {
     return anim.curInstance.symbol.transformationPoint;
-  }
 
   public override function destroy():Void
   {

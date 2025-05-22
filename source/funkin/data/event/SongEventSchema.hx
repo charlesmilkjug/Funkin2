@@ -17,29 +17,21 @@ abstract SongEventSchema(SongEventSchemaRaw)
   public function getByName(name:String):SongEventSchemaField
   {
     for (field in this)
-    {
       if (field.name == name) return field;
-    }
 
     return null;
   }
 
   public function getFirstField():SongEventSchemaField
-  {
     return this[0];
-  }
 
   @:arrayAccess
   public inline function get(key:Int)
-  {
     return this[key];
-  }
 
   @:arrayAccess
   public inline function arrayWrite(k:Int, v:SongEventSchemaField):SongEventSchemaField
-  {
     return this[k] = v;
-  }
 
   public function stringifyFieldValue(name:String, value:Dynamic, addUnits:Bool = true):String
   {

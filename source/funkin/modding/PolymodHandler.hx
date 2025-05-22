@@ -72,9 +72,7 @@ class PolymodHandler
    * If the mods folder doesn't exist, create it.
    */
   public static function createModRoot():Void
-  {
     FileUtil.createDirIfNotExists(MOD_FOLDER);
-  }
 
   /**
    * Loads the game with ALL mods enabled with Polymod.
@@ -123,14 +121,9 @@ class PolymodHandler
    */
   public static function loadModsById(ids:Array<String>):Void
   {
-    if (ids.length == 0)
-    {
-      trace('You attempted to load zero mods.');
-    }
+    if (ids.length == 0) trace('You attempted to load zero mods.');
     else
-    {
       trace('Attempting to load ${ids.length} mods...');
-    }
 
     buildImports();
 
@@ -370,13 +363,14 @@ class PolymodHandler
   static function buildParseRules():polymod.format.ParseRules
   {
     var output:polymod.format.ParseRules = polymod.format.ParseRules.getDefault();
+
     // Ensure TXT files have merge support.
     output.addType('txt', TextFileFormat.LINES);
+
     // Ensure script files have merge support.
-    output.addType('hscript', TextFileFormat.PLAINTEXT);
-    output.addType('hxs', TextFileFormat.PLAINTEXT);
-    output.addType('hxc', TextFileFormat.PLAINTEXT);
-    output.addType('hx', TextFileFormat.PLAINTEXT);
+    var scriptFormats:Array<String> = ['hscript', 'hxs', 'hxc', 'haxe', 'hx'];
+    for (format in scriptFormats)
+      output.addType(format, TextFileFormat.PLAINTEXT);
 
     // You can specify the format of a specific file, with file extension.
     // output.addFile("data/introText.txt", TextFileFormat.LINES)
@@ -446,9 +440,8 @@ class PolymodHandler
     var modMetadata:Array<ModMetadata> = getAllMods();
     var enabledMods:Array<ModMetadata> = [];
     for (item in modMetadata)
-    {
       if (modIds.indexOf(item.id) != -1) enabledMods.push(item);
-    }
+
     return enabledMods;
   }
 

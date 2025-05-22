@@ -42,10 +42,8 @@ class Save
 
   static function get_instance():Save
   {
-    if (_instance == null)
-    {
-      return load();
-    }
+    if (_instance == null) return load();
+
     return _instance;
   }
 
@@ -196,9 +194,7 @@ class Save
   public var options(get, never):SaveDataOptions;
 
   function get_options():SaveDataOptions
-  {
     return data.options;
-  }
 
   /**
    * NOTE: Modifications will not be saved without calling `Save.flush()`!
@@ -206,9 +202,7 @@ class Save
   public var modOptions(get, never):Map<String, Dynamic>;
 
   function get_modOptions():Map<String, Dynamic>
-  {
     return data.mods.modOptions;
-  }
 
   /**
    * The current session ID for the logged-in Newgrounds user, or null if the user is cringe.
@@ -216,9 +210,7 @@ class Save
   public var ngSessionId(get, set):Null<String>;
 
   function get_ngSessionId():Null<String>
-  {
     return data.api.newgrounds.sessionId;
-  }
 
   function set_ngSessionId(value:Null<String>):Null<String>
   {
@@ -230,9 +222,7 @@ class Save
   public var enabledModIds(get, set):Array<String>;
 
   function get_enabledModIds():Array<String>
-  {
     return data.mods.enabledMods;
-  }
 
   function set_enabledModIds(value:Array<String>):Array<String>
   {
@@ -567,9 +557,7 @@ class Save
   public var charactersSeen(get, never):Array<String>;
 
   function get_charactersSeen():Array<String>
-  {
     return data.unlocks.charactersSeen;
-  }
 
   /**
    * Marks whether the player has seen the spotlight animation, which should only display once per save file ever.
@@ -577,9 +565,7 @@ class Save
   public var oldChar(get, set):Bool;
 
   function get_oldChar():Bool
-  {
     return data.unlocks.oldChar;
-  }
 
   function set_oldChar(value:Bool):Bool
   {
@@ -825,10 +811,8 @@ class Save
 
   public function hasBeatenLevel(levelId:String, ?difficultyList:Array<String>):Bool
   {
-    if (difficultyList == null)
-    {
-      difficultyList = ['easy', 'normal', 'hard'];
-    }
+    if (difficultyList == null) difficultyList = ['easy', 'normal', 'hard'];
+
     for (difficulty in difficultyList)
     {
       var score:Null<SaveScoreData> = getLevelScore(levelId, difficulty);

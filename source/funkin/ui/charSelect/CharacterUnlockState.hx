@@ -27,7 +27,7 @@ class CharacterUnlockState extends MusicBeatState
 
   var nextState:FlxState;
 
-  public static var instance:CharacterUnlockState = null;
+  public static var instance:Null<CharacterUnlockState> = null;
 
   static final DIALOG_BG_COLOR:FlxColor = 0xFF000000; // Iconic
   static final DIALOG_COLOR:FlxColor = 0xFF4344F6; // Iconic

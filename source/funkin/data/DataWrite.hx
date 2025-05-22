@@ -31,17 +31,13 @@ class DataWrite
    * `@:jcustomwrite(funkin.data.DataWrite.semverVersion)`
    */
   public static function semverVersion(value:Version):String
-  {
     return '"${value.toString()}"';
-  }
 
   /**
    * `@:jcustomwrite(funkin.data.DataWrite.semverVersionRule)`
    */
   public static function semverVersionRule(value:VersionRule):String
-  {
     return '"${value.toString()}"';
-  }
 
   /**
    * `@:jcustomwrite(funkin.data.DataWrite.eitherFloatOrFloats)`

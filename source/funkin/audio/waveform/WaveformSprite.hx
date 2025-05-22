@@ -147,9 +147,7 @@ class WaveformSprite extends MeshRender
    * Manually tell the waveform to rebuild itself, even if none of its properties have changed.
    */
   public function markDirty():Void
-  {
     isWaveformDirty = true;
-  }
 
   public override function update(elapsed:Float)
   {
@@ -388,48 +386,20 @@ class WaveformSprite extends MeshRender
     // If the vertex is fully outside the clipRect, use a pre-existing vertex.
     // Else, if the vertex is outside the clipRect on one axis, create a new vertex constrained on that axis.
     // Else, create a whole new vertex.
-    if (shouldClipXLeft && shouldClipYTop)
-    {
-      return topLeftVertexIndex;
-    }
-    else if (shouldClipXRight && shouldClipYTop)
-    {
-      return topRightVertexIndex;
-    }
-    else if (shouldClipXLeft && shouldClipYBottom)
-    {
-      return bottomLeftVertexIndex;
-    }
-    else if (shouldClipXRight && shouldClipYBottom)
-    {
-      return bottomRightVertexIndex;
-    }
-    else if (shouldClipXLeft)
-    {
-      return this.build_vertex(clipRect.x, y);
-    }
-    else if (shouldClipXRight)
-    {
-      return this.build_vertex(clipRect.x + clipRect.width, y);
-    }
-    else if (shouldClipYTop)
-    {
-      return this.build_vertex(x, clipRect.y);
-    }
-    else if (shouldClipYBottom)
-    {
-      return this.build_vertex(x, clipRect.y + clipRect.height);
-    }
+    if (shouldClipXLeft && shouldClipYTop) return topLeftVertexIndex;
+    else if (shouldClipXRight && shouldClipYTop) return topRightVertexIndex;
+    else if (shouldClipXLeft && shouldClipYBottom) return bottomLeftVertexIndex;
+    else if (shouldClipXRight && shouldClipYBottom) return bottomRightVertexIndex;
+    else if (shouldClipXLeft) return this.build_vertex(clipRect.x, y);
+    else if (shouldClipXRight) return this.build_vertex(clipRect.x + clipRect.width, y);
+    else if (shouldClipYTop) return this.build_vertex(x, clipRect.y);
+    else if (shouldClipYBottom) return this.build_vertex(x, clipRect.y + clipRect.height);
     else
-    {
       return this.build_vertex(x, y);
-    }
   }
 
   public static function buildFromWaveformData(data:WaveformData, ?orientation:WaveformOrientation, ?color:FlxColor, ?duration:Float)
-  {
     return new WaveformSprite(data, orientation, color, duration);
-  }
 
   public static function buildFromFunkinSound(sound:FunkinSound, ?orientation:WaveformOrientation, ?color:FlxColor, ?duration:Float)
   {

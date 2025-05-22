@@ -51,10 +51,7 @@ class IntervalShake implements IFlxDestroyable
       // }
     }
 
-    if (Interval <= 0)
-    {
-      Interval = FlxG.elapsed;
-    }
+    if (Interval <= 0) Interval = FlxG.elapsed;
 
     var shake:IntervalShake = _pool.get();
     shake.start(Object, Duration, Interval, StartIntensity, EndIntensity, Ease, CompletionCallback, ProgressCallback);
@@ -67,9 +64,7 @@ class IntervalShake implements IFlxDestroyable
    * @param   Object The object to test.
    */
   public static function isShaking(Object:FlxObject):Bool
-  {
     return _boundObjects.exists(Object);
-  }
 
   /**
    * Stops shaking the object.
@@ -79,10 +74,7 @@ class IntervalShake implements IFlxDestroyable
   public static function stopShaking(Object:FlxObject):Void
   {
     var boundShake:IntervalShake = _boundObjects[Object];
-    if (boundShake != null)
-    {
-      boundShake.stop();
-    }
+    if (boundShake != null) boundShake.stop();
   }
 
   /**
@@ -223,10 +215,7 @@ class IntervalShake implements IFlxDestroyable
     {
       object.x = initialOffset.x;
       object.y = initialOffset.y;
-      if (completionCallback != null)
-      {
-        completionCallback(this);
-      }
+      if (completionCallback != null) completionCallback(this);
 
       if (this.timer == timer) release();
     }

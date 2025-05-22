@@ -114,10 +114,5 @@ class BitmapDataUtil
   }
 
   static function hardwareCheck(bitmap:BitmapData):Void
-  {
-    if (bitmap.readable)
-    {
-      FlxG.log.error('do not use `BitmapDataUtil` for non-GPU bitmaps!');
-    }
-  }
+    if (bitmap.readable) FlxG.log.error('do not use `BitmapDataUtil` for non-GPU bitmaps!');
 }

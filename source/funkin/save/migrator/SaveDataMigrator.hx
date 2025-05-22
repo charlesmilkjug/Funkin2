@@ -32,10 +32,7 @@ class SaveDataMigrator
         var save:Save = new Save(saveDataWithDefaults);
         return save;
       }
-      else if (VersionUtil.validateVersion(version, "2.0.x"))
-      {
-        return migrate_v2_0_0(inputData);
-      }
+      else if (VersionUtil.validateVersion(version, "2.0.x")) return migrate_v2_0_0(inputData);
       else
       {
         var message:String = 'Error migrating save data, expected ${Save.SAVE_DATA_VERSION}.';
@@ -85,15 +82,9 @@ class SaveDataMigrator
 
   static function migrateLegacyScores(result:Save, inputSaveData:RawSaveData_v1_0_0):Void
   {
-    if (inputSaveData.songCompletion == null)
-    {
-      inputSaveData.songCompletion = [];
-    }
+    if (inputSaveData.songCompletion == null) inputSaveData.songCompletion = [];
 
-    if (inputSaveData.songScores == null)
-    {
-      inputSaveData.songScores = [];
-    }
+    if (inputSaveData.songScores == null) inputSaveData.songScores = [];
 
     migrateLegacyLevelScore(result, inputSaveData, 'week0');
     migrateLegacyLevelScore(result, inputSaveData, 'week1');
@@ -273,16 +264,10 @@ class SaveDataMigrator
   static function migrateLegacyControls(result:Save, inputSaveData:RawSaveData_v1_0_0):Void
   {
     var p1Data = inputSaveData?.controls?.p1;
-    if (p1Data != null)
-    {
-      migrateLegacyPlayerControls(result, 1, p1Data);
-    }
+    if (p1Data != null) migrateLegacyPlayerControls(result, 1, p1Data);
 
     var p2Data = inputSaveData?.controls?.p2;
-    if (p2Data != null)
-    {
-      migrateLegacyPlayerControls(result, 2, p2Data);
-    }
+    if (p2Data != null) migrateLegacyPlayerControls(result, 2, p2Data);
   }
 
   static function migrateLegacyPlayerControls(result:Save, playerId:Int, controlsData:SavePlayerControlsData_v1_0_0):Void

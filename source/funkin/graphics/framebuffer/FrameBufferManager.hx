@@ -94,13 +94,10 @@ class FrameBufferManager
   public function unlock():Void
   {
     for (_ => fb in frameBufferMap)
-    {
       fb.render();
-    }
+
     for (_ => fb in frameBufferMap)
-    {
       fb.unlock();
-    }
   }
 
   /**
@@ -109,9 +106,7 @@ class FrameBufferManager
    * @return the bitmap data
    */
   public function getFrameBuffer(name:String):BitmapData
-  {
     return frameBufferMap[name].bitmap;
-  }
 
   /**
    * Disposes all frame buffers. The instance can be reused.
@@ -119,9 +114,8 @@ class FrameBufferManager
   public function dispose():Void
   {
     for (_ => fb in frameBufferMap)
-    {
       fb.dispose();
-    }
+
     frameBufferMap.clear();
   }
 }

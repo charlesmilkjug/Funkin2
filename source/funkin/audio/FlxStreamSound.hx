@@ -25,14 +25,8 @@ class FlxStreamSound extends FlxSound
 
     cleanup(true);
 
-    if ((EmbeddedSound is Sound))
-    {
-      _sound = EmbeddedSound;
-    }
-    else if ((EmbeddedSound is Class))
-    {
-      _sound = Type.createInstance(EmbeddedSound, []);
-    }
+    if ((EmbeddedSound is Sound)) _sound = EmbeddedSound;
+    else if ((EmbeddedSound is Class)) _sound = Type.createInstance(EmbeddedSound, []);
     else if ((EmbeddedSound is String))
     {
       if (Assets.exists(EmbeddedSound, AssetType.SOUND)
