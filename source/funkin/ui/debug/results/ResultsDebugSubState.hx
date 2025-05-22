@@ -62,7 +62,7 @@ class ResultsDebugSubState extends MusicBeatSubState
       returnToDebugScreen = result == "Debug"; // We will create the ResultsState as a Substate, that we will just close and return back to here
       resultsParams.storyMode = result == "Story"; // Debug overrides this, but if not using Debug, we will return to either Freeplay or Story menus
     });
-    createToggleListItem("Ranking", DebugTallies.DEBUG_RANKS, (result:String) -> resultsParams.scoreData.tallies = DebugTallies.getTallyForRank(result);
+    createToggleListItem("Ranking", DebugTallies.DEBUG_RANKS, (result:String) -> resultsParams.scoreData.tallies = DebugTallies.getTallyForRank(result));
   }
 
   function createTextItem(name:String, ?onChange:Void->Void):MenuTypedItem<FlxText>

@@ -54,8 +54,7 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
         }
       }
 
-      objAlpha.onChange = (_)
-      if (linkedObj != null) linkedObj.alpha = objAlpha.pos;
+      objAlpha.onChange = (_) -> if (linkedObj != null) linkedObj.alpha = objAlpha.pos;
 
       objAngle.onChange = (_) -> if (linkedObj != null) linkedObj.angle = objAngle.pos;
 

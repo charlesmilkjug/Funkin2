@@ -57,7 +57,7 @@ class CapsuleOptionsMenu extends FlxSpriteGroup
     add(label);
     add(currentOption);
 
-    capsuleMenuBG.animation.finishCallback = (_) -> .animation.play('idle', true);
+    capsuleMenuBG.animation.finishCallback = (_) -> capsuleMenuBG.animation.play('idle', true);
     capsuleMenuBG.animation.play('open', true);
   }
 
