@@ -97,9 +97,7 @@ class ChartEditorEventSprite extends FlxSprite
 
       frames.parent.persist = true;
       for (frame in frames.frames)
-      {
         eventFrames.pushFrame(frame);
-      }
     }
 
     return eventFrames;
@@ -115,9 +113,7 @@ class ChartEditorEventSprite extends FlxSprite
   {
     var eventNames:Array<String> = [DEFAULT_EVENT].concat(SongEventRegistry.listEventIds());
     for (eventName in eventNames)
-    {
       this.animation.addByPrefix(eventName, '${eventName}0', 24, false);
-    }
   }
 
   public function correctAnimationName(name:String):String

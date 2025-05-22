@@ -50,9 +50,7 @@ class SongEventRegistry
         eventCache.set(event.id, event);
       }
       else
-      {
         trace('  Failed to load built-in song event: ${Type.getClassName(eventCls)}');
-      }
     }
   }
 
@@ -72,26 +70,18 @@ class SongEventRegistry
         eventCache.set(event.id, event);
       }
       else
-      {
         trace('  Failed to instantiate scripted song event class: ${eventCls}');
-      }
     }
   }
 
   public static function listEventIds():Array<String>
-  {
     return eventCache.keys().array();
-  }
 
   public static function listEvents():Array<SongEvent>
-  {
     return eventCache.values();
-  }
 
   public static function getEvent(id:String):Null<SongEvent>
-  {
     return eventCache.get(id);
-  }
 
   public static function getEventSchema(id:String):Null<SongEventSchema>
   {
@@ -102,34 +92,23 @@ class SongEventRegistry
   }
 
   static function clearEventCache()
-  {
     eventCache.clear();
-  }
 
   public static function handleEvent(data:SongEventData):Void
   {
     var eventKind:String = data.eventKind;
     var eventHandler:Null<SongEvent> = eventCache.get(eventKind);
 
-    if (eventHandler != null)
-    {
-      eventHandler.handleEvent(data);
-    }
+    if (eventHandler != null) eventHandler.handleEvent(data);
     else
-    {
       trace('WARNING: No event handler for event with kind: ${eventKind}');
-    }
 
     data.activated = true;
   }
 
   public static inline function handleEvents(events:Array<SongEventData>):Void
-  {
     for (event in events)
-    {
       handleEvent(event);
-    }
-  }
 
   /**
    * Given a list of song events and the current timestamp,
@@ -158,16 +137,10 @@ class SongEventRegistry
     for (event in events)
     {
       // Deactivate future events.
-      if (event.time > currentTime)
-      {
-        event.activated = false;
-      }
+      if (event.time > currentTime) event.activated = false;
 
       // Skip past events.
-      if (event.time < currentTime)
-      {
-        event.activated = true;
-      }
+      if (event.time < currentTime) event.activated = true;
     }
   }
 

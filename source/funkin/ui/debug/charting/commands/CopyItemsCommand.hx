@@ -27,13 +27,8 @@ class CopyItemsCommand implements ChartEditorCommand
   {
     // Calculate a single time offset for all the notes and events.
     var timeOffset:Null<Int> = state.currentNoteSelection.length > 0 ? Std.int(state.currentNoteSelection[0].time) : null;
-    if (state.currentEventSelection.length > 0)
-    {
-      if (timeOffset == null || state.currentEventSelection[0].time < timeOffset)
-      {
-        timeOffset = Std.int(state.currentEventSelection[0].time);
-      }
-    }
+    if (state.currentEventSelection.length > 0) if (timeOffset == null
+      || state.currentEventSelection[0].time < timeOffset) timeOffset = Std.int(state.currentEventSelection[0].time);
 
     SongDataUtils.writeItemsToClipboard(
       {

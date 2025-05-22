@@ -65,10 +65,7 @@ class ConversationDebugState extends MusicBeatState
 
     if (conversation != null)
     {
-      if (controls.CUTSCENE_ADVANCE)
-      {
-        conversation.advanceConversation();
-      }
+      if (controls.CUTSCENE_ADVANCE) conversation.advanceConversation();
       else if (controls.PAUSE)
       {
         conversation.kill();

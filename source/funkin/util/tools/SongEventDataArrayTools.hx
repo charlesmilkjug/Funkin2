@@ -48,10 +48,7 @@ class SongEventDataArrayTools
         highIndex = midIndex - 1;
       }
       // Found it? Make a more thorough check.
-      else if (midNote == note)
-      {
-        return midIndex;
-      }
+      else if (midNote == note) return midIndex;
       else
       {
         // We may be close, so constrain the range (but only a little) and try again.
@@ -62,7 +59,5 @@ class SongEventDataArrayTools
   }
 
   public static inline function fastContains(input:Array<SongEventData>, note:SongEventData):Bool
-  {
     return fastIndexOf(input, note) != -1;
-  }
 }

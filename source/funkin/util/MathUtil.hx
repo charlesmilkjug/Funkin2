@@ -45,9 +45,7 @@ class MathUtil
    * @return `log_base(value)`
    */
   public static function logBase(base:Float, value:Float):Float
-  {
     return Math.log(value) / Math.log(base);
-  }
 
   public static function easeInOutCirc(x:Float):Float
   {
@@ -85,9 +83,7 @@ class MathUtil
    * @return `2^x`
    */
   public static function exp2(x:Float):Float
-  {
     return Math.pow(2, x);
-  }
 
   /**
    * Linearly interpolate between two values.

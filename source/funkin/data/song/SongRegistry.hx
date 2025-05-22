@@ -104,17 +104,13 @@ class SongRegistry extends BaseRegistry<Song, SongMetadata> implements ISingleto
    * Read, parse, and validate the JSON data and produce the corresponding data object.
    */
   public function parseEntryData(id:String):Null<SongMetadata>
-  {
     return parseEntryMetadata(id);
-  }
 
   /**
    * Parse, and validate the JSON data and produce the corresponding data object.
    */
   public function parseEntryDataRaw(contents:String, ?fileName:String = 'raw'):Null<SongMetadata>
-  {
     return parseEntryMetadataRaw(contents);
-  }
 
   public function parseEntryMetadata(id:String, ?variation:String):Null<SongMetadata>
   {

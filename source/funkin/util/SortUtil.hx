@@ -49,9 +49,7 @@ class SortUtil
    * @return 1 if `a` has an earlier strumtime, -1 if `b` has an earlier strumtime.
    */
   public static inline function byStrumtime(order:Int, a:NoteSprite, b:NoteSprite):Int
-  {
     return noteDataByTime(order, a.noteData, b.noteData);
-  }
 
   /**
    * Given two Note Data objects, returns 1 or -1 based on whether `a` or `b` has an earlier time.
@@ -62,9 +60,7 @@ class SortUtil
    * @return 1 if `a` has an earlier time, -1 if `b` has an earlier time.
    */
   public static inline function noteDataByTime(order:Int, a:SongNoteData, b:SongNoteData):Int
-  {
     return FlxSort.byValues(order, a.time, b.time);
-  }
 
   /**
    * Given two Event Data objects, returns 1 or -1 based on whether `a` or `b` has an earlier time.
@@ -75,9 +71,7 @@ class SortUtil
    * @return 1 if `a` has an earlier time, -1 if `b` has an earlier time.
    */
   public static inline function eventDataByTime(order:Int, a:SongEventData, b:SongEventData):Int
-  {
     return FlxSort.byValues(order, a.time, b.time);
-  }
 
   /**
    * Given two FlxFrames, sort their names alphabetically.
@@ -88,9 +82,7 @@ class SortUtil
    * @return 1 if `a` has an earlier time, -1 if `b` has an earlier time.
    */
   public static inline function byFrameName(a:FlxFrame, b:FlxFrame):Int
-  {
     return alphabetically(a.name, b.name);
-  }
 
   /**
    * Sort predicate for sorting strings alphabetically.

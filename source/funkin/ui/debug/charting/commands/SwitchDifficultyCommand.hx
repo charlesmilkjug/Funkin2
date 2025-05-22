@@ -45,7 +45,5 @@ class SwitchDifficultyCommand implements ChartEditorCommand
   }
 
   public function toString():String
-  {
     return 'Switch Difficulty';
-  }
 }

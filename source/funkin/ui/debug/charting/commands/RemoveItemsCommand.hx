@@ -46,14 +46,10 @@ class RemoveItemsCommand implements ChartEditorCommand
     if ((notes.length + events.length) == 0) return;
 
     for (note in notes)
-    {
       state.currentSongChartNoteData.push(note);
-    }
 
     for (event in events)
-    {
       state.currentSongChartEventData.push(event);
-    }
 
     state.currentNoteSelection = notes;
     state.currentEventSelection = events;
@@ -75,7 +71,5 @@ class RemoveItemsCommand implements ChartEditorCommand
   }
 
   public function toString():String
-  {
     return 'Remove ${notes.length + events.length} Items';
-  }
 }

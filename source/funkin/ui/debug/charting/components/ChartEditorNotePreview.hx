@@ -42,17 +42,13 @@ class ChartEditorNotePreview extends FlxSprite
    * Build the initial sprite for the preview.
    */
   function buildBackground():Void
-  {
     makeGraphic(WIDTH, previewHeight, BG_COLOR);
-  }
 
   /**
    * Erase all notes from the preview.
    */
   public function erase():Void
-  {
     drawRect(0, 0, WIDTH, previewHeight, BG_COLOR);
-  }
 
   /**
    * Add a single note to the preview.
@@ -168,7 +164,5 @@ class ChartEditorNotePreview extends FlxSprite
   }
 
   inline function drawRect(noteX:Float, noteY:Float, width:Int, height:Int, color:FlxColor):Void
-  {
     FlxSpriteUtil.drawRect(this, noteX, noteY, width, height, color);
-  }
 }

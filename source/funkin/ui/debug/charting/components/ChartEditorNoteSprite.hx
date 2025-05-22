@@ -76,9 +76,7 @@ class ChartEditorNoteSprite extends FlxSprite
       buildEmptyFrameCollection();
 
       for (entry in entries)
-      {
         addNoteStyleFrames(fetchNoteStyle(entry));
-      }
     }
 
     if (noteFrameCollection == null) throw 'ERROR: Could not initialize note sprite animations.';
@@ -86,9 +84,7 @@ class ChartEditorNoteSprite extends FlxSprite
     this.frames = noteFrameCollection;
 
     for (entry in entries)
-    {
       addNoteStyleAnimations(fetchNoteStyle(entry));
-    }
   }
 
   static var noteFrameCollection:Null<FlxFramesCollection> = null;
@@ -184,10 +180,7 @@ class ChartEditorNoteSprite extends FlxSprite
     // Notes far in the song will start far down, but the group they belong to will have a high negative offset.
     // noteData.getStepTime() returns a calculated value which accounts for BPM changes
     var stepTime:Float = (overrideStepTime != null) ? overrideStepTime : noteData.getStepTime();
-    if (stepTime >= 0)
-    {
-      this.y = stepTime * ChartEditorState.GRID_SIZE;
-    }
+    if (stepTime >= 0) this.y = stepTime * ChartEditorState.GRID_SIZE;
 
     if (origin != null)
     {

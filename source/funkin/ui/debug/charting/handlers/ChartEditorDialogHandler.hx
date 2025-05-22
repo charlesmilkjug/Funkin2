@@ -358,7 +358,7 @@ class ChartEditorDialogHandler
     // Step 1. Open Chart
     var openChartDialog:Null<Dialog> = openImportChartDialog(state, format);
     if (openChartDialog == null) throw 'Could not locate Import Chart dialog';
-    openChartDialog.onDialogClosed = function(event) {
+    openChartDialog.onDialogClosed = (event) -> {
       state.isHaxeUIDialogOpen = false;
       if (event.button == DialogButton.APPLY)
       {
@@ -907,7 +907,7 @@ class ChartEditorDialogHandler
       }
     }
 
-    onDropFileMetadataVariation = function(variation:String, label:Label, pathStr:String) {
+    onDropFileMetadataVariation = (variation:String, label:Label, pathStr:String) -> {
       var path:Path = new Path(pathStr);
       trace('Dropped JSON file (${path})');
 
@@ -945,9 +945,9 @@ class ChartEditorDialogHandler
       if (variation == Constants.DEFAULT_VARIATION) constructVariationEntries(songMetadataVariation.playData.songVariations);
     };
 
-    onClickMetadataVariation = function(variation:String, label:Label, _:UIEvent) {
+    onClickMetadataVariation = (variation:String, label:Label, _:UIEvent) -> {
       Dialogs.openBinaryFile('Open Chart ($variation) Metadata', [
-        {label: 'JSON File (.json)', extension: 'json'}], function(selectedFile) {
+        {label: 'JSON File (.json)', extension: 'json'}], (selectedFile) -> {
           if (selectedFile != null && selectedFile.bytes != null)
           {
             trace('Selected file: ' + selectedFile.name);
@@ -986,10 +986,10 @@ class ChartEditorDialogHandler
               state.error('Failure', 'Failed to load metadata file (${selectedFile.name})');
             }
           }
-      });
+        });
     }
 
-    onDropFileChartDataVariation = function(variation:String, label:Label, pathStr:String) {
+    onDropFileChartDataVariation = (variation:String, label:Label, pathStr:String) -> {
       var path:Path = new Path(pathStr);
       trace('Dropped JSON file (${path})');
 
@@ -1176,7 +1176,7 @@ class ChartEditorDialogHandler
       });
     }
 
-    onDropFile = function(pathStr:String) {
+    onDropFile = (pathStr:String) -> {
       var path:Path = new Path(pathStr);
       var selectedFileText:String = FileUtil.readStringFromPath(path.toString()) ?? '';
       var selectedFileData:Null<FNFLegacyData> = FNFLegacyImporter.parseLegacyDataRaw(selectedFileText, path.toString());
@@ -1226,13 +1226,11 @@ class ChartEditorDialogHandler
 
     var buttonCancel:Null<Button> = dialog.findComponent('dialogCancel', Button);
     if (buttonCancel == null) throw 'Could not locate dialogCancel button in Add Variation dialog';
-    buttonCancel.onClick = (_) -> {
-      dialog.hideDialog(DialogButton.CANCEL);
-    }
+    buttonCancel.onClick = (_) -> dialog.hideDialog(DialogButton.CANCEL);
 
     var buttonAdd:Null<Button> = dialog.findComponent('dialogAdd', Button);
     if (buttonAdd == null) throw 'Could not locate dialogAdd button in Add Variation dialog';
-    buttonAdd.onClick = function(_) {
+    buttonAdd.onClick = (_) -> {
       // This performs validation before the onSubmit callback is called.
       variationForm.submit();
     }

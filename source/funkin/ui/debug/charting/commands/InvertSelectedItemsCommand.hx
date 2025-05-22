@@ -45,7 +45,5 @@ class InvertSelectedItemsCommand implements ChartEditorCommand
   }
 
   public function toString():String
-  {
     return 'Invert Selected Items';
-  }
 }

@@ -50,15 +50,11 @@ class ChartEditorDifficultyToolbox extends ChartEditorBaseToolbox
     this.x = 150;
     this.y = 250;
 
-    difficultyToolboxAddVariation.onClick = function(_:UIEvent) {
-      chartEditorState.openAddVariationDialog(true);
-    };
+    difficultyToolboxAddVariation.onClick = (_:UIEvent) -> chartEditorState.openAddVariationDialog(true);
 
-    difficultyToolboxAddDifficulty.onClick = function(_:UIEvent) {
-      chartEditorState.openAddDifficultyDialog(true);
-    };
+    difficultyToolboxAddDifficulty.onClick = (_:UIEvent) -> chartEditorState.openAddDifficultyDialog(true);
 
-    difficultyToolboxRemoveDifficulty.onClick = function(_:UIEvent) {
+    difficultyToolboxRemoveDifficulty.onClick = (_:UIEvent) -> {
       var currentVariation:String = chartEditorState.selectedVariation;
       var currentDifficulty:String = chartEditorState.selectedDifficulty;
 
@@ -79,26 +75,24 @@ class ChartEditorDifficultyToolbox extends ChartEditorBaseToolbox
       Dialogs.messageBox("Are you sure? This cannot be undone.", "Remove Difficulty", MessageBoxType.TYPE_YESNO, callback);
     };
 
-    difficultyToolboxSaveMetadata.onClick = function(_:UIEvent) {
+    difficultyToolboxSaveMetadata.onClick = (_:UIEvent) -> {
       var vari:String = chartEditorState.selectedVariation != Constants.DEFAULT_VARIATION ? '-${chartEditorState.selectedVariation}' : '';
       FileUtil.writeFileReference('${chartEditorState.currentSongId}$vari-metadata.json', chartEditorState.currentSongMetadata.serialize());
     };
 
-    difficultyToolboxSaveChart.onClick = function(_:UIEvent) {
+    difficultyToolboxSaveChart.onClick = (_:UIEvent) -> {
       var vari:String = chartEditorState.selectedVariation != Constants.DEFAULT_VARIATION ? '-${chartEditorState.selectedVariation}' : '';
       FileUtil.writeFileReference('${chartEditorState.currentSongId}$vari-chart.json', chartEditorState.currentSongChartData.serialize());
     };
 
-    difficultyToolboxLoadMetadata.onClick = function(_:UIEvent) {
+    difficultyToolboxLoadMetadata.onClick = (_:UIEvent) -> {
       // Replace metadata for current variation.
-      SongSerializer.importSongMetadataAsync(function(songMetadata) {
-        chartEditorState.currentSongMetadata = songMetadata;
-      });
+      SongSerializer.importSongMetadataAsync((songMetadata) -> chartEditorState.currentSongMetadata = songMetadata);
     };
 
-    difficultyToolboxLoadChart.onClick = function(_:UIEvent) {
+    difficultyToolboxLoadChart.onClick = (_:UIEvent) -> {
       // Replace chart data for current variation.
-      SongSerializer.importSongChartDataAsync(function(songChartData) {
+      SongSerializer.importSongChartDataAsync((songChartData) -> {
         chartEditorState.currentSongChartData = songChartData;
         chartEditorState.noteDisplayDirty = true;
       });
@@ -217,7 +211,5 @@ class ChartEditorDifficultyToolbox extends ChartEditorBaseToolbox
   }
 
   public static function build(chartEditorState:ChartEditorState):ChartEditorDifficultyToolbox
-  {
     return new ChartEditorDifficultyToolbox(chartEditorState);
-  }
 }

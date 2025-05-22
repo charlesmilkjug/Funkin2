@@ -24,14 +24,10 @@ class SelectItemsCommand implements ChartEditorCommand
   public function execute(state:ChartEditorState):Void
   {
     for (note in this.notes)
-    {
       state.currentNoteSelection.push(note);
-    }
 
     for (event in this.events)
-    {
       state.currentEventSelection.push(event);
-    }
 
     // If we just selected one or more events (and no notes), then we should make the event data toolbox display the event data for the selected event.
     if (this.notes.length == 0 && this.events.length == 1)
@@ -44,14 +40,10 @@ class SelectItemsCommand implements ChartEditorCommand
       // TODO: Clean this up or get rid of it.
       var eventSchema = eventSelected.getSchema();
       var defaultKey = null;
-      if (eventSchema == null)
-      {
-        trace('[WARNING] Event schema not found for event ${eventSelected.eventKind}.');
-      }
+      if (eventSchema == null) trace('[WARNING] Event schema not found for event ${eventSelected.eventKind}.');
       else
-      {
         defaultKey = eventSchema.getFirstField()?.name;
-      }
+
       var eventData = eventSelected.valueAsStruct(defaultKey);
 
       state.eventDataToPlace = eventData;
@@ -97,25 +89,15 @@ class SelectItemsCommand implements ChartEditorCommand
 
     if (notes.length == 0)
     {
-      if (events.length == 1)
-      {
-        return 'Select Event';
-      }
+      if (events.length == 1) return 'Select Event';
       else
-      {
         return 'Select ${events.length} Events';
-      }
     }
     else if (events.length == 0)
     {
-      if (notes.length == 1)
-      {
-        return 'Select Note';
-      }
+      if (notes.length == 1) return 'Select Note';
       else
-      {
         return 'Select ${notes.length} Notes';
-      }
     }
 
     return 'Select ${len} Items';

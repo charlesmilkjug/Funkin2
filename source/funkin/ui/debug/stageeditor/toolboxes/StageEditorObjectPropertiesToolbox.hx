@@ -41,16 +41,12 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
 
     try
     { // Numeric callbacks.
-      objPosX.onChange = function(_) {
-        if (linkedObj != null) linkedObj.x = objPosX.pos;
-      }
+      objPosX.onChange = (_) -> if (linkedObj != null) linkedObj.x = objPosX.pos;
 
-      objPosY.onChange = function(_) {
-        if (linkedObj != null) linkedObj.y = objPosY.pos;
-      }
+      objPosY.onChange = (_) -> if (linkedObj != null) linkedObj.y = objPosY.pos;
 
       objZIdx.max = StageEditorState.MAX_Z_INDEX;
-      objZIdx.onChange = function(_) {
+      objZIdx.onChange = (_) -> {
         if (linkedObj != null)
         {
           linkedObj.zIndex = Std.int(objZIdx.pos);
@@ -58,15 +54,12 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
         }
       }
 
-      objAlpha.onChange = function(_) {
-        if (linkedObj != null) linkedObj.alpha = objAlpha.pos;
-      }
+      objAlpha.onChange = (_)
+      if (linkedObj != null) linkedObj.alpha = objAlpha.pos;
 
-      objAngle.onChange = function(_) {
-        if (linkedObj != null) linkedObj.angle = objAngle.pos;
-      }
+      objAngle.onChange = (_) -> if (linkedObj != null) linkedObj.angle = objAngle.pos;
 
-      objScaleX.onChange = function(_) {
+      objScaleX.onChange = (_) -> {
         if (linkedObj != null)
         {
           linkedObj.scale.x = objScaleX.pos;
@@ -74,7 +67,7 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
         }
       }
 
-      objScaleY.onChange = function(_) {
+      objScaleY.onChange = (_) -> {
         if (linkedObj != null)
         {
           linkedObj.scale.y = objScaleY.pos;
@@ -82,44 +75,26 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
         }
       }
 
-      objScrollX.onChange = function(_) {
-        if (linkedObj != null) linkedObj.scrollFactor.x = objScrollX.pos;
-      }
+      objScrollX.onChange = (_) -> if (linkedObj != null) linkedObj.scrollFactor.x = objScrollX.pos;
 
-      objScrollY.onChange = function(_) {
-        if (linkedObj != null) linkedObj.scrollFactor.y = objScrollY.pos;
-      }
+      objScrollY.onChange = (_) -> if (linkedObj != null) linkedObj.scrollFactor.y = objScrollY.pos;
 
-      objDance.onChange = function(_) {
-        if (linkedObj != null) linkedObj.danceEvery = Std.int(objDance.pos);
-      }
+      objDance.onChange = (_) -> if (linkedObj != null) linkedObj.danceEvery = Std.int(objDance.pos);
 
       // Boolean callbacks.
-      objPixel.onChange = function(_) {
-        if (linkedObj != null) linkedObj.antialiasing = objPixel.selected; // Kind of misleading, but objPixel has the 'Antialiasing' label attached to it!
-      }
+      objPixel.onChange = (_) -> if (linkedObj != null)
+        linkedObj.antialiasing = objPixel.selected; // Kind of misleading, but objPixel has the 'Antialiasing' label attached to it!
 
-      objFlipX.onChange = function(_) {
-        if (linkedObj != null) linkedObj.flipX = objFlipX.selected;
-      }
+      objFlipX.onChange = (_) -> if (linkedObj != null) linkedObj.flipX = objFlipX.selected;
 
-      objFlipY.onChange = function(_) {
-        if (linkedObj != null) linkedObj.flipY = objFlipY.selected;
-      }
+      objFlipY.onChange = (_) -> if (linkedObj != null) linkedObj.flipY = objFlipY.selected;
 
-      objBlend.onChange = function(_) {
+      objBlend.onChange = (_) -> {
         if (linkedObj != null)
-        {
           linkedObj.blend = (objBlend.selectedItem?.text ?? "NONE") == "NONE" ? null : AssetDataHandler.blendFromString(objBlend.selectedItem.text);
-        }
       }
 
-      objTint.onChange = function(_) {
-        if (linkedObj != null)
-        {
-          linkedObj.color = FlxColor.fromString(_.value) ?? 0xFFFFFFFF;
-        }
-      }
+      objTint.onChange = (_) -> if (linkedObj != null) linkedObj.color = FlxColor.fromString(_.value) ?? 0xFFFFFFFF;
     }
     catch (e)
     {
@@ -152,8 +127,7 @@ class StageEditorObjectPropertiesToolbox extends StageEditorDefaultToolbox
         objDance.pos = 0;
 
         objPixel.selected = true;
-        objFlipX.selected = false;
-        objFlipY.selected = false;
+        objFlipX.selected = objFlipY.selected = false;
 
         objBlend.selectedIndex = 0;
         objTint.selectedItem = Color.fromString("white");
@@ -240,10 +214,7 @@ private class ObjectTintHandler extends DropDownHandler
 
   private function onColorChange(e:UIEvent)
   {
-    if (_view != null)
-    {
-      _cachedSelectedColor = _view.currentColor;
-    }
+    if (_view != null) _cachedSelectedColor = _view.currentColor;
 
     _dropdown.text = _cachedSelectedColor.toHex();
 
@@ -271,9 +242,7 @@ private class ObjectTintView extends VBox
   public var currentColor(get, set):Null<Color>;
 
   private function get_currentColor():Null<Color>
-  {
     return picker.currentColor;
-  }
 
   private function set_currentColor(value:Null<Color>):Null<Color>
   {
@@ -283,9 +252,7 @@ private class ObjectTintView extends VBox
 
   @:bind(cancelButton, MouseEvent.CLICK)
   private function onCancel(_)
-  {
     dropdown.hideDropDown();
-  }
 
   @:bind(applyButton, MouseEvent.CLICK)
   private function onApply(_)

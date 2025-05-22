@@ -20,10 +20,7 @@ class StringTools
     {
       var word:String = words[i];
       result += word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
-      if (i < words.length - 1)
-      {
-        result += ' ';
-      }
+      if (i < words.length - 1) result += ' ';
     }
     return result;
   }
@@ -36,10 +33,8 @@ class StringTools
    */
   public static function stripPrefix(value:String, prefix:String):String
   {
-    if (value.startsWith(prefix))
-    {
-      return value.substr(prefix.length);
-    }
+    if (value.startsWith(prefix)) return value.substr(prefix.length);
+
     return value;
   }
 
@@ -51,10 +46,8 @@ class StringTools
    */
   public static function stripSuffix(value:String, suffix:String):String
   {
-    if (value.endsWith(suffix))
-    {
-      return value.substr(0, value.length - suffix.length);
-    }
+    if (value.endsWith(suffix)) return value.substr(0, value.length - suffix.length);
+
     return value;
   }
 
@@ -65,9 +58,7 @@ class StringTools
    * @return The converted string.
    */
   public static function toLowerKebabCase(value:String):String
-  {
     return value.toLowerCase().replace(' ', '-');
-  }
 
   /**
    * Converts a string to upper kebab case, aka screaming kebab case. For example, "Hello World" becomes "HELLO-WORLD".
@@ -76,9 +67,7 @@ class StringTools
    * @return The converted string.
    */
   public static function toUpperKebabCase(value:String):String
-  {
     return value.toUpperCase().replace(' ', '-');
-  }
 
   /**
    * The regular expression to sanitize strings.
@@ -91,9 +80,7 @@ class StringTools
    * @return The sanitized string.
    */
   public static function sanitize(value:String):String
-  {
     return SANTIZE_REGEX.replace(value, '');
-  }
 
   /**
    * Parses the string data as JSON and returns the resulting object.
@@ -104,7 +91,5 @@ class StringTools
    * @return The parsed object.
    */
   public static function parseJSON(value:String):Dynamic
-  {
     return SerializerUtil.fromJSON(value);
-  }
 }

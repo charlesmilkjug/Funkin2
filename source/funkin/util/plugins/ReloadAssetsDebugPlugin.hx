@@ -18,9 +18,7 @@ class ReloadAssetsDebugPlugin extends FlxBasic
   }
 
   public static function initialize():Void
-  {
     FlxG.plugins.addPlugin(new ReloadAssetsDebugPlugin());
-  }
 
   public override function update(elapsed:Float):Void
   {
@@ -45,7 +43,5 @@ class ReloadAssetsDebugPlugin extends FlxBasic
   }
 
   public override function destroy():Void
-  {
     super.destroy();
-  }
 }

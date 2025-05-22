@@ -29,23 +29,14 @@ class MirrorNotesCommand implements ChartEditorCommand
       // Sort the selection by the strumline positions and then mirror each individually
       for (note in notes)
       {
-        if (note.data < ChartEditorState.STRUMLINE_SIZE)
-        {
-          playerNotes.push(note);
-        }
-        else if (note.data >= ChartEditorState.STRUMLINE_SIZE)
-        {
-          opponentNotes.push(note);
-        }
+        if (note.data < ChartEditorState.STRUMLINE_SIZE) playerNotes.push(note);
+        else if (note.data >= ChartEditorState.STRUMLINE_SIZE) opponentNotes.push(note);
       }
-      if (playerNotes.length > 0)
-      {
-        this.mirroredNotes = mirroredNotes.concat(SongDataUtils.mirrorNotes(playerNotes, ChartEditorState.STRUMLINE_SIZE, flipMiddle, mirrorX, mirrorY));
-      }
-      if (opponentNotes.length > 0)
-      {
-        this.mirroredNotes = mirroredNotes.concat(SongDataUtils.mirrorNotes(opponentNotes, ChartEditorState.STRUMLINE_SIZE, flipMiddle, mirrorX, mirrorY));
-      }
+      if (playerNotes.length > 0) this.mirroredNotes = mirroredNotes.concat(SongDataUtils.mirrorNotes(playerNotes, ChartEditorState.STRUMLINE_SIZE,
+        flipMiddle, mirrorX, mirrorY));
+
+      if (opponentNotes.length > 0) this.mirroredNotes = mirroredNotes.concat(SongDataUtils.mirrorNotes(opponentNotes, ChartEditorState.STRUMLINE_SIZE,
+        flipMiddle, mirrorX, mirrorY));
     }
     else
       this.mirroredNotes = SongDataUtils.mirrorNotes(notes, ChartEditorState.STRUMLINE_SIZE, flipMiddle, mirrorX, mirrorY);

@@ -14,9 +14,7 @@ class WatchPlugin extends FlxBasic
   }
 
   public static function initialize():Void
-  {
     FlxG.plugins.addPlugin(new WatchPlugin());
-  }
 
   public override function update(elapsed:Float):Void
   {
@@ -46,7 +44,5 @@ class WatchPlugin extends FlxBasic
   }
 
   public override function destroy():Void
-  {
     super.destroy();
-  }
 }

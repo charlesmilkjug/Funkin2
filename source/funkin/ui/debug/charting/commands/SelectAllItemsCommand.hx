@@ -51,21 +51,10 @@ class SelectAllItemsCommand implements ChartEditorCommand
 
   public function toString():String
   {
-    if (shouldSelectNotes && !shouldSelectEvents)
-    {
-      return 'Select All Notes';
-    }
-    else if (shouldSelectEvents && !shouldSelectNotes)
-    {
-      return 'Select All Events';
-    }
-    else if (shouldSelectNotes && shouldSelectEvents)
-    {
-      return 'Select All Notes and Events';
-    }
+    if (shouldSelectNotes && !shouldSelectEvents) return 'Select All Notes';
+    else if (shouldSelectEvents && !shouldSelectNotes) return 'Select All Events';
+    else if (shouldSelectNotes && shouldSelectEvents) return 'Select All Notes and Events';
     else
-    {
       return 'Select Nothing (Huh?)';
-    }
   }
 }

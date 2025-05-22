@@ -22,10 +22,7 @@ class EditorTheme implements IRegistryEntry<ThemeData>
     this.id = id;
     this._data = _fetchData(id);
 
-    if (_data == null)
-    {
-      throw 'Could not parse theme data for id: $id';
-    }
+    if (_data == null) throw 'Could not parse theme data for id: $id';
   }
 
   /**
@@ -33,25 +30,21 @@ class EditorTheme implements IRegistryEntry<ThemeData>
    * @return The name of the theme
    */
   public function getThemeName():String
-  {
     return _data.name ?? 'Unknown Theme';
-  }
 
   /**
    *  Return the data for chart editor colors.
    *  @return The chart theme data
    */
-  public function getChartData() {
+  public function getChartData()
     return _data?.chart;
-  }
 
   /**
    * Return the data for stage editor colors.
    * @return The stage theme data
    */
-  public function getStageData() {
+  public function getStageData()
     return _data?.stage;
-  }
 
   public function getColor(name:String, fallback:FlxColor, ?useStageData:Bool = false):FlxColor
   {
@@ -86,12 +79,8 @@ class EditorTheme implements IRegistryEntry<ThemeData>
   }
 
   public function toString():String
-  {
     return 'EditorTheme($id)';
-  }
 
   static function _fetchData(id:String):Null<ThemeData>
-  {
     return ThemeRegistry.instance.parseEntryDataWithMigration(id, ThemeRegistry.instance.fetchEntryVersion(id));
-  }
 }

@@ -43,7 +43,5 @@ class DeselectAllItemsCommand implements ChartEditorCommand
   }
 
   public function toString():String
-  {
     return 'Deselect All Items';
-  }
 }

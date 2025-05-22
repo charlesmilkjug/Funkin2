@@ -70,9 +70,7 @@ class RemoveTimeChangeCommand implements ChartEditorCommand
   }
 
   public function shouldAddToHistory(state:ChartEditorState):Bool
-  {
     return true;
-  }
 
   public function toString():String
   {

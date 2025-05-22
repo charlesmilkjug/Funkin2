@@ -46,14 +46,10 @@ class ChartEditorMeasureTicks extends FlxTypedSpriteGroup<FlxSprite>
   }
 
   public function reloadTickBitmap():Void
-  {
     measureTicksSprite.loadGraphic(chartEditorState.measureTickBitmap);
-  }
 
   public function setClipRect(rect:Null<FlxRect>):Void
-  {
     measureTicksSprite.clipRect = rect;
-  }
 
   /**
    * Update all 5 measure numbers, since that's the most we can really see at a time, even if barely.

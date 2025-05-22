@@ -51,30 +51,27 @@ class BackupAvailableDialog extends Dialog
     backupTimeLabel.text = DateUtil.generateCleanTimestamp(new Date(year, month - 1, day, hour, minute, second));
 
     // button callbacks
-    dialogCancel.onClick = function(_) hideDialog(DialogButton.CANCEL);
+    dialogCancel.onClick = (_) -> hideDialog(DialogButton.CANCEL);
 
-    buttonGoToFolder.onClick = function(_) {
-      // :[
-      #if sys
-      var absoluteBackupsPath:String = Path.join([Sys.getCwd(), StageEditorState.BACKUPS_PATH]);
-      FileUtil.openFolder(absoluteBackupsPath);
-      #end
-    }
-
-    buttonOpenBackup.onClick = function(_) {
-      if (FileUtil.fileExists(filePath) && state.welcomeDialog != null) // doing a check in case a sleezy FUCK decides to delete the backup file AFTER dialog opens
+    buttonGoToFolder.onClick = (_) ->
       {
-        state.welcomeDialog.loadFromFilePath(filePath);
+        // :[
+        #if sys
+        var absoluteBackupsPath:String = Path.join([Sys.getCwd(), StageEditorState.BACKUPS_PATH]);
+        FileUtil.openFolder(absoluteBackupsPath);
+        #end
       }
+
+    buttonOpenBackup.onClick = (_) -> {
+      if (FileUtil.fileExists(filePath) && state.welcomeDialog != null) // doing a check in case a sleezy FUCK decides to delete the backup file AFTER dialog opens
+        state.welcomeDialog.loadFromFilePath(filePath);
+
       hideDialog(DialogButton.APPLY);
     }
 
     // uhhh
-    onDialogClosed = function(event) {
-      if (event.button == DialogButton.APPLY)
-      {
-        if (state.welcomeDialog != null) state.welcomeDialog.hideDialog(DialogButton.APPLY);
-      }
+    onDialogClosed = (event) -> {
+      if (event.button == DialogButton.APPLY) if (state.welcomeDialog != null) state.welcomeDialog.hideDialog(DialogButton.APPLY);
     };
   }
 }

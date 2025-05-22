@@ -145,9 +145,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
           // Reset the options menu when logout succeeds.
           // This means the login option will be displayed.
           FlxG.resetState();
-        }, () -> {
-          FlxG.log.warn("Newgrounds logout failed!");
-        });
+        }, () -> FlxG.log.warn("Newgrounds logout failed!"));
       });
     }
     else
@@ -160,9 +158,7 @@ class OptionsMenu extends Page<OptionsMenuPageName>
           // NOTE: If the user presses login and opens the browser,
           // then navigates the UI
           promptRegisterScore();
-        }, () -> {
-          FlxG.log.warn("Newgrounds login failed!");
-        });
+        }, () -> FlxG.log.warn("Newgrounds login failed!"));
       });
     }
     #end

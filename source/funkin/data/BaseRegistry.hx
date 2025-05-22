@@ -60,10 +60,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
 
     // Lazy initialization of singletons should let this get called,
     // but we have this check just in case.
-    if (FlxG.game != null)
-    {
-      FlxG.console.registerObject('registry$registryId', this);
-    }
+    if (FlxG.game != null) FlxG.console.registerObject('registry$registryId', this);
   }
 
   /**
@@ -99,9 +96,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
         scriptedEntryIds.set(entry.id, entryCls);
       }
       else
-      {
         log('Failed to create scripted entry (${entryCls})');
-      }
     }
 
     //
@@ -138,18 +133,14 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @return The list of entry IDs.
    */
   public function listEntryIds():Array<String>
-  {
     return entries.keys().array();
-  }
 
   /**
    * Count the number of entries in this registry.
    * @return The number of entries.
    */
   public function countEntries():Int
-  {
     return entries.size();
-  }
 
   /**
    * Return whether the entry ID is known to have an attached script.
@@ -157,9 +148,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @return `true` if the entry has an attached script, `false` otherwise.
    */
   public function isScriptedEntry(id:String):Bool
-  {
     return scriptedEntryIds.exists(id);
-  }
 
   /**
    * Return the class name of the scripted entry with the given ID, if it exists.
@@ -167,9 +156,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @return The class name, or `null` if it does not exist.
    */
   public function getScriptedEntryClassName(id:String):Null<String>
-  {
     return scriptedEntryIds.get(id);
-  }
 
   /**
    * Return whether the registry has successfully parsed an entry with the given ID.
@@ -177,9 +164,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @return `true` if the entry exists, `false` otherwise.
    */
   public function hasEntry(id:String):Bool
-  {
     return entries.exists(id);
-  }
 
   /**
    * Fetch an entry by its ID.
@@ -187,9 +172,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @return The entry, or `null` if it does not exist.
    */
   public function fetchEntry(id:String):Null<T>
-  {
     return entries.get(id);
-  }
 
   /**
    * A list of all entries included in the base game.
@@ -205,9 +188,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
   // public function listModdedEntryIds():Array<String> {}
 
   public function toString():String
-  {
     return 'Registry(' + registryId + ', ${countEntries()} entries)';
-  }
 
   /**
    * Retrieve the data for an entry and parse its Semantic Version.
@@ -239,9 +220,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
   function clearEntries():Void
   {
     for (entry in entries)
-    {
       entry.destroy();
-    }
 
     entries.clear();
   }
@@ -280,20 +259,12 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    */
   public function parseEntryDataWithMigration(id:String, version:Null<thx.semver.Version>):Null<J>
   {
-    if (version == null)
-    {
-      throw '[${registryId}] Entry ${id} could not be JSON-parsed or does not have a parseable version.';
-    }
+    if (version == null) throw '[${registryId}] Entry ${id} could not be JSON-parsed or does not have a parseable version.';
 
     // If a version rule is not specified, do not check against it.
-    if (versionRule == null || VersionUtil.validateVersion(version, versionRule))
-    {
-      return parseEntryData(id);
-    }
+    if (versionRule == null || VersionUtil.validateVersion(version, versionRule)) return parseEntryData(id);
     else
-    {
       throw '[${registryId}] Entry ${id} does not support migration to version ${versionRule}.';
-    }
 
     /*
      * An example of what you should override this with:
@@ -335,8 +306,6 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
     trace('[${registryId}] Failed to parse entry data: ${id}');
 
     for (error in errors)
-    {
       DataError.printError(error);
-    }
   }
 }

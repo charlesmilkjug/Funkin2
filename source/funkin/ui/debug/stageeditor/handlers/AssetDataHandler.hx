@@ -87,10 +87,7 @@ class AssetDataHandler
         var bitToLoad = state.addBitmap(data.bitmap.clone());
         object.frames = FlxAtlasFrames.fromSparrow(state.bitmaps[bitToLoad], data.animData);
       }
-      else if (areTheseBitmapsEqual(data.bitmap, getDefaultGraphic()))
-      {
-        object.loadGraphic(getDefaultGraphic());
-      }
+      else if (areTheseBitmapsEqual(data.bitmap, getDefaultGraphic())) object.loadGraphic(getDefaultGraphic());
       else
       {
         var bitToLoad = state.addBitmap(data.bitmap.clone());
@@ -101,14 +98,9 @@ class AssetDataHandler
     {
       if (data.animations != null && data.animations.length > 0) // considering we're unpacking we might as well just do this instead of switch
       {
-        if (data.animData.contains("</TextureAtlas>"))
-        {
-          object.frames = FlxAtlasFrames.fromSparrow(state.bitmaps[data.assetPath].clone(), data.animData);
-        }
+        if (data.animData.contains("</TextureAtlas>")) object.frames = FlxAtlasFrames.fromSparrow(state.bitmaps[data.assetPath].clone(), data.animData);
         else
-        {
           object.frames = FlxAtlasFrames.fromSpriteSheetPacker(state.bitmaps[data.assetPath].clone(), data.animData);
-        }
       }
       else if (data.assetPath.startsWith("#"))
       {
@@ -161,9 +153,7 @@ class AssetDataHandler
    * @return BitmapData
    */
   public static function getDefaultGraphic():BitmapData
-  {
     return new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE).pixels.clone();
-  }
 
   /**
    * Returns OpenFL's BlendMode based on the Name.
@@ -206,12 +196,7 @@ class AssetDataHandler
     var bytes2 = bitmap2.image.data;
 
     for (i in 0...bytes1.length)
-    {
-      if (bytes1[i] != bytes2[i])
-      {
-        return false;
-      }
-    }
+      if (bytes1[i] != bytes2[i]) return false;
 
     return true;
   }

@@ -96,20 +96,14 @@ class CrashHandler
   }
 
   static function displayError(error:UncaughtErrorEvent):Void
-  {
     displayErrorMessage(generateErrorMessage(error));
-  }
 
   static function displayErrorMessage(message:String):Void
-  {
     lime.app.Application.current.window.alert(message, "Fatal Uncaught Exception");
-  }
 
   #if sys
   static function logError(error:UncaughtErrorEvent):Void
-  {
     logErrorMessage(generateErrorMessage(error));
-  }
 
   public static function logErrorMessage(message:String, critical:Bool = false):Void
   {

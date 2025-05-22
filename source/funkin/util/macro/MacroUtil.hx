@@ -111,17 +111,13 @@ class MacroUtil
    * @return Whether the field is static.
    */
   public static function isFieldStatic(field:haxe.macro.Expr.Field):Bool
-  {
     return field.access.contains(AStatic);
-  }
 
   /**
    * Converts a value to an equivalent macro expression.
    */
   public static function toExpr(value:Any):ExprOf<Any>
-  {
     return Context.makeExpr(value, Context.currentPos());
-  }
 
   /**
    * Determine whether two classes are equal.
@@ -130,9 +126,7 @@ class MacroUtil
    * @return Whether the two classes are equivalent.
    */
   public static function areClassesEqual(class1:ClassType, class2:ClassType):Bool
-  {
     return class1.pack.join('.') == class2.pack.join('.') && class1.name == class2.name;
-  }
 
   /**
    * Retrieve a ClassType from a string name.
@@ -158,27 +152,14 @@ class MacroUtil
   public static function fieldAlreadyExists(name:String):Bool
   {
     for (field in Context.getBuildFields())
-    {
-      if (field.name == name && !((field.access ?? []).contains(Access.AAbstract)))
-      {
-        return true;
-      }
-    }
+      if (field.name == name && !((field.access ?? []).contains(Access.AAbstract))) return true;
 
     function fieldAlreadyExistsSuper(name:String, superClass:Null<ClassType>)
     {
-      if (superClass == null)
-      {
-        return false;
-      }
+      if (superClass == null) return false;
 
       for (field in superClass.fields.get())
-      {
-        if (field.name == name && !field.isAbstract)
-        {
-          return true;
-        }
-      }
+        if (field.name == name && !field.isAbstract) return true;
 
       // recursively check superclasses
       return fieldAlreadyExistsSuper(name, superClass.superClass?.t.get());
@@ -197,10 +178,7 @@ class MacroUtil
   {
     if (areClassesEqual(classType, superClass)) return true;
 
-    if (classType.superClass != null)
-    {
-      return isSubclassOf(classType.superClass.t.get(), superClass);
-    }
+    if (classType.superClass != null) return isSubclassOf(classType.superClass.t.get(), superClass);
 
     return false;
   }
@@ -214,17 +192,9 @@ class MacroUtil
   public static function implementsInterface(classType:ClassType, interfaceType:ClassType):Bool
   {
     for (i in classType.interfaces)
-    {
-      if (areClassesEqual(i.t.get(), interfaceType))
-      {
-        return true;
-      }
-    }
+      if (areClassesEqual(i.t.get(), interfaceType)) return true;
 
-    if (classType.superClass != null)
-    {
-      return implementsInterface(classType.superClass.t.get(), interfaceType);
-    }
+    if (classType.superClass != null) return implementsInterface(classType.superClass.t.get(), interfaceType);
 
     return false;
   }

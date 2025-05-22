@@ -4284,10 +4284,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
                 {
                   // Deselect all items.
                   var shouldDeselect:Bool = !wasCursorOverHaxeUI && (currentNoteSelection.length > 0 || currentEventSelection.length > 0);
-                  if (shouldDeselect)
-                  {
-                    performCommand(new DeselectAllItemsCommand());
-                  }
+                  if (shouldDeselect) performCommand(new DeselectAllItemsCommand());
                 }
               }
             }
@@ -5253,14 +5250,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   function handleFileKeybinds():Void
   {
     // CTRL + N = New Chart
-    if (pressingControl()
-      && FlxG.keys.justPressed.N
-      && !isHaxeUIDialogOpen
-      && !FlxG.keys.pressed.SHIFT
-      && !FlxG.keys.pressed.ALT)
-    {
-      this.openWelcomeDialog(true);
-    }
+    if (pressingControl() && FlxG.keys.justPressed.N && !isHaxeUIDialogOpen && !FlxG.keys.pressed.SHIFT && !FlxG.keys.pressed.ALT) this.openWelcomeDialog(true);
 
     // CTRL + O = Open Chart
     if (pressingControl() && FlxG.keys.justPressed.O && !isHaxeUIDialogOpen) this.openBrowseFNFC(true);
@@ -5296,7 +5286,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     if (saveDataDirty)
     {
       Dialogs.messageBox("You are about to leave the editor without saving.\n\nAre you sure?", "Leave Editor", MessageBoxType.TYPE_YESNO, true,
-        function(button:DialogButton) {
+        (button:DialogButton) -> {
           if (button == DialogButton.YES)
           {
             if (Save.instance.chartEditorAutoSaveExit) autoSave();
@@ -5644,8 +5634,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     subStateClosed.add(reviveUICamera);
     subStateClosed.add(resetConductorAfterTest);
 
-    FlxTransitionableState.skipNextTransIn = false;
-    FlxTransitionableState.skipNextTransOut = false;
+    FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = false;
 
     var targetStateParams =
       {
@@ -6208,19 +6197,9 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       editButtonsDirty = false;
 
       if (currentEventSelection.length > 0 || currentNoteSelection.length > 0)
-      {
-        menubarItemCopy.disabled = false;
-        menubarItemCut.disabled = false;
-        menubarItemDelete.disabled = false;
-        menubarItemSelectNone.disabled = false;
-      }
+        menubarItemCopy.disabled = menubarItemCut.disabled = menubarItemDelete.disabled = menubarItemSelectNone.disabled = false;
       else
-      {
-        menubarItemCopy.disabled = true;
-        menubarItemCut.disabled = true;
-        menubarItemDelete.disabled = true;
-        menubarItemSelectNone.disabled = true;
-      }
+        menubarItemCopy.disabled = menubarItemCut.disabled = menubarItemDelete.disabled = menubarItemSelectNone.disabled = true;
 
       if (currentNoteSelection.length > 0) menubarItemFlipNotes.disabled = false;
       else
@@ -6288,13 +6267,13 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     if (audioInstTrack.isPlaying)
     {
-      // Pause
+      // Pause.
       stopAudioPlayback();
       fadeInWelcomeMusic(WELCOME_MUSIC_FADE_IN_DELAY, WELCOME_MUSIC_FADE_IN_DURATION);
     }
     else
     {
-      // Play
+      // Play.
       startAudioPlayback();
       stopWelcomeMusic();
     }
@@ -6352,14 +6331,10 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    * Clear the voices group.
    */
   public function clearVocals():Void
-  {
     audioVocalTrackGroup.clear();
-  }
 
   function isNoteSelected(note:Null<SongNoteData>):Bool
-  {
     return note != null && currentNoteSelection.indexOf(note) != -1;
-  }
 
   override function destroy():Void
   {

@@ -70,10 +70,7 @@ class NumberPreferenceItem extends TextMenuItem
     if (!selected) return;
 
     holdDelayTimer -= elapsed;
-    if (holdDelayTimer <= 0.0)
-    {
-      changeRateTimer -= elapsed;
-    }
+    if (holdDelayTimer <= 0.0) changeRateTimer -= elapsed;
 
     var jpLeft:Bool = controls().UI_LEFT_P;
     var jpRight:Bool = controls().UI_RIGHT_P;
@@ -117,14 +114,9 @@ class NumberPreferenceItem extends TextMenuItem
   function formatted(value:Float):String
   {
     var float:Float = toFixed(value);
-    if (valueFormatter != null)
-    {
-      return valueFormatter(float);
-    }
+    if (valueFormatter != null) return valueFormatter(float);
     else
-    {
       return '${float}';
-    }
   }
 
   function toFixed(value:Float):Float

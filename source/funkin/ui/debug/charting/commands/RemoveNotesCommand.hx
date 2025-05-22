@@ -41,9 +41,8 @@ class RemoveNotesCommand implements ChartEditorCommand
     if (notes.length == 0) return;
 
     for (note in notes)
-    {
       state.currentSongChartNoteData.push(note);
-    }
+
     state.currentNoteSelection = notes;
     state.currentEventSelection = [];
     state.playSound(Paths.sound('chartingSounds/undo'));

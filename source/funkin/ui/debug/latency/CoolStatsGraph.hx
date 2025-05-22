@@ -153,9 +153,7 @@ class CoolStatsGraph extends Sprite
   }
 
   function formatValue(value:Float):String
-  {
     return FlxMath.roundDecimal(value, DECIMALS) + " " + _unit;
-  }
 
   public function average():Float
   {

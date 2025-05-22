@@ -35,10 +35,7 @@ class SetItemSelectionCommand implements ChartEditorCommand
     {
       var eventSelected = this.events[0];
 
-      if (state.eventKindToPlace == eventSelected.eventKind)
-      {
-        trace('Target event kind matches selection: ${eventSelected.eventKind}');
-      }
+      if (state.eventKindToPlace == eventSelected.eventKind) trace('Target event kind matches selection: ${eventSelected.eventKind}');
       else
       {
         trace('Switching target event kind to match selection: ${state.eventKindToPlace} != ${eventSelected.eventKind}');
@@ -49,22 +46,15 @@ class SetItemSelectionCommand implements ChartEditorCommand
       // TODO: Clean this up or get rid of it.
       var eventSchema = eventSelected.getSchema();
       var defaultKey = null;
-      if (eventSchema == null)
-      {
-        trace('[WARNING] Event schema not found for event ${eventSelected.eventKind}.');
-      }
+      if (eventSchema == null) trace('[WARNING] Event schema not found for event ${eventSelected.eventKind}.');
       else
-      {
         defaultKey = eventSchema.getFirstField()?.name;
-      }
+
       var eventData = eventSelected.valueAsStruct(defaultKey);
 
       var eventDataClone = Reflect.copy(eventData);
 
-      if (eventDataClone != null)
-      {
-        state.eventDataToPlace = eventDataClone;
-      }
+      if (eventDataClone != null) state.eventDataToPlace = eventDataClone;
 
       state.refreshToolbox(ChartEditorState.CHART_EDITOR_TOOLBOX_EVENT_DATA_LAYOUT);
     }
@@ -99,7 +89,5 @@ class SetItemSelectionCommand implements ChartEditorCommand
   }
 
   public function toString():String
-  {
     return 'Select ${notes.length + events.length} Items';
-  }
 }

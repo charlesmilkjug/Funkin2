@@ -20,10 +20,7 @@ class CLIUtil
     exeDir = Path.addTrailingSlash(Path.join([exeDir, '../Resources/']));
     #end
     var cwd:String = Path.addTrailingSlash(Sys.getCwd());
-    if (cwd == exeDir)
-    {
-      trace('Working directory is already correct.');
-    }
+    if (cwd == exeDir) trace('Working directory is already correct.');
     else
     {
       trace('Changing working directory from ${Sys.getCwd()} to ${exeDir}');
@@ -113,7 +110,7 @@ class CLIUtil
   static function printUsage():Void
   {
     trace('Usage: Funkin.exe [--chart <chart>] [--stage <stage>] [--help] [--version]');
-  }
+  };
 
   static function buildDefaultParams():CLIParams
   {

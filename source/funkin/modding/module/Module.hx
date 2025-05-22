@@ -5,6 +5,18 @@ import funkin.modding.IScriptedClass.IStateChangingScriptedClass;
 import funkin.modding.events.ScriptEvent;
 
 /**
+ * Parameters used to initialize a module.
+ */
+typedef ModuleParams =
+{
+  /**
+   * The state this module is associated with.
+   * If set, this module will only receive events when the game is in this state.
+   */
+  ?state:Class<Dynamic>
+}
+
+/**
  * A module is a scripted class which receives all events without requiring a specific context.
  * You may have the module active at all times, or only when another script enables it.
  */
@@ -37,15 +49,23 @@ class Module implements IPlayStateScriptedClass implements IStateChangingScripte
   }
 
   /**
+   * The state this module is associated with.
+   * If set, this module will only receive events when the game is in this state.
+   */
+  public var state:Null<Class<Dynamic>> = null;
+
+  /**
    * Called when the module is initialized.
    * It may not be safe to reference other modules here since they may not be loaded yet.
    *
    * NOTE: To make the module start inactive, call `this.active = false` in the constructor.
    */
-  public function new(moduleId:String, priority:Int = 1000):Void
+  public function new(moduleId:String, priority:Int = 1000, ?params:ModuleParams):Void
   {
     this.moduleId = moduleId;
     this.priority = priority;
+
+    if (params != null) this.state = params.state ?? null;
   }
 
   public function toString()
@@ -118,6 +138,10 @@ class Module implements IPlayStateScriptedClass implements IStateChangingScripte
    */
   public function onNoteMiss(event:NoteScriptEvent) {}
 
+  /**
+   * Called when a hold note has been dropped.
+   * This gets dispatched for both the player and opponent strumlines.
+   */
   public function onNoteHoldDrop(event:HoldNoteScriptEvent) {}
 
   /**
@@ -206,4 +230,29 @@ class Module implements IPlayStateScriptedClass implements IStateChangingScripte
    * Called when the song has been restarted.
    */
   public function onSongRetry(event:SongRetryEvent) {}
+
+  /**
+   * Called as the dialogue starts, and before the first dialogue text is displayed.
+   */
+  public function onDialogueStart(event:DialogueScriptEvent):Void {};
+
+  /**
+   * Called when a dialogue line has been completed.
+   */
+  public function onDialogueCompleteLine(event:DialogueScriptEvent):Void {};
+
+  /**
+   * Called when a dialogue line is displayed.
+   */
+  public function onDialogueLine(event:DialogueScriptEvent):Void {};
+
+  /**
+   * Called when the dialogue is skipped.
+   */
+  public function onDialogueSkip(event:DialogueScriptEvent):Void {};
+
+  /**
+   * Called when the dialogue ends.
+   */
+  public function onDialogueEnd(event:DialogueScriptEvent):Void {};
 }

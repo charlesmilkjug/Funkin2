@@ -116,7 +116,5 @@ class ModifyTimeChangeCommand implements ChartEditorCommand
   }
 
   public function toString():String
-  {
     return 'TimeChange ${timeChangeIndex}: ${targetTimeStamp} : BPM: ${targetBPM} in ${targetNumerator}/${targetDenominator}';
-  }
 }

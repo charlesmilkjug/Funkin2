@@ -51,9 +51,7 @@ class Perf
    * @return The duration in seconds
    */
   public function duration():Float
-  {
     return current() - startTime;
-  }
 
   /**
    * A rounded millisecond duration

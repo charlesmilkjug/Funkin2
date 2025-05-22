@@ -18,7 +18,7 @@ class DebugMenuSubState extends MusicBeatSubState
   var items:TextMenuList;
 
   /**
-   * Camera focus point
+   * The camera focus point.
    */
   var camFocusPoint:FlxObject;
 
@@ -78,9 +78,7 @@ class DebugMenuSubState extends MusicBeatSubState
   }
 
   function onMenuChange(selected:TextMenuItem)
-  {
     camFocusPoint.setPosition(selected.x + selected.width / 2, selected.y + selected.height / 2);
-  }
 
   override function update(elapsed:Float):Void
   {
@@ -115,9 +113,7 @@ class DebugMenuSubState extends MusicBeatSubState
   }
 
   function openCharSelect()
-  {
     FlxG.switchState(() -> new funkin.ui.charSelect.CharSelectSubState());
-  }
 
   function openAnimationEditor()
   {
@@ -138,15 +134,11 @@ class DebugMenuSubState extends MusicBeatSubState
   }
 
   function openTestResultsScreen():Void
-  {
     FlxG.switchState(() -> new funkin.ui.debug.results.ResultsDebugSubState());
-  }
 
   #if sys
   function openLogFolder()
-  {
     FileUtil.openFolder(CrashHandler.LOG_FOLDER);
-  }
   #end
 
   function exitDebugMenu()

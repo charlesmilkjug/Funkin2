@@ -26,8 +26,7 @@ class ResultsDebugSubState extends MusicBeatSubState
 
     instance = this;
 
-    persistentUpdate = false;
-    persistentDraw = false;
+    persistentUpdate = persistentDraw = false;
     initResultsParams();
 
     items = new MenuTypedList<MenuTypedItem<FlxText>>();
@@ -58,16 +57,12 @@ class ResultsDebugSubState extends MusicBeatSubState
           FlxG.switchState(() -> new funkin.play.ResultState(resultsParams));
       });
     });
-    createToggleListItem("Character", PlayerRegistry.instance.listBaseGameEntryIds(), (result:String) -> {
-      resultsParams.characterId = result;
-    });
+    createToggleListItem("Character", PlayerRegistry.instance.listBaseGameEntryIds(), (result:String) -> resultsParams.characterId = result);
     createToggleListItem("Results Mode", ["Debug", "Story", "Freeplay"], (result:String) -> {
       returnToDebugScreen = result == "Debug"; // We will create the ResultsState as a Substate, that we will just close and return back to here
       resultsParams.storyMode = result == "Story"; // Debug overrides this, but if not using Debug, we will return to either Freeplay or Story menus
     });
-    createToggleListItem("Ranking", DebugTallies.DEBUG_RANKS, (result:String) -> {
-      resultsParams.scoreData.tallies = DebugTallies.getTallyForRank(result);
-    });
+    createToggleListItem("Ranking", DebugTallies.DEBUG_RANKS, (result:String) -> resultsParams.scoreData.tallies = DebugTallies.getTallyForRank(result);
   }
 
   function createTextItem(name:String, ?onChange:Void->Void):MenuTypedItem<FlxText>
@@ -132,7 +127,7 @@ class ResultsDebugSubState extends MusicBeatSubState
         variationId: "erect",
         isNewHighscore: true,
         isPracticeMode: true, // Invalidates achievements/scores.
-        isBotPlayMode: true, // Invalidates achievements/scores.
+        isBotPlayMode: true, // Also invalidates achievements/scores.
         scoreData:
           {
             score: 1_234_567,

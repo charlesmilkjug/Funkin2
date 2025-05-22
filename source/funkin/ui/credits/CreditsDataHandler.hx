@@ -32,9 +32,7 @@ class CreditsDataHandler
     var entryCount = data.entries.length;
     var lineCount = 0;
     for (entry in data.entries)
-    {
       lineCount += entry?.body?.length ?? 0;
-    }
 
     trace('CreditsData($entryCount entries containing $lineCount lines)');
   }

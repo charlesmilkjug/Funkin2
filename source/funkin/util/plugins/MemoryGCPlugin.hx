@@ -15,9 +15,7 @@ class MemoryGCPlugin extends FlxBasic
   }
 
   public static function initialize():Void
-  {
     FlxG.plugins.addPlugin(new MemoryGCPlugin());
-  }
 
   public override function update(elapsed:Float):Void
   {
@@ -32,7 +30,5 @@ class MemoryGCPlugin extends FlxBasic
   }
 
   public override function destroy():Void
-  {
     super.destroy();
-  }
 }

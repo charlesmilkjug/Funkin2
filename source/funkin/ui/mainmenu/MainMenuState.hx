@@ -71,8 +71,7 @@ class MainMenuState extends MusicBeatState
     if (!overrideMusic) playMenuMusic();
 
     // We want the state to always be able to begin with being able to accept inputs and show the anims of the menu items.
-    persistentUpdate = true;
-    persistentDraw = true;
+    persistentUpdate = persistentDraw = true;
 
     bg.scrollFactor.x = 0;
     bg.scrollFactor.y = 0.17;
@@ -96,9 +95,7 @@ class MainMenuState extends MusicBeatState
     if (Preferences.flashingLights) add(magenta);
     add(menuItems);
     menuItems.onChange.add(onMenuItemChange);
-    menuItems.onAcceptPress.add((_) -> {
-      FlxFlicker.flicker(magenta, 1.1, 0.15, false, true);
-    });
+    menuItems.onAcceptPress.add((_) -> FlxFlicker.flicker(magenta, 1.1, 0.15, false, true));
 
     menuItems.enabled = true; // can move on intro
     createMenuItem('storymode', 'mainmenu/storymode', () -> startExitState(() -> new StoryMenuState()));
@@ -107,8 +104,7 @@ class MainMenuState extends MusicBeatState
       persistentUpdate = false;
       rememberedSelectedIndex = menuItems.selectedIndex;
       // Freeplay has its own custom transition
-      FlxTransitionableState.skipNextTransIn = true;
-      FlxTransitionableState.skipNextTransOut = true;
+      FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 
       #if FEATURE_DEBUG_FUNCTIONS
       // Debug function: Hold SHIFT when selecting Freeplay to swap character without the char select menu
@@ -156,12 +152,7 @@ class MainMenuState extends MusicBeatState
     subStateClosed.add(_ -> resetCamStuff(false));
 
     subStateOpened.add(sub -> {
-      if (Std.isOfType(sub, FreeplayState))
-      {
-        new FlxTimer().start(0.5, _ -> {
-          magenta.visible = false;
-        });
-      }
+      if (Std.isOfType(sub, FreeplayState)) new FlxTimer().start(0.5, _ -> magenta.visible = false);
     });
 
     // FlxG.camera.setScrollBounds(bg.x, bg.x + bg.width, bg.y, bg.y + bg.height * 1.2);
@@ -174,10 +165,7 @@ class MainMenuState extends MusicBeatState
       this.leftWatermarkText.text = Constants.VERSION;
 
       #if FEATURE_NEWGROUNDS
-      if (NewgroundsClient.instance.isLoggedIn())
-      {
-        this.leftWatermarkText.text += ' | Newgrounds: Logged in as ${NewgroundsClient.instance.user?.name}';
-      }
+      if (NewgroundsClient.instance.isLoggedIn()) this.leftWatermarkText.text += ' | Newgrounds: Logged in as ${NewgroundsClient.instance.user?.name}';
       #end
     }
 
@@ -225,25 +213,17 @@ class MainMenuState extends MusicBeatState
   }
 
   override function finishTransIn():Void
-  {
     super.finishTransIn();
-  }
 
   function onMenuItemChange(selected:MenuListItem)
-  {
     camFollow.setPosition(selected.getGraphicMidpoint().x, selected.getGraphicMidpoint().y);
-  }
 
   #if FEATURE_OPEN_URL
   function selectDonate()
-  {
     WindowUtil.openURL(Constants.URL_ITCH);
-  }
 
   function selectMerch()
-  {
     Referral.doMerchReferral();
-  }
   #end
 
   public function openPrompt(prompt:Prompt, ?onClose:Void->Void):Void

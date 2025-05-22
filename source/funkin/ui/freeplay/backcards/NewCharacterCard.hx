@@ -7,12 +7,12 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.ui.freeplay.charselect.PlayableCharacter;
 import openfl.display.BlendMode;
 
+@:nullSafety
 class NewCharacterCard extends BackingCard
 {
-  var confirmAtlas:FlxAtlasSprite;
-
   var darkBg:FlxSprite;
   var lightLayer:FlxSprite;
   var multiply1:FlxSprite;
@@ -21,8 +21,6 @@ class NewCharacterCard extends BackingCard
   var lightLayer3:FlxSprite;
   var yellow:FlxSprite;
   var multiplyBar:FlxSprite;
-
-  var bruh:FlxSprite;
 
   public var friendFoe:BGScrollingText;
   public var newUnlock1:BGScrollingText;
@@ -92,6 +90,26 @@ class NewCharacterCard extends BackingCard
     FlxTween.tween(newUnlock3, {speed: 0}, 0.8, {ease: FlxEase.sineIn});
   }
 
+  public override function new(currentCharacter:PlayableCharacter)
+  {
+    super(currentCharacter);
+
+    friendFoe = new BGScrollingText(0, 163, "COULD IT BE A NEW FRIEND? OR FOE??", FlxG.width, true, 43);
+    newUnlock1 = new BGScrollingText(-440, 215, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
+    waiting = new BGScrollingText(0, 286, "SOMEONE'S WAITING!", FlxG.width / 2, true, 43);
+    newUnlock2 = new BGScrollingText(-220, 331, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
+    friendFoe2 = new BGScrollingText(0, 402, 'COULD IT BE A NEW FRIEND? OR FOE??', FlxG.width, true, 43);
+    newUnlock3 = new BGScrollingText(0, 458, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
+    darkBg = new FlxSprite(0, 0).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/darkback'));
+    multiplyBar = new FlxSprite(-10, 440).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/multiplyBar'));
+    lightLayer = new FlxSprite(-360, 230).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/orange gradient'));
+    multiply1 = new FlxSprite(-15, -125).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/red'));
+    multiply2 = new FlxSprite(-15, -125).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/red'));
+    lightLayer2 = new FlxSprite(-360, 230).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/orange gradient'));
+    yellow = new FlxSprite(0, 0).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/yellow bg piece'));
+    lightLayer3 = new FlxSprite(-360, 290).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/red gradient'));
+  }
+
   public override function init():Void
   {
     FlxTween.tween(pinkBack, {x: 0}, 0.6, {ease: FlxEase.quartOut});
@@ -104,14 +122,6 @@ class NewCharacterCard extends BackingCard
 
     confirmGlow.visible = confirmGlow2.visible = false;
 
-    friendFoe = new BGScrollingText(0, 163, "COULD IT BE A NEW FRIEND? OR FOE??", FlxG.width, true, 43);
-    newUnlock1 = new BGScrollingText(-440, 215, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
-    waiting = new BGScrollingText(0, 286, "SOMEONE'S WAITING!", FlxG.width / 2, true, 43);
-    newUnlock2 = new BGScrollingText(-220, 331, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
-    friendFoe2 = new BGScrollingText(0, 402, 'COULD IT BE A NEW FRIEND? OR FOE??', FlxG.width, true, 43);
-    newUnlock3 = new BGScrollingText(0, 458, 'NEW UNLOCK!', FlxG.width / 2, true, 80);
-
-    darkBg = new FlxSprite(0, 0).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/darkback'));
     add(darkBg);
 
     friendFoe.funnyColor = 0xFF139376;
@@ -138,31 +148,24 @@ class NewCharacterCard extends BackingCard
     newUnlock3.speed = 2;
     add(newUnlock3);
 
-    multiplyBar = new FlxSprite(-10, 440).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/multiplyBar'));
     multiplyBar.blend = BlendMode.MULTIPLY;
     add(multiplyBar);
 
-    lightLayer = new FlxSprite(-360, 230).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/orange gradient'));
     lightLayer.blend = BlendMode.ADD;
     add(lightLayer);
 
-    multiply1 = new FlxSprite(-15, -125).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/red'));
     multiply1.blend = BlendMode.MULTIPLY;
     add(multiply1);
 
-    multiply2 = new FlxSprite(-15, -125).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/red'));
     multiply2.blend = BlendMode.MULTIPLY;
     add(multiply2);
 
-    lightLayer2 = new FlxSprite(-360, 230).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/orange gradient'));
     lightLayer2.blend = BlendMode.ADD;
     add(lightLayer2);
 
-    yellow = new FlxSprite(0, 0).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/yellow bg piece'));
     yellow.blend = BlendMode.MULTIPLY;
     add(yellow);
 
-    lightLayer3 = new FlxSprite(-360, 290).loadGraphic(Paths.image('freeplay/backingCards/newCharacter/red gradient'));
     lightLayer3.blend = BlendMode.ADD;
     add(lightLayer3);
 
@@ -206,9 +209,5 @@ class NewCharacterCard extends BackingCard
     FlxTween.tween(cardGlow, {alpha: 0, "scale.x": 1.2, "scale.y": 1.2}, 0.25, {ease: FlxEase.sineOut});
   }
 
-  override public function confirm():Void
-  {
-    // confirmAtlas.visible = true;
-    // confirmAtlas.anim.play("");
-  }
+  override public function confirm():Void {}
 }

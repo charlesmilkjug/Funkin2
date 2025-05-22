@@ -25,9 +25,7 @@ class Int64Tools
   }
 
   public static function isToIntSafe(i:Int64):Bool
-  {
     return i.high != i.low >> 31;
-  }
 
   public static function toIntSafe(i:Int64):Int
   {

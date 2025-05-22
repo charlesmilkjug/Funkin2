@@ -22,19 +22,13 @@ class BezierUtil
    * Depending on p, 0 = a, 0.5 = b, 1 = c, 0.25 = halfway between a and b, etc.
    */
   static inline function mix3(p:Float, a:Float, b:Float, c:Float):Float
-  {
     return mix2(p, mix2(p, a, b), mix2(p, b, c));
-  }
 
   static inline function mix4(p:Float, a:Float, b:Float, c:Float, d:Float):Float
-  {
     return mix2(p, mix3(p, a, b, c), mix3(p, b, c, d));
-  }
 
   static inline function mix5(p:Float, a:Float, b:Float, c:Float, d:Float, e:Float):Float
-  {
     return mix2(p, mix4(p, a, b, c, d), mix4(p, b, c, d, e));
-  }
 
   /**
    * A bezier curve with two points.

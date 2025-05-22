@@ -79,9 +79,7 @@ class AnsiTrace
   }
 
   public static function ansiWrap(str:Dynamic, ansiCol:String)
-  {
     return ansify(ansiCol) + str + ansify(NORMAL);
-  }
 
   public static function ansify(ansiCol:String)
   {

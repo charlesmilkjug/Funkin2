@@ -14,9 +14,7 @@ class VolumePlugin extends FlxBasic
   }
 
   public static function initialize()
-  {
     FlxG.plugins.addPlugin(new VolumePlugin());
-  }
 
   public override function update(elapsed:Float):Void
   {

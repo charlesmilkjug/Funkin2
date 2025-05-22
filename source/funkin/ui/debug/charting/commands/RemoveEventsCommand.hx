@@ -62,10 +62,7 @@ class RemoveEventsCommand implements ChartEditorCommand
 
   public function toString():String
   {
-    if (events.length == 1 && events[0] != null)
-    {
-      return 'Remove Event';
-    }
+    if (events.length == 1 && events[0] != null) return 'Remove Event';
 
     return 'Remove ${events.length} Events';
   }

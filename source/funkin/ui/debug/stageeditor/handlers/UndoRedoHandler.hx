@@ -20,9 +20,7 @@ class UndoRedoHandler
         var pos = actionToDo.data.pos == null ? [0, 0] : actionToDo.data.pos;
 
         for (char in state.getCharacters())
-        {
           if (char.characterType == type) state.selectedChar = char;
-        }
 
         state.selectedChar.x = pos[0] - state.selectedChar.characterOrigin.x + state.selectedChar.globalOffsets[0];
         state.selectedChar.y = pos[1] - state.selectedChar.characterOrigin.y + state.selectedChar.globalOffsets[1];
@@ -35,9 +33,7 @@ class UndoRedoHandler
         var pos = actionToDo.data.pos ?? [0, 0];
 
         for (obj in state.spriteArray)
-        {
           if (obj.ID == id) state.selectedSprite = obj;
-        }
 
         if (state.selectedSprite != null)
         {
@@ -98,9 +94,7 @@ class UndoRedoHandler
         var angle = actionToDo.data.angle ?? 0;
 
         for (obj in state.spriteArray)
-        {
           if (obj.ID == id) state.selectedSprite = obj;
-        }
 
         if (state.selectedSprite != null)
         {

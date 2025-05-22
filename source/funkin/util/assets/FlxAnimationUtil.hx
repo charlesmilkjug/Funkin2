@@ -38,9 +38,7 @@ class FlxAnimationUtil
   public static function addAtlasAnimations(target:FlxSprite, animations:Array<AnimationData>):Void
   {
     for (anim in animations)
-    {
       addAtlasAnimation(target, anim);
-    }
   }
 
   /**
@@ -55,13 +53,10 @@ class FlxAnimationUtil
     var result:FlxFramesCollection = new FlxFramesCollection(null, ATLAS, null);
 
     for (frame in a.frames)
-    {
       result.pushFrame(frame);
-    }
+
     for (frame in b.frames)
-    {
       result.pushFrame(frame);
-    }
 
     return result;
   }

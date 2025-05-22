@@ -22,14 +22,9 @@ class AddNotesCommand implements ChartEditorCommand
   public function execute(state:ChartEditorState):Void
   {
     for (note in notes)
-    {
       state.currentSongChartNoteData.push(note);
-    }
 
-    if (appendToSelection)
-    {
-      state.currentNoteSelection = state.currentNoteSelection.concat(notes);
-    }
+    if (appendToSelection) state.currentNoteSelection = state.currentNoteSelection.concat(notes);
     else
     {
       state.currentNoteSelection = notes;

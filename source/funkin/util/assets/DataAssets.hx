@@ -4,9 +4,7 @@ package funkin.util.assets;
 class DataAssets
 {
   static function buildDataPath(path:String):String
-  {
     return 'assets/data/${path}';
-  }
 
   public static function listDataFilesInPath(path:String, suffix:String = '.json'):Array<String>
   {

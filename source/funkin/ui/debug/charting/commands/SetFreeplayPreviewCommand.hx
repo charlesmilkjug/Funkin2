@@ -37,26 +37,16 @@ class SetFreeplayPreviewCommand implements ChartEditorCommand
   }
 
   public function shouldAddToHistory(state:ChartEditorState):Bool
-  {
     return (newStartTime != null && newStartTime != previousStartTime) || (newEndTime != null && newEndTime != previousEndTime);
-  }
 
   public function toString():String
   {
     var setStart = newStartTime != null && newStartTime != previousStartTime;
     var setEnd = newEndTime != null && newEndTime != previousEndTime;
 
-    if (setStart && !setEnd)
-    {
-      return "Set Freeplay Preview Start Time";
-    }
-    else if (setEnd && !setStart)
-    {
-      return "Set Freeplay Preview End Time";
-    }
+    if (setStart && !setEnd) return "Set Freeplay Preview Start Time";
+    else if (setEnd && !setStart) return "Set Freeplay Preview End Time";
     else
-    {
       return "Set Freeplay Preview Start and End Times";
-    }
   }
 }

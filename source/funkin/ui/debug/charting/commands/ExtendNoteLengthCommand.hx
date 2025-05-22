@@ -62,18 +62,10 @@ class ExtendNoteLengthCommand implements ChartEditorCommand
 
   public function toString():String
   {
-    if (oldLength == 0)
-    {
-      return 'Add Hold to Note';
-    }
-    else if (newLength == 0)
-    {
-      return 'Remove Hold from Note';
-    }
+    if (oldLength == 0) return 'Add Hold to Note';
+    else if (newLength == 0) return 'Remove Hold from Note';
     else
-    {
       return 'Extend Hold Note Length';
-    }
   }
 }
 

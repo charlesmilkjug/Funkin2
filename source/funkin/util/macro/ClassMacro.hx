@@ -76,9 +76,7 @@ class ClassMacro
     classListsRaw = [];
 
     for (request in classListsToGenerate)
-    {
       classListsRaw.set(request, []);
-    }
 
     for (type in allTypes)
     {
@@ -96,12 +94,7 @@ class ClassMacro
           else
           {
             for (request in classListsToGenerate)
-            {
-              if (doesClassMatchRequest(classType, request))
-              {
-                classListsRaw.get(request).push(className);
-              }
-            }
+              if (doesClassMatchRequest(classType, request)) classListsRaw.get(request).push(className);
           }
         // Other types (things like enums)
         default:
@@ -162,10 +155,7 @@ class ClassMacro
 
         var classPackage:String = classType.pack.join('.');
 
-        if (recursive)
-        {
-          return StringTools.startsWith(classPackage, targetPackage);
-        }
+        if (recursive) return StringTools.startsWith(classPackage, targetPackage);
         else
         {
           var regex:EReg = ~/^${targetPackage}(\.|$)/;
@@ -176,14 +166,8 @@ class ClassMacro
 
         var targetClassType:ClassType = MacroUtil.getClassType(targetClassName);
 
-        if (MacroUtil.implementsInterface(classType, targetClassType))
-        {
-          return true;
-        }
-        else if (MacroUtil.isSubclassOf(classType, targetClassType))
-        {
-          return true;
-        }
+        if (MacroUtil.implementsInterface(classType, targetClassType)) return true;
+        else if (MacroUtil.isSubclassOf(classType, targetClassType)) return true;
 
         return false;
 

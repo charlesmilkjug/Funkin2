@@ -22,14 +22,9 @@ class AddEventsCommand implements ChartEditorCommand
   public function execute(state:ChartEditorState):Void
   {
     for (event in events)
-    {
       state.currentSongChartEventData.push(event);
-    }
 
-    if (appendToSelection)
-    {
-      state.currentEventSelection = state.currentEventSelection.concat(events);
-    }
+    if (appendToSelection) state.currentEventSelection = state.currentEventSelection.concat(events);
     else
     {
       state.currentNoteSelection = [];

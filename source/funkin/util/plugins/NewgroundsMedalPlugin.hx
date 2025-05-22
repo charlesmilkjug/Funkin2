@@ -40,8 +40,7 @@ class NewgroundsMedalPlugin extends FlxTypedContainer<FlxBasic>
     points = new FlxText(171 + ecs, 10 + why, 50, 12, false);
     points.fieldHeight = 18;
     points.systemFont = "Arial";
-    points.bold = true;
-    points.italic = true;
+    points.bold = points.italic = true;
     points.alignment = "right";
 
     points.text = "100";
@@ -68,8 +67,7 @@ class NewgroundsMedalPlugin extends FlxTypedContainer<FlxBasic>
     // fr.add(() -> FunkinSound.playOnce(Paths.sound('NGFadeIn'), 1.));
 
     medal.anim.getFrameLabel("show").add(() -> {
-      points.visible = true;
-      name.visible = true;
+      points.visible = name.visible = true;
       if (name.width > name.clipRect.width)
       {
         am = (name.text.length * (name.size + 2) * 1.25) / name.clipRect.width * 10;
@@ -81,11 +79,8 @@ class NewgroundsMedalPlugin extends FlxTypedContainer<FlxBasic>
     medal.anim.getFrameLabel("fade").add(() -> FunkinSound.playOnce(Paths.sound('NGFadeOut'), 1.));
 
     medal.anim.getFrameLabel("hide").add(() -> {
-      points.visible = false;
-      name.visible = false;
-      tween = false;
-      name.offset.x = 0;
-      name.clipRect.x = 0;
+      points.visible = name.visible = tween = false;
+      name.offset.x = name.clipRect.x = 0;
       name.resetFrame();
       medal.replaceFrameGraphic(3, null);
     });
@@ -122,8 +117,7 @@ class NewgroundsMedalPlugin extends FlxTypedContainer<FlxBasic>
   public static function play(points:Int = 100, name:String = "I LOVE CUM I LOVE CUM I LOVE CUM I LOVE CUM", graphic:FlxGraphic = null)
   {
     var func = () -> {
-      instance.points.visible = false;
-      instance.name.visible = false;
+      instance.points.visible = instance.name.visible = false;
       instance.points.text = Std.string(points);
       instance.name.text = name;
 

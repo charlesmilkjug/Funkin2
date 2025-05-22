@@ -49,10 +49,7 @@ class WindowUtil
   {
     #if FEATURE_OPEN_URL
     targetUrl = sanitizeURL(targetUrl);
-    if (targetUrl == '')
-    {
-      throw 'Invalid URL: "$targetUrl"';
-    }
+    if (targetUrl == '') throw 'Invalid URL: "$targetUrl"';
 
     #if linux
     Sys.command('/usr/bin/xdg-open $targetUrl &');
@@ -117,9 +114,7 @@ class WindowUtil
     // onUpdate is called every frame just before rendering.
 
     // onExit is called when the game window is closed.
-    openfl.Lib.current.stage.application.onExit.add((exitCode:Int) -> {
-      windowExit.dispatch(exitCode);
-    });
+    openfl.Lib.current.stage.application.onExit.add((exitCode:Int) -> windowExit.dispatch(exitCode));
 
     openfl.Lib.current.stage.addEventListener(openfl.events.KeyboardEvent.KEY_DOWN, (e:openfl.events.KeyboardEvent) -> {
       if (haxe.ui.focus.FocusManager.instance.focus != null) return;
@@ -156,9 +151,7 @@ class WindowUtil
    * @param value The title to use.
    */
   public static function setWindowTitle(value:String):Void
-  {
     lime.app.Application.current.window.title = value;
-  }
 
   public static function setVSyncMode(value:lime.ui.WindowVSyncMode):Void
   {

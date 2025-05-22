@@ -33,10 +33,8 @@ class SingletonMacro
 
         static function get_instance():$clsType
         {
-          if (_instance == null)
-          {
-            _instance = ${Context.parse(newExpr, Context.currentPos())};
-          }
+          if (_instance == null) _instance = ${Context.parse(newExpr, Context.currentPos())};
+
           return _instance;
         }
       }).fields);

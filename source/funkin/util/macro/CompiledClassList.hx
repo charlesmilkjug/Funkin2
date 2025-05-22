@@ -43,9 +43,7 @@ class CompiledClassList
       }
     }
     else
-    {
       throw "Class lists not properly generated. Try cleaning out your export folder, restarting your IDE, and rebuilding your project.";
-    }
   }
 
   public static function get(request:String):List<Class<Dynamic>>
@@ -62,7 +60,5 @@ class CompiledClassList
   }
 
   public static inline function getTyped<T>(request:String, type:Class<T>):List<Class<T>>
-  {
     return cast get(request);
-  }
 }

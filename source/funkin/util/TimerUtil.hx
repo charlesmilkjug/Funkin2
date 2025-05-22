@@ -10,9 +10,7 @@ class TimerUtil
    * Store the current time.
    */
   public static function start():Float
-  {
     return Timer.stamp();
-  }
 
   /**
    * Return the elapsed time.

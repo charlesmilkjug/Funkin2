@@ -33,14 +33,10 @@ class DeselectItemsCommand implements ChartEditorCommand
   public function undo(state:ChartEditorState):Void
   {
     for (note in this.notes)
-    {
       state.currentNoteSelection.push(note);
-    }
 
     for (event in this.events)
-    {
       state.currentEventSelection.push(event);
-    }
 
     state.noteDisplayDirty = true;
     state.notePreviewDirty = true;
@@ -59,14 +55,8 @@ class DeselectItemsCommand implements ChartEditorCommand
     var notesOnly = (notes.length > 0 && events.length == 0);
     var eventsOnly = (notes.length == 0 && events.length > 0);
 
-    if (notesOnly)
-    {
-      return 'Deselect ${notes.length} ${isPlural ? 'Notes' : 'Note'}';
-    }
-    else if (eventsOnly)
-    {
-      return 'Deselect ${events.length} ${isPlural ? 'Events' : 'Event'}';
-    }
+    if (notesOnly) return 'Deselect ${notes.length} ${isPlural ? 'Notes' : 'Note'}';
+    else if (eventsOnly) return 'Deselect ${events.length} ${isPlural ? 'Events' : 'Event'}';
 
     return 'Deselect ${notes.length + events.length} Items';
   }

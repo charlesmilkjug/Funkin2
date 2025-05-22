@@ -38,40 +38,32 @@ class StageEditorCharacterToolbox extends StageEditorDefaultToolbox
     super(state);
 
     // Numeric callbacks.
-    charPosX.onChange = charPosY.onChange = function(_) {
-      repositionCharacter();
-    }
+    charPosX.onChange = charPosY.onChange = (_) -> repositionCharacter();
 
     charZIdx.max = StageEditorState.MAX_Z_INDEX;
-    charZIdx.onChange = function(_) {
+    charZIdx.onChange = (_) -> {
       state.charGroups[state.selectedChar.characterType].zIndex = Std.int(charZIdx.pos);
       state.sortAssets();
     }
 
-    charCamX.onChange = charCamY.onChange = function(_) {
+    charCamX.onChange = charCamY.onChange = (_) -> {
       state.charCamOffsets[state.selectedChar.characterType] = [charCamX.pos, charCamY.pos];
       state.updateMarkerPos();
     }
 
-    charScale.onChange = function(_) {
+    charScale.onChange = (_) -> {
       state.selectedChar.setScale(state.selectedChar.getBaseScale() * charScale.pos);
       repositionCharacter();
     }
 
-    charAlpha.onChange = function(_) {
-      state.selectedChar.alpha = charAlpha.pos;
-    }
+    charAlpha.onChange = (_) -> state.selectedChar.alpha = charAlpha.pos;
 
-    charAngle.onChange = function(_) {
-      state.selectedChar.angle = charAngle.pos;
-    }
+    charAngle.onChange = (_) -> state.selectedChar.angle = charAngle.pos;
 
-    charScrollX.onChange = charScrollY.onChange = function(_) {
-      state.selectedChar.scrollFactor.set(charScrollX.pos, charScrollY.pos);
-    }
+    charScrollX.onChange = charScrollY.onChange = (_) -> state.selectedChar.scrollFactor.set(charScrollX.pos, charScrollY.pos);
 
     // character button
-    charType.onClick = function(_) {
+    charType.onClick = (_) -> {
       charMenu = new StageEditorCharacterMenu(state, this);
       Screen.instance.addComponent(charMenu);
     }
@@ -222,12 +214,8 @@ class StageEditorCharacterMenu extends Menu // copied from chart editor
         }
       };
 
-      charButton.onMouseOver = _ -> {
-        charIconName.text = '${charData.name} [${charId}]';
-      };
-      charButton.onMouseOut = _ -> {
-        charIconName.text = defaultText;
-      };
+      charButton.onMouseOver = _ -> charIconName.text = '${charData.name} [${charId}]';
+      charButton.onMouseOut = _ -> charIconName.text = defaultText;
       charGrid.addComponent(charButton);
     }
 

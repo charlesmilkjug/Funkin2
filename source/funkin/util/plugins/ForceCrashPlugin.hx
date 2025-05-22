@@ -15,9 +15,7 @@ class ForceCrashPlugin extends FlxBasic
   }
 
   public static function initialize():Void
-  {
     FlxG.plugins.addPlugin(new ForceCrashPlugin());
-  }
 
   public override function update(elapsed:Float):Void
   {
@@ -32,7 +30,5 @@ class ForceCrashPlugin extends FlxBasic
   }
 
   public override function destroy():Void
-  {
     super.destroy();
-  }
 }

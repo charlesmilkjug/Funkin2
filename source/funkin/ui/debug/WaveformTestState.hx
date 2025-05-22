@@ -74,14 +74,9 @@ class WaveformTestState extends MusicBeatState
 
     if (FlxG.keys.justPressed.SPACE)
     {
-      if (waveformAudio.isPlaying)
-      {
-        waveformAudio.stop();
-      }
+      if (waveformAudio.isPlaying) waveformAudio.stop();
       else
-      {
         waveformAudio.play();
-      }
     }
 
     if (FlxG.keys.justPressed.ENTER)
@@ -167,15 +162,9 @@ class WaveformTestState extends MusicBeatState
 
       var newVertex = polygonSprite.build_vertex(x, y);
 
-      if (firstVertex == -1)
-      {
-        firstVertex = newVertex;
-      }
+      if (firstVertex == -1) firstVertex = newVertex;
 
-      if (lastVertex != -1)
-      {
-        polygonSprite.add_tri(centerVertex, lastVertex, newVertex);
-      }
+      if (lastVertex != -1) polygonSprite.add_tri(centerVertex, lastVertex, newVertex);
 
       lastVertex = newVertex;
     }
@@ -184,7 +173,5 @@ class WaveformTestState extends MusicBeatState
   }
 
   public override function destroy():Void
-  {
     super.destroy();
-  }
 }

@@ -50,7 +50,7 @@ class ChartEditorNoteContextMenu extends ChartEditorBaseContextMenu
         contextmenuNoteKind.text = data.kind;
     }
     // NOTE: Remember to use commands here to ensure undo/redo works properly
-    contextmenuUnit.onChange = function(_) {
+    contextmenuUnit.onChange = (_) -> {
       // Why does the dropdown do this after I specifically set the value of the damn thing?
       if (contextmenuUnit.selectedIndex == -1)
       {
@@ -91,7 +91,7 @@ class ChartEditorNoteContextMenu extends ChartEditorBaseContextMenu
     }
     var id:String = contextmenuUnit.dataSource.get(contextmenuUnit.selectedIndex).id;
 
-    contextmenuPosition.onChange = function(_) {
+    contextmenuPosition.onChange = (_) -> {
       var newTime:Float = contextmenuPosition.value;
       if (contextmenuUnit.selectedIndex == -1)
       {
@@ -151,17 +151,10 @@ class ChartEditorNoteContextMenu extends ChartEditorBaseContextMenu
       contextmenuPosition.resumeEvent(UIEvent.CHANGE, true, true);
     }
 
+    contextmenuFlip.onClick = (_) -> chartEditorState.performCommand(new FlipNotesCommand([data]));
 
-    contextmenuFlip.onClick = function(_) {
-      chartEditorState.performCommand(new FlipNotesCommand([data]));
-    }
+    contextmenuAddHold.onClick = (_) -> chartEditorState.performCommand(new ExtendNoteLengthCommand(data, 4, STEPS));
 
-    contextmenuAddHold.onClick = function(_) {
-      chartEditorState.performCommand(new ExtendNoteLengthCommand(data, 4, STEPS));
-    }
-
-    contextmenuDelete.onClick = function(_) {
-      chartEditorState.performCommand(new RemoveNotesCommand([data]));
-    }
+    contextmenuDelete.onClick = (_) -> chartEditorState.performCommand(new RemoveNotesCommand([data]));
   }
 }

@@ -568,9 +568,7 @@ class StageEditorState extends UIState
   }
 
   function stopWelcomeMusic():Void
-  {
     this.welcomeMusic.pause();
-  }
 
   public function loadPreferences():Void
   {
@@ -1234,7 +1232,7 @@ class StageEditorState extends UIState
           return;
         }
 
-        FileUtil.saveFile(bytes, [FileUtil.FILE_FILTER_FNFS], function(path:String) {
+        FileUtil.saveFile(bytes, [FileUtil.FILE_FILTER_FNFS], (path:String) -> {
           saved = true;
           currentFile = path;
         }, null, stageName + "." + FileUtil.FILE_EXTENSION_INFO_FNFS.extension);
@@ -1264,18 +1262,18 @@ class StageEditorState extends UIState
         if (!saved)
         {
           Dialogs.messageBox("Opening a new Stage will reset all your progress for this Stage.\n\nAre you sure you want to proceed?", "Open Stage",
-            MessageBoxType.TYPE_YESNO, true, function(btn:DialogButton) {
+            MessageBoxType.TYPE_YESNO, true, (btn:DialogButton) -> {
               if (btn == DialogButton.YES)
               {
                 saved = true;
                 onMenuItemClick("open stage"); // ough
               }
-          });
+            });
 
           return;
         }
 
-        FileUtil.browseForBinaryFile("Open Stage Data", [FileUtil.FILE_EXTENSION_INFO_FNFS], function(_) {
+        FileUtil.browseForBinaryFile("Open Stage Data", [FileUtil.FILE_EXTENSION_INFO_FNFS], (_) -> {
           if (_?.fullPath == null) return;
 
           clearAssets();
@@ -1359,9 +1357,7 @@ class StageEditorState extends UIState
         objNameDialog = new NewObjDialog(this);
         objNameDialog.showDialog();
 
-        objNameDialog.onDialogClosed = function(_) {
-          objNameDialog = null;
-        }
+        objNameDialog.onDialogClosed = (_) -> objNameDialog = null;
 
       case "find object":
         findObjDialog.hideDialog(DialogButton.CANCEL);
@@ -1376,9 +1372,7 @@ class StageEditorState extends UIState
         userGuideDialog = new UserGuideDialog();
         userGuideDialog.showDialog();
 
-        userGuideDialog.onDialogClosed = function(_) {
-          userGuideDialog = null;
-        }
+        userGuideDialog.onDialogClosed = (_) -> userGuideDialog = null;
 
       case "open folder":
         #if sys
@@ -1398,16 +1392,14 @@ class StageEditorState extends UIState
         }
 
         if (!testingMode)
-        {
           menubarItemWindowObjectGraphic.selected = menubarItemWindowObjectAnims.selected = menubarItemWindowObjectProps.selected = menubarItemWindowCharacter.selected = menubarItemWindowStage.selected = false;
-        }
 
         selectedSprite?.selectedShader.setAmount((testingMode ? (moveMode == "assets" ? 1 : 0) : 0));
         testingMode = !testingMode;
 
       case "clear assets":
         Dialogs.messageBox("This will destroy all Objects in this Stage.\n\nAre you sure? This cannot be undone.", "Clear Assets", MessageBoxType.TYPE_YESNO,
-          true, function(btn:DialogButton) {
+          true, (btn:DialogButton) -> {
             if (btn == DialogButton.YES)
             {
               clearAssets();
@@ -1417,7 +1409,7 @@ class StageEditorState extends UIState
               updateDialog(StageEditorDialogType.OBJECT_ANIMS);
               updateDialog(StageEditorDialogType.OBJECT_PROPERTIES);
             }
-        });
+          });
 
       case "center on screen":
         if (selectedSprite != null && moveMode == "assets")
@@ -1488,7 +1480,7 @@ class StageEditorState extends UIState
         welcomeDialog = new WelcomeDialog(this);
         welcomeDialog.showDialog();
         welcomeDialog.closable = true;
-        welcomeDialog.onDialogClosed = function(_) {
+        welcomeDialog.onDialogClosed = (_) -> {
           updateWindowTitle();
           welcomeDialog = null;
 
@@ -1546,9 +1538,7 @@ class StageEditorState extends UIState
   {
     // first we check for existing bitmaps so we dont like add an extra one
     for (name => bitmap in bitmaps)
-    {
       if (bitmap == newBitmap) return name;
-    }
 
     var id:Int = 0;
     while (bitmaps.exists("image" + id))
@@ -1571,9 +1561,7 @@ class StageEditorState extends UIState
   public function createURLDialog(onComplete:lime.utils.Bytes->Void = null, onFail:String->Void = null)
   {
     loadUrlDialog = new LoadFromUrlDialog(onComplete, onFail);
-    loadUrlDialog.onDialogClosed = function(_) {
-      loadUrlDialog = null;
-    }
+    loadUrlDialog.onDialogClosed = (_) -> loadUrlDialog = null;
 
     loadUrlDialog.showDialog();
   }

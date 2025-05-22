@@ -48,9 +48,7 @@ class MapTools
     var result = a.copy();
 
     for (pair in b.keyValueIterator())
-    {
       result.set(pair.key, pair.value);
-    }
 
     return result;
   }

@@ -20,7 +20,8 @@ import haxe.ui.components.OptionStepper;
 
 @:nullSafety
 @:access(funkin.ui.debug.stageeditor.StageEditorState)
-class StageEditorDialogHandler {
+class StageEditorDialogHandler
+{
   public static function openPreferencesDialog(state:StageEditorState, closable:Bool):Null<Dialog>
   {
     var dialog = PreferenceDialog.build(state, closable);
@@ -28,7 +29,7 @@ class StageEditorDialogHandler {
 
     var themeMusic:Null<CheckBox> = dialog.findComponent('optionsThemeMusic', CheckBox);
     if (themeMusic == null) throw 'Could not locate themeMusic CheckBox in Preferences dialog';
-    themeMusic.onChange = function(event:UIEvent) {
+    themeMusic.onChange = (event:UIEvent) -> {
       if (event.value == null) return;
       state.isWelcomeMusic = event.value;
       if (!state.welcomeMusic.active || !state.isWelcomeMusic) state.fadeInWelcomeMusic();
@@ -37,7 +38,7 @@ class StageEditorDialogHandler {
 
     var inputTheme:Null<DropDown> = dialog.findComponent('optionsThemeGroup', DropDown);
     if (inputTheme == null) throw 'Could not locate inputTheme DropDown in Preferences dialog';
-    inputTheme.onChange = function(event:UIEvent) {
+    inputTheme.onChange = (event:UIEvent) -> {
       if (event.data?.id == null) return;
       state.themeId = event.data.id;
     };

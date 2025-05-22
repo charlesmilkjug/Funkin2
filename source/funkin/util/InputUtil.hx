@@ -120,29 +120,19 @@ class InputUtil
   }
 
   inline static function titleCaseTrim(str:String, length = 8)
-  {
     return str.charAt(0).toUpperCase() + str.substr(1, length - 1).toLowerCase();
-  }
 
   inline static function titleCase(str:String)
-  {
     return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
-  }
 
   inline static public function parsePadName(name:String):ControllerName
-  {
     return ControllerName.parseName(name);
-  }
 
   inline static public function getPadName(gamepad:FlxGamepad):ControllerName
-  {
     return ControllerName.getName(gamepad);
-  }
 
   inline static public function getPadNameById(id:Int):ControllerName
-  {
     return ControllerName.getNameById(id);
-  }
 }
 
 @:forward

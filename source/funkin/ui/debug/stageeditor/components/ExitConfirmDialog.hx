@@ -21,10 +21,7 @@ class ExitConfirmDialog extends Dialog
 
   public override function validateDialog(button:DialogButton, fn:Bool->Void)
   {
-    if (button == "{{Proceed}}" && onComplete != null)
-    {
-      onComplete();
-    }
+    if (button == "{{Proceed}}" && onComplete != null) onComplete();
 
     fn(true);
   }

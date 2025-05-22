@@ -38,17 +38,17 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
     this.charIds = charIds;
     this.instId = chartEditorState.currentInstrumentalId;
 
-    dialogCancel.onClick = function(_) {
+    dialogCancel.onClick = (_) -> {
       hideDialog(DialogButton.CANCEL);
     }
 
-    dialogNoVocals.onClick = function(_) {
+    dialogNoVocals.onClick = (_) -> {
       // Dismiss
       chartEditorState.wipeVocalData();
       hideDialog(DialogButton.APPLY);
     };
 
-    dialogContinue.onClick = function(_) {
+    dialogContinue.onClick = (_) -> {
       // Dismiss
       hideDialog(DialogButton.APPLY);
     };
@@ -69,7 +69,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
 
       var dropHandler:DialogDropTarget = {component: vocalsEntry, handler: null};
 
-      var onDropFile:String->Void = function(pathStr:String) {
+      var onDropFile:String->Void = (pathStr:String) -> {
         trace('Selected file: $pathStr');
         var path:Path = new Path(pathStr);
 
@@ -102,9 +102,9 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
         }
       };
 
-      vocalsEntry.onClick = function(_event) {
+      vocalsEntry.onClick = (_event) -> {
         Dialogs.openBinaryFile('Open $charName Vocals', [
-          {label: 'Audio File (.ogg)', extension: 'ogg'}], function(selectedFile) {
+          {label: 'Audio File (.ogg)', extension: 'ogg'}], (selectedFile) -> {
             if (selectedFile != null && selectedFile.bytes != null)
             {
               trace('Selected file: ' + selectedFile.name);
@@ -138,7 +138,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
                 #end
               }
             }
-        });
+          });
       }
 
       dropHandler.handler = onDropFile;
@@ -161,9 +161,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
       });
 
     for (dropTarget in dialog.dropHandlers)
-    {
       state.addDropHandler(dropTarget);
-    }
 
     dialog.showDialog(modal ?? true);
 
@@ -181,9 +179,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
     }
 
     for (dropTarget in dropHandlers)
-    {
       chartEditorState.removeDropHandler(dropTarget);
-    }
   }
 
   public override function lock():Void
@@ -232,9 +228,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
         this.hideDialog(DialogButton.APPLY);
       }
       else
-      {
         chartEditorState.failure('Failed to Load Chart', 'Failed to load chart (${path.toString()})');
-      }
     }
     catch (err)
     {
@@ -271,9 +265,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
   }
 
   function onCancelBrowse():Void
-  {
     this.unlock();
-  }
 }
 
 @:build(haxe.ui.ComponentBuilder.build("assets/exclude/data/ui/chart-editor/dialogs/upload-vocals-entry.xml"))
@@ -295,13 +287,13 @@ class ChartEditorUploadVocalsEntry extends Box
     vocalsEntryLabel.text = 'Click to browse for vocals for $charName.';
     #end
 
-    this.onMouseOver = function(_event) {
+    this.onMouseOver = (_event) -> {
       // if (this.locked) return;
       this.swapClass('upload-bg', 'upload-bg-hover');
       Cursor.cursorMode = Pointer;
     }
 
-    this.onMouseOut = function(_event) {
+    this.onMouseOut = (_event) -> {
       this.swapClass('upload-bg-hover', 'upload-bg');
       Cursor.cursorMode = Default;
     }
