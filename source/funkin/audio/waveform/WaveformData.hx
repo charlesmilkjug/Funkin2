@@ -260,9 +260,10 @@ class WaveformDataChannel
    * Retrieve a given maximum point at an index.
    */
   public function maxSample(i:Int)
+  {
     var offset = (i * parent.channels + this.channelId) * 2 + 1;
-
-  return inline parent.get(offset);
+    return inline parent.get(offset);
+  }
 
   /**
    * Mapped to a value between 0 and 1.
