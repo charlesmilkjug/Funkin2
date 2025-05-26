@@ -117,17 +117,11 @@ class ResultState extends MusicBeatSubState
     clearPercentSmall.visible = false;
 
     bgFlash = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFFFFF1A6, 0xFFFFF1BE], 90);
-
     resultsAnim = FunkinSprite.createSparrow(-200, -10, "resultScreen/results");
-
     ratingsPopin = FunkinSprite.createSparrow(-135, 135, "resultScreen/ratingsPopin");
-
     scorePopin = FunkinSprite.createSparrow(-180, 515, "resultScreen/scorePopin");
-
     highscoreNew = new FlxSprite(44, 557);
-
     score = new ResultScore(35, 305, 10, params.scoreData.score);
-
     rankBg = new FunkinSprite(0, 0);
   }
 
@@ -189,10 +183,8 @@ class ResultState extends MusicBeatSubState
     {
       if (animData == null) continue;
 
-      if (animData.filter != "both")
-      {
-        if (Preferences.naughtyness && animData.filter != "naughty" || !Preferences.naughtyness && animData.filter != "safe") continue;
-      }
+      if (animData.filter != "both") if (Preferences.naughtyness && animData.filter != "naughty" || !Preferences.naughtyness && animData.filter != "safe")
+        continue;
 
       var animPath:String = "";
       var animLibrary:String = "";
@@ -415,17 +407,6 @@ class ResultState extends MusicBeatSubState
       });
     }
 
-    // if (params.isNewHighscore ?? false)
-    // {
-    //   highscoreNew.visible = true;
-    //   highscoreNew.animation.play("new");
-    //   //FlxTween.tween(highscoreNew, {y: highscoreNew.y + 10}, 0.8, {ease: FlxEase.quartOut});
-    // }
-    // else
-    // {
-    //   highscoreNew.visible = false;
-    // }
-
     new FlxTimer().start(rank.getMusicDelay(), _ -> {
       var introMusic:String = Paths.music(getMusicPath(playerCharacter, rank) + '/' + getMusicPath(playerCharacter, rank) + '-intro');
       if (Assets.exists(introMusic))
@@ -515,11 +496,7 @@ class ResultState extends MusicBeatSubState
           #end
 
           clearPercentCounter.flash(true);
-          new FlxTimer().start(0.4, _ -> {
-            clearPercentCounter.flash(false);
-          });
-
-          // displayRankText();
+          new FlxTimer().start(0.4, _ -> clearPercentCounter.flash(false));
 
           // previously 2.0 seconds
           new FlxTimer().start(0.25, _ -> {
@@ -542,14 +519,7 @@ class ResultState extends MusicBeatSubState
     if (ratingsPopin == null) trace("Could not build ratingsPopin!");
     else
     {
-      // ratingsPopin.animation.play("idle");
-      // ratingsPopin.visible = true;
-
       ratingsPopin.animation.finishCallback = anim -> {
-        // scorePopin.animation.play("score");
-
-        // scorePopin.visible = true;
-
         if (params.isNewHighscore ?? false)
         {
           highscoreNew.visible = true;
@@ -667,18 +637,14 @@ class ResultState extends MusicBeatSubState
       add(clearPercentSmall);
       clearPercentSmall.visible = true;
       clearPercentSmall.flash(true);
-      new FlxTimer().start(0.4, _ -> {
-        clearPercentSmall.flash(false);
-      });
+      new FlxTimer().start(0.4, _ -> clearPercentSmall.flash(false));
 
       clearPercentSmall.curNumber = clearPercentTarget;
       clearPercentSmall.zIndex = 1000;
       refresh();
     }
 
-    new FlxTimer().start(2.5, _ -> {
-      movingSongStuff = true;
-    });
+    new FlxTimer().start(2.5, _ -> movingSongStuff = true);
   }
 
   var movingSongStuff:Bool = false;
@@ -703,17 +669,13 @@ class ResultState extends MusicBeatSubState
 
     if (movingSongStuff)
     {
-      songName.x += speedOfTween.x;
-      difficulty.x += speedOfTween.x;
-      clearPercentSmall.x += speedOfTween.x;
-      songName.y += speedOfTween.y;
-      difficulty.y += speedOfTween.y;
-      clearPercentSmall.y += speedOfTween.y;
-
-      if (songName.x + songName.width < 100)
+      for (thingie in [songName, difficulty, clearPercentSmall])
       {
-        timerThenSongName();
+        thingie.x += speedOfTween.x;
+        thingie.y += speedOfTween.y;
       }
+
+      if (songName.x + songName.width < 100) timerThenSongName();
     }
 
     if (controls.PAUSE || controls.ACCEPT)

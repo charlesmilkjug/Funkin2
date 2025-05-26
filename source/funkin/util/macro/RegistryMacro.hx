@@ -229,9 +229,7 @@ class RegistryMacro
       }
     }
     catch (e)
-    {
       throw '${cls.name}: IRegistryEntry must be the last implemented interface';
-    }
   }
 
   /**

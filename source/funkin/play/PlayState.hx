@@ -1017,11 +1017,7 @@ class PlayState extends MusicBeatSubState
     if (!isInCutscene && !disableKeys)
     {
       // RESET = Quick Game Over Screen
-      if (controls.RESET)
-      {
-        health = Constants.HEALTH_MIN;
-        trace('RESET = True');
-      }
+      if (controls.RESET) health = Constants.HEALTH_MIN;
 
       if (health <= Constants.HEALTH_MIN && !isPracticeMode && !isPlayerDying)
       {
@@ -1096,8 +1092,8 @@ class PlayState extends MusicBeatSubState
   function moveToGameOver():Void
   {
     // Reset and update a bunch of values in advance for the transition back from the game over substate.
-    playerStrumline.clean();
-    opponentStrumline.clean();
+    for (strumline in [playerStrumline, opponentStrumline])
+      strumline.clean();
 
     vwooshTimer.cancel();
 
@@ -1109,11 +1105,8 @@ class PlayState extends MusicBeatSubState
 
     healthBar.value = healthLerp;
 
-    if (!isMinimalMode)
-    {
-      if (iconP1 != null) iconP1.updatePosition();
-      if (iconP1 != null) iconP2.updatePosition();
-    }
+    if (!isMinimalMode) for (icon in [iconP1, iconP2])
+      if (icon != null) icon.updatePosition();
 
     // Transition to the game over substate.
     var gameOverSubState = new GameOverSubState(
@@ -1410,8 +1403,8 @@ class PlayState extends MusicBeatSubState
 
     if (isGamePaused) return false;
 
-    if (iconP1 != null) iconP1.onStepHit(Std.int(Conductor.instance.currentStep));
-    if (iconP2 != null) iconP2.onStepHit(Std.int(Conductor.instance.currentStep));
+    for (icon in [iconP1, iconP2])
+      if (icon != null) icon.onStepHit(Std.int(Conductor.instance.currentStep));
 
     return true;
   }
@@ -1455,14 +1448,16 @@ class PlayState extends MusicBeatSubState
 
       var hardwareDelay = SoundUtil.getPlaybackDeviceDelay(FlxG.sound.music);
       if (!startingSong
-        && (!FlxMath.inBounds(FlxG.sound.music.time - correctSync, -100, 100 + hardwareDelay)
-          || !FlxMath.inBounds(playerVoicesError, -100, 100 + hardwareDelay)
-          || !FlxMath.inBounds(opponentVoicesError, -100, 100 + hardwareDelay)))
+        && (!FlxMath.inBounds(FlxG.sound.music.time - correctSync, -100, Math.max(100, hardwareDelay + 20))
+          || !FlxMath.inBounds(playerVoicesError, -100, Math.max(100, hardwareDelay + 20))
+          || !FlxMath.inBounds(opponentVoicesError, -100, Math.max(100, hardwareDelay + 20))))
       {
+        #if debug
         trace("VOCALS NEED RESYNC");
 
         if (vocals != null) trace(playerVoicesError + " " + opponentVoicesError);
         trace(FlxG.sound.music.time + " " + correctSync);
+        #end
 
         resyncVocals();
       }
@@ -1479,17 +1474,11 @@ class PlayState extends MusicBeatSubState
       // HUD camera zoom still uses old system. To change. (+3%)
       camHUD.zoom += hudCameraZoomIntensity * defaultHUDCameraZoom;
     }
-    // trace('Not bopping camera: ${FlxG.camera.zoom} < ${(1.35 * defaultCameraZoom)} && ${cameraZoomRate} > 0 && ${Conductor.instance.currentBeat} % ${cameraZoomRate} == ${Conductor.instance.currentBeat % cameraZoomRate}}');
-
-    // That combo milestones that got spoiled that one time.
-    // Comes with NEAT visual and audio effects.
-
-    // bruh this var is bonkers i thot it was a function lmfaooo
 
     // Break up into individual lines to aid debugging.
 
-    if (playerStrumline != null) playerStrumline.onBeatHit();
-    if (opponentStrumline != null) opponentStrumline.onBeatHit();
+    for (strumline in [playerStrumline, opponentStrumline])
+      if (strumline != null) strumline.onBeatHit();
 
     return true;
   }
@@ -1611,10 +1600,7 @@ class PlayState extends MusicBeatSubState
       #end
     }
     else
-    {
-      // lolol
-      lime.app.Application.current.window.alert('Unable to load stage ${id}, is its data corrupted?.', 'Stage Error');
-    }
+      lime.app.Application.current.window.alert('Unable to load stage ${id}, is its data corrupted?.', 'Stage Error'); // lolol
   }
 
   public function resetCameraZoom():Void
@@ -1748,8 +1734,9 @@ class PlayState extends MusicBeatSubState
     playerStrumline.onNoteIncoming.add(onStrumlineNoteIncoming);
     opponentStrumline = new Strumline(noteStyle, false);
     opponentStrumline.onNoteIncoming.add(onStrumlineNoteIncoming);
-    add(playerStrumline);
-    add(opponentStrumline);
+
+    for (strumline in [playerStrumline, opponentStrumline])
+      add(strumline);
 
     // Position the player strumline on the right half of the screen
     playerStrumline.x = FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET; // Classic style
@@ -1764,8 +1751,8 @@ class PlayState extends MusicBeatSubState
     opponentStrumline.zIndex = 1000;
     opponentStrumline.cameras = [camHUD];
 
-    playerStrumline.fadeInArrows();
-    opponentStrumline.fadeInArrows();
+    for (strumline in [playerStrumline, opponentStrumline])
+      strumline.fadeInArrows();
   }
 
   /**
@@ -1846,8 +1833,6 @@ class PlayState extends MusicBeatSubState
   function generateSong():Void
   {
     if (currentChart == null) trace('Song difficulty could not be loaded.');
-
-    // Conductor.instance.forceBPM(currentChart.getStartingBPM());
 
     if (!overrideMusic)
     {
@@ -2011,7 +1996,6 @@ class PlayState extends MusicBeatSubState
     vocals.pitch = playbackRate;
     vocals.time = FlxG.sound.music.time;
     Conductor.instance.update(FlxG.sound?.music?.time ?? 0.0);
-    // resyncVocals();
 
     FlxG.sound.music.play();
     vocals.play();
@@ -2026,14 +2010,9 @@ class PlayState extends MusicBeatSubState
         largeImageKey: discordRPCAlbum,
         smallImageKey: discordRPCIcon
       });
-    // DiscordClient.changePresence(detailsText, '${currentChart.songName} ($discordRPCDifficulty)', discordRPCIcon, true, currentSongLengthMs);
     #end
 
-    if (startTimestamp > 0)
-    {
-      // FlxG.sound.music.time = startTimestamp - Conductor.instance.combinedOffset;
-      handleSkippedNotes();
-    }
+    if (startTimestamp > 0) handleSkippedNotes();
 
     dispatchEvent(new ScriptEvent(SONG_START));
 
@@ -2044,6 +2023,8 @@ class PlayState extends MusicBeatSubState
 
   /**
      * Resyncronize the vocal tracks if they have become offset from the instrumental.
+     *
+     * TODO: Rework this function cuz this shit is just kinda jank...
      */
   function resyncVocals():Void
   {

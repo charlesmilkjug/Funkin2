@@ -227,9 +227,7 @@ class ScreenshotPlugin extends FlxBasic
    * Initialize the screenshot plugin.
    */
   public static function initialize():Void
-  {
     FlxG.plugins.addPlugin(new ScreenshotPlugin({}));
-  }
 
   /**
    * @return `true` if the screenshot key is currently pressed.
@@ -630,11 +628,5 @@ class ScreenshotPlugin extends FlxBasic
       for (child in parent.__children)
         parent.removeChild(child);
     }
-
-    // flashSprite = null
-    // flashBitmap = null
-    // previewSprite = null
-    // shotPreviewBitmap = null
-    // outlineBitmap = null
   }
 }

@@ -280,7 +280,6 @@ class Countdown
         return GO;
       case GO:
         return AFTER;
-
       default:
         return AFTER;
     }

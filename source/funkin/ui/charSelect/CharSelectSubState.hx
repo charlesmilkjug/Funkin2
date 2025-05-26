@@ -632,12 +632,6 @@ class CharSelectSubState extends MusicBeatSubState
     @:privateAccess
     if (sync && unlockSound.time > 0)
     {
-      // if (playerChillOut.anim.framerate > 0)
-      // {
-      //   if (syncLock != null) syncLock.anim.framerate = 0;
-      //   playerChillOut.anim.framerate = 0;
-      // }
-
       playerChillOut.anim._tick = 0;
       if (syncLock != null) syncLock.anim._tick = 0;
 

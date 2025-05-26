@@ -102,15 +102,7 @@ class TitleState extends MusicBeatState
     gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
     gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
     gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-
-    // maskShader.swagSprX = gfDance.x;
-    // maskShader.swagMaskX = gfDance.x + 200;
-    // maskShader.frameUV = gfDance.frame.uv;
-    // gfDance.shader = maskShader;
-
     gfDance.shader = swagShader.shader;
-
-    // gfDance.shader = new TitleOutline();
 
     add(logoBl);
 
@@ -237,9 +229,12 @@ class TitleState extends MusicBeatState
       }
           }
      */
-    if (FlxG.keys.justPressed.I) FlxTween.tween(outlineShaderShit, {funnyX: 50, funnyY: 50}, 0.6, {ease: FlxEase.quartOut});
-    if (FlxG.keys.pressed.D) outlineShaderShit.funnyX += 1;
-    // outlineShaderShit.xPos.value[0] += 1;
+    if (outlineShaderShit != null)
+    {
+      if (FlxG.keys.justPressed.I) FlxTween.tween(outlineShaderShit, {funnyX: 50, funnyY: 50}, 0.6, {ease: FlxEase.quartOut});
+      if (FlxG.keys.pressed.D) outlineShaderShit.funnyX += 1;
+      // outlineShaderShit.xPos.value[0] += 1;
+    }
 
     if (FlxG.keys.justPressed.Y)
     {
@@ -255,10 +250,7 @@ class TitleState extends MusicBeatState
 
     var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
-    if (gamepad != null)
-    {
-      if (gamepad.justPressed.START) pressedEnter = true;
-    }
+    if (gamepad != null) if (gamepad.justPressed.START) pressedEnter = true;
 
     // If you spam Enter, we should skip the transition.
     if (pressedEnter && transitioning && skippedIntro) FlxG.switchState(() -> new MainMenuState());
@@ -300,9 +292,7 @@ class TitleState extends MusicBeatState
   }
 
   override function draw()
-  {
     super.draw();
-  }
 
   var cheatArray:Array<Int> = [0x0001, 0x0010, 0x0001, 0x0010, 0x0100, 0x1000, 0x0100, 0x1000];
   var curCheatPos:Int = 0;
@@ -335,8 +325,6 @@ class TitleState extends MusicBeatState
   function startCheat():Void
   {
     cheatActive = true;
-
-    var spec:SpectogramSprite = new SpectogramSprite(FlxG.sound.music);
 
     FunkinSound.playMusic('girlfriendsRingtone',
       {

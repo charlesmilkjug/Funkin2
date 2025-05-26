@@ -24,27 +24,21 @@ class SongEvent
    * @param data The data associated with the event.
    */
   public function handleEvent(data:SongEventData):Void
-  {
     throw 'SongEvent.handleEvent() must be overridden!';
-  }
 
   /**
    * Retrieves the chart editor schema for this song event type.
    * @return The schema, or null if this event type does not have a schema.
    */
   public function getEventSchema():SongEventSchema
-  {
     return null;
-  }
 
   /**
    * Retrieves the asset path to the icon this event type should use in the chart editor.
    * To customize this, override getIconPath().
    */
   public function getIconPath():String
-  {
     return 'ui/chart-editor/events/default';
-  }
 
   /**
    * Retrieves the human readable title of this song event type.
@@ -52,12 +46,8 @@ class SongEvent
    * @return The title.
    */
   public function getTitle():String
-  {
     return this.id.toTitleCase();
-  }
 
   public function toString():String
-  {
     return 'SongEvent(${this.id})';
-  }
 }

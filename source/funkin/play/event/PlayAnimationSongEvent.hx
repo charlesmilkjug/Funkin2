@@ -53,16 +53,12 @@ class PlayAnimationSongEvent extends SongEvent
         targetChar.playAnimation(anim, force, force);
       }
       else
-      {
         target.animation.play(anim, force);
-      }
     }
   }
 
   public override function getTitle():String
-  {
     return "Play Animation";
-  }
 
   /**
    * ```

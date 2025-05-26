@@ -89,9 +89,7 @@ class ZoomCameraSongEvent extends SongEvent
   }
 
   public override function getTitle():String
-  {
     return 'Zoom Camera';
-  }
 
   /**
    * ```

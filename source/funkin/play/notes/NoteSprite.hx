@@ -20,9 +20,7 @@ class NoteSprite extends FunkinSprite
   public var strumTime(get, set):Float;
 
   function get_strumTime():Float
-  {
     return this.noteData?.time ?? 0.0;
-  }
 
   function set_strumTime(value:Float):Float
   {
@@ -37,9 +35,7 @@ class NoteSprite extends FunkinSprite
   public var length(get, set):Float;
 
   function get_length():Float
-  {
     return this.noteData?.length ?? 0.0;
-  }
 
   function set_length(value:Float):Float
   {
@@ -54,9 +50,7 @@ class NoteSprite extends FunkinSprite
   public var kind(get, set):Null<String>;
 
   function get_kind():Null<String>
-  {
     return this.noteData?.kind;
-  }
 
   function set_kind(value:String):String
   {
@@ -70,9 +64,7 @@ class NoteSprite extends FunkinSprite
   public var params(get, set):Array<NoteParamData>;
 
   function get_params():Array<NoteParamData>
-  {
     return this.noteData?.params ?? [];
-  }
 
   function set_params(value:Array<NoteParamData>):Array<NoteParamData>
   {
@@ -100,9 +92,7 @@ class NoteSprite extends FunkinSprite
   public var isHoldNote(get, never):Bool;
 
   function get_isHoldNote():Bool
-  {
     return noteData.length > 0;
-  }
 
   /**
    * The Y Offset of the note.
@@ -184,12 +174,8 @@ class NoteSprite extends FunkinSprite
   public function getParam(name:String):Null<Dynamic>
   {
     for (param in params)
-    {
-      if (param.name == name)
-      {
-        return param.value;
-      }
-    }
+      if (param.name == name) return param.value;
+
     return null;
   }
 
@@ -217,19 +203,13 @@ class NoteSprite extends FunkinSprite
   #end
 
   function playNoteAnimation(value:Int):Void
-  {
     animation.play(DIRECTION_COLORS[value] + 'Scroll');
-  }
 
   public function desaturate():Void
-  {
     this.hsvShader.saturation = 0.2;
-  }
 
   public function setHue(hue:Float):Void
-  {
     this.hsvShader.hue = hue;
-  }
 
   public override function revive():Void
   {
@@ -248,9 +228,7 @@ class NoteSprite extends FunkinSprite
   }
 
   public override function kill():Void
-  {
     super.kill();
-  }
 
   public override function destroy():Void
   {

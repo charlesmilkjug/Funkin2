@@ -36,16 +36,11 @@ class NoteHoldCover extends FlxTypedSpriteGroup<FlxSprite>
 
     glow.animation.onFinish.add(this.onAnimationFinished);
 
-    if (glow.animation.getAnimationList().length < 3 * 4)
-    {
-      trace('WARNING: NoteHoldCover failed to initialize all animations.');
-    }
+    if (glow.animation.getAnimationList().length < 3 * 4) trace('WARNING: NoteHoldCover failed to initialize all animations.');
   }
 
   public override function update(elapsed):Void
-  {
     super.update(elapsed);
-  }
 
   public function playStart():Void
   {
@@ -71,8 +66,8 @@ class NoteHoldCover extends FlxTypedSpriteGroup<FlxSprite>
 
     this.visible = false;
 
-    if (glow != null) glow.visible = false;
-    if (sparks != null) sparks.visible = false;
+    for (toKill in [glow, sparks])
+      if (toKill != null) toKill.visible = false;
   }
 
   public override function revive():Void
@@ -82,8 +77,8 @@ class NoteHoldCover extends FlxTypedSpriteGroup<FlxSprite>
     this.visible = true;
     this.alpha = 1.0;
 
-    if (glow != null) glow.visible = true;
-    if (sparks != null) sparks.visible = true;
+    for (toRevive in [glow, sparks])
+      if (toRevive != null) toRevive.visible = true;
   }
 
   public function onAnimationFinished(animationName:String):Void

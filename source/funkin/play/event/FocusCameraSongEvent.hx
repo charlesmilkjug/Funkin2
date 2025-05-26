@@ -143,9 +143,7 @@ class FocusCameraSongEvent extends SongEvent
   }
 
   public override function getTitle():String
-  {
     return 'Focus Camera';
-  }
 
   /**
    * ```

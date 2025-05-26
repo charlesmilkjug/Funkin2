@@ -3250,26 +3250,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   }
 
   /**
-   * Function called when the game window loses focus.
-  **/
-  public override function onFocusLost():Void
-  {
-    stopAudioPlayback();
-
-    super.onFocusLost();
-  }
-
-  /**
-   * Function called when the game window gains focus.
-  **/
-  public override function onFocus():Void
-  {
-    if (this.subState != null && Std.isOfType(this.subState, funkin.play.PlayState)) startAudioPlayback();
-
-    super.onFocus();
-  }
-
-  /**
    * Beat hit while the song is playing.
    */
   override function beatHit():Bool
@@ -3658,10 +3638,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
       // Destroy all existing selection squares.
       for (member in renderedSelectionSquares.members)
-      {
-        // Killing the sprite is cheap because we can recycle it.
-        member.kill();
-      }
+        member.kill(); // Killing the sprite is cheap because we can recycle it.
 
       // Readd selection squares for selected notes.
       // Recycle selection squares if possible.

@@ -34,8 +34,6 @@ class Int64Tools
       return Int64.toInt(i);
     }
     catch (e:Dynamic)
-    {
       throw 'Could not represent value "${Int64.toStr(i)}" as an integer.';
-    }
   }
 }

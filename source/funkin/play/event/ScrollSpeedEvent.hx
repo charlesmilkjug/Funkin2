@@ -54,11 +54,8 @@ class ScrollSpeedEvent extends SongEvent
 
     var strumlineNames:Array<String> = [];
 
-    if (!absolute)
-    {
-      // If absolute is set to false, do the awesome multiplicative thing
-      scroll = scroll * (PlayState.instance?.currentChart?.scrollSpeed ?? 1.0);
-    }
+    // If absolute is set to false, do the awesome multiplicative thing
+    if (!absolute) scroll = scroll * (PlayState.instance?.currentChart?.scrollSpeed ?? 1.0);
 
     switch (strumline)
     {
@@ -86,9 +83,7 @@ class ScrollSpeedEvent extends SongEvent
   }
 
   public override function getTitle():String
-  {
     return 'Scroll Speed';
-  }
 
   /**
    * ```

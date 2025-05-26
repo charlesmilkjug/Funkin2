@@ -52,9 +52,7 @@ class SetCameraBopSongEvent extends SongEvent
   }
 
   public override function getTitle():String
-  {
     return 'Set Camera Bop';
-  }
 
   /**
    * ```

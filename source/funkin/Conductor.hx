@@ -333,18 +333,14 @@ class Conductor
   static function setupSingleton(input:Conductor):Void
   {
     input.onMeasureHit.add(dispatchMeasureHit);
-
     input.onBeatHit.add(dispatchBeatHit);
-
     input.onStepHit.add(dispatchStepHit);
   }
 
   static function clearSingleton(input:Conductor):Void
   {
     input.onMeasureHit.remove(dispatchMeasureHit);
-
     input.onBeatHit.remove(dispatchBeatHit);
-
     input.onStepHit.remove(dispatchStepHit);
   }
 

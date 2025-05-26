@@ -58,9 +58,7 @@ class CrashHandler
       displayError(error);
     }
     catch (e:Dynamic)
-    {
       trace('Error while handling crash: ' + e);
-    }
 
     #if sys
     Sys.sleep(1); // wait a few moments of margin to process.
@@ -117,71 +115,34 @@ class CrashHandler
   {
     var fullContents:String = '=====================\n';
     fullContents += ' Funkin Crash Report\n';
-    fullContents += '=====================\n';
-
-    fullContents += '\n';
-
+    fullContents += '=====================\n\n';
     fullContents += buildSystemInfo();
-
-    fullContents += '\n\n';
-
-    fullContents += '=====================\n';
-
-    fullContents += '\n';
+    fullContents += '\n\n=====================\n\n';
 
     var currentState:String = 'No state loaded';
     if (FlxG.state != null)
     {
       var currentStateCls:Null<Class<Dynamic>> = Type.getClass(FlxG.state);
-      if (currentStateCls != null)
-      {
-        currentState = Type.getClassName(currentStateCls) ?? 'No state loaded';
-      }
+      if (currentStateCls != null) currentState = Type.getClassName(currentStateCls) ?? 'No state loaded';
     }
 
-    fullContents += 'Flixel Current State: ${currentState}\n';
-
-    fullContents += '\n';
-
+    fullContents += 'Flixel Current State: ${currentState}\n\n';
     fullContents += '=====================\n';
-
-    fullContents += '\n';
-
-    fullContents += 'Haxelibs: \n';
+    fullContents += '\nHaxelibs: \n';
 
     for (lib in Constants.LIBRARY_VERSIONS)
-    {
       fullContents += '- ${lib}\n';
-    }
 
-    fullContents += '\n';
-
-    fullContents += '=====================\n';
-
-    fullContents += '\n';
-
+    fullContents += '\n=====================\n\n';
     fullContents += 'Loaded mods: \n';
 
-    if (funkin.modding.PolymodHandler.loadedModIds.length == 0)
-    {
-      fullContents += 'No mods loaded.\n';
-    }
+    if (funkin.modding.PolymodHandler.loadedModIds.length == 0) fullContents += 'No mods loaded.\n';
     else
-    {
       for (mod in funkin.modding.PolymodHandler.loadedModIds)
-      {
         fullContents += '- ${mod}\n';
-      }
-    }
 
-    fullContents += '\n';
-
-    fullContents += '=====================\n';
-
-    fullContents += '\n';
-
+    fullContents += '\n=====================\n\n';
     fullContents += message;
-
     fullContents += '\n';
 
     return fullContents;
@@ -198,13 +159,7 @@ class CrashHandler
     fullContents += 'Platform: ${Sys.systemName()}\n';
     #end
     fullContents += 'Render method: ${renderMethod()}\n';
-
-    fullContents += '\n';
-
-    fullContents += '=====================\n';
-
-    fullContents += '\n';
-
+    fullContents += '\n=====================\n\n';
     fullContents += MemoryUtil.buildGCInfo();
 
     return fullContents;
@@ -259,9 +214,7 @@ class CrashHandler
   }
 
   public static function induceBasicCrash():Void
-  {
     throw "This is an example of an uncaught exception.";
-  }
 
   public static function induceNullObjectReference():Void
   {

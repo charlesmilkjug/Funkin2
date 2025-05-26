@@ -82,9 +82,7 @@ class AnsiTrace
     return ansify(ansiCol) + str + ansify(NORMAL);
 
   public static function ansify(ansiCol:String)
-  {
     return (colorSupported ? ansiCol : "");
-  }
 
   /**
    * Color pixel art of BF in ANSI format.

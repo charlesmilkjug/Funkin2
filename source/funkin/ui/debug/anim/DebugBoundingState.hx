@@ -93,11 +93,7 @@ class DebugBoundingState extends FlxState
 
     var viewDropdown:Null<DropDown> = offsetEditorDialog.findComponent("swapper", DropDown);
 
-    if (viewDropdown != null) viewDropdown.onChange = (e:UIEvent) -> {
-      // trace(e.type);
-      curView = cast e.data.curView;
-      // trace(e.data);
-    };
+    if (viewDropdown != null) viewDropdown.onChange = (e:UIEvent) -> curView = cast e.data.curView;
 
     offsetAnimationDropdown = offsetEditorDialog.findComponent("animationDropdown", DropDown);
 

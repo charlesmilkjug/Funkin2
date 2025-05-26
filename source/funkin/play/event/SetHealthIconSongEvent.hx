@@ -66,9 +66,7 @@ class SetHealthIconSongEvent extends SongEvent
   }
 
   public override function getTitle():String
-  {
     return 'Set Health Icon';
-  }
 
   public override function getEventSchema():SongEventSchema
   {

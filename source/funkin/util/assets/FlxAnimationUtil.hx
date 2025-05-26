@@ -18,18 +18,10 @@ class FlxAnimationUtil
     var flipX = anim.flipX == null ? false : anim.flipX;
     var flipY = anim.flipY == null ? false : anim.flipY;
 
-    if (anim.frameIndices != null && anim.frameIndices.length > 0)
-    {
-      // trace('addByIndices(${anim.name}, ${anim.prefix}, ${anim.frameIndices}, ${frameRate}, ${looped}, ${flipX}, ${flipY})');
-      target.animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, '', frameRate, looped, flipX, flipY);
-      // trace('RESULT:${target.animation.getAnimationList()}');
-    }
+    if (anim.frameIndices != null && anim.frameIndices.length > 0) target.animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, '', frameRate,
+      looped, flipX, flipY);
     else
-    {
-      // trace('addByPrefix(${anim.name}, ${anim.prefix}, ${frameRate}, ${looped}, ${flipX}, ${flipY})');
       target.animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, flipX, flipY);
-      // trace('RESULT:${target.animation.getAnimationList()}');
-    }
   }
 
   /**
