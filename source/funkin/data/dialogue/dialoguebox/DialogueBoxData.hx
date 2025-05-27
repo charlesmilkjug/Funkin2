@@ -131,14 +131,14 @@ typedef DialogueBoxTextData =
   @:optional
   @:default(0)
   var shadowWidth:Int;
-};
+}
 
 typedef DialogueBoxSoundData =
 {
   /**
    * The sound to play when the text is displayed.
    */
-   @:default('pixelText')
+  @:default('pixelText')
   var assetPath:String;
 
   /**
@@ -147,4 +147,4 @@ typedef DialogueBoxSoundData =
   @:optional
   @:default(1.0)
   var volume:Float;
-};
+}

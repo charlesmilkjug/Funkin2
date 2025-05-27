@@ -21,54 +21,42 @@ class ChartEditorNotificationHandler
    * @param state The current state of the chart editor.
    */
   public static function success(state:ChartEditorState, title:String, body:String):Notification
-  {
     return sendNotification(state, title, body, NotificationType.Success);
-  }
 
   /**
    * Send a notification with a warning icon.
    * @param state The current state of the chart editor.
    */
   public static function warning(state:ChartEditorState, title:String, body:String):Notification
-  {
     return sendNotification(state, title, body, NotificationType.Warning);
-  }
 
   /**
    * Send a notification with a warning icon.
    * @param state The current state of the chart editor.
    */
   public static inline function warn(state:ChartEditorState, title:String, body:String):Notification
-  {
     return warning(state, title, body);
-  }
 
   /**
    * Send a notification with a cross indicating an error.
    * @param state The current state of the chart editor.
    */
   public static function error(state:ChartEditorState, title:String, body:String):Notification
-  {
     return sendNotification(state, title, body, NotificationType.Error);
-  }
 
   /**
    * Send a notification with a cross indicating failure.
    * @param state The current state of the chart editor.
    */
   public static inline function failure(state:ChartEditorState, title:String, body:String):Notification
-  {
     return error(state, title, body);
-  }
 
   /**
    * Send a notification with an info icon.
    * @param state The current state of the chart editor.
    */
   public static function info(state:ChartEditorState, title:String, body:String):Notification
-  {
     return sendNotification(state, title, body, NotificationType.Info);
-  }
 
   /**
    * Send a notification with an info icon and one or more actions.
@@ -79,18 +67,14 @@ class ChartEditorNotificationHandler
    * @return The notification that was sent.
    */
   public static function infoWithActions(state:ChartEditorState, title:String, body:String, actions:Array<NotificationActionData>):Notification
-  {
     return sendNotification(state, title, body, NotificationType.Info, actions);
-  }
 
   /**
    * Clear all active notifications.
    * @param state The current state of the chart editor.
    */
   public static function clearNotifications(state:ChartEditorState):Void
-  {
     NotificationManager.instance.clearNotifications();
-  }
 
   /**
    * Clear a specific notification.

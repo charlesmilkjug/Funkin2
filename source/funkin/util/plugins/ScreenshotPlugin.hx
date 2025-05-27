@@ -28,7 +28,7 @@ import funkin.Preferences;
 typedef ScreenshotPluginParams =
 {
   ?region:Rectangle,
-};
+}
 
 /**
  * A Flixel plugin, which renders on top of the game, and provides the functionality

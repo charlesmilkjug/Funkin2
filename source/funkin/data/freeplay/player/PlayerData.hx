@@ -93,9 +93,7 @@ class PlayerData
   }
 
   public function updateVersionToLatest():Void
-  {
     this.version = PlayerRegistry.PLAYER_DATA_VERSION;
-  }
 }
 
 class PlayerFreeplayDJData
@@ -150,9 +148,7 @@ class PlayerFreeplayDJData
   }
 
   public function getAtlasPath():String
-  {
     return Paths.animateAtlas(assetPath);
-  }
 
   public function getFreeplayDJText(index:Int):String
   {
@@ -186,81 +182,51 @@ class PlayerFreeplayDJData
   }
 
   public function getAnimationOffsets(name:String):Array<Float>
-  {
     return getAnimationOffsetsByPrefix(getAnimationPrefix(name));
-  }
 
   // TODO: These should really be frame labels, ehe.
 
   public function getCartoonSoundClickFrame():Int
-  {
     return cartoon?.soundClickFrame ?? 80;
-  }
 
   public function getCartoonSoundCartoonFrame():Int
-  {
     return cartoon?.soundCartoonFrame ?? 85;
-  }
 
   public function getCartoonLoopBlinkFrame():Int
-  {
     return cartoon?.loopBlinkFrame ?? 112;
-  }
 
   public function getCartoonLoopFrame():Int
-  {
     return cartoon?.loopFrame ?? 166;
-  }
 
   public function getCartoonChannelChangeFrame():Int
-  {
     return cartoon?.channelChangeFrame ?? 60;
-  }
 
   public function getFistPumpIntroStartFrame():Int
-  {
     return fistPump?.introStartFrame ?? 0;
-  }
 
   public function getFistPumpIntroEndFrame():Int
-  {
     return fistPump?.introEndFrame ?? 0;
-  }
 
   public function getFistPumpLoopStartFrame():Int
-  {
     return fistPump?.loopStartFrame ?? 0;
-  }
 
   public function getFistPumpLoopEndFrame():Int
-  {
     return fistPump?.loopEndFrame ?? 0;
-  }
 
   public function getFistPumpIntroBadStartFrame():Int
-  {
     return fistPump?.introBadStartFrame ?? 0;
-  }
 
   public function getFistPumpIntroBadEndFrame():Int
-  {
     return fistPump?.introBadEndFrame ?? 0;
-  }
 
   public function getFistPumpLoopBadStartFrame():Int
-  {
     return fistPump?.loopBadStartFrame ?? 0;
-  }
 
   public function getFistPumpLoopBadEndFrame():Int
-  {
     return fistPump?.loopBadEndFrame ?? 0;
-  }
 
   public function getCharSelectTransitionDelay():Float
-  {
     return charSelect?.transitionDelay ?? 0.25;
-  }
 }
 
 class PlayerCharSelectData
@@ -304,7 +270,7 @@ typedef PlayerResultsData =
   var great:Array<PlayerResultsAnimationData>;
   var good:Array<PlayerResultsAnimationData>;
   var loss:Array<PlayerResultsAnimationData>;
-};
+}
 
 typedef PlayerResultsMusicData =
 {
@@ -377,7 +343,7 @@ typedef PlayerResultsAnimationData =
 
   @:optional
   var loopFrameLabel:Null<String>;
-};
+}
 
 typedef PlayerFreeplayDJCharSelectData =
 {
@@ -418,4 +384,4 @@ typedef PlayerFreeplayDJFistPumpData =
 
   @:default(-1)
   var loopBadEndFrame:Int;
-};
+}

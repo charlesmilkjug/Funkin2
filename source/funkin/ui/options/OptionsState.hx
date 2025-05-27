@@ -9,7 +9,6 @@ import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;
 import flixel.util.FlxSignal;
-import funkin.audio.FunkinSound;
 import funkin.data.song.SongRegistry;
 import funkin.data.story.level.LevelRegistry;
 import funkin.play.scoring.Scoring;

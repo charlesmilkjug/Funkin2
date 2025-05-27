@@ -226,10 +226,7 @@ class WaveformSprite extends MeshRender
         var isAfterClipRect:Bool = (clipRect != null)
           && ((orientation == HORIZONTAL) ? pixelPos > (clipRect.x + clipRect.width) : pixelPos > (clipRect.y + clipRect.height));
 
-        if (isAfterClipRect)
-        {
-          break;
-        };
+        if (isAfterClipRect) break;
 
         var sampleMax:Float = Math.min(waveformData.channel(0).maxSampleMapped(i) * amplitude, 1.0);
         var sampleMin:Float = Math.max(waveformData.channel(0).minSampleMapped(i) * amplitude, -1.0);
@@ -310,10 +307,7 @@ class WaveformSprite extends MeshRender
         var isAfterClipRect:Bool = (clipRect != null)
           && ((orientation == HORIZONTAL) ? pixelPos > (clipRect.x + clipRect.width) : pixelPos > (clipRect.y + clipRect.height));
 
-        if (isAfterClipRect)
-        {
-          break;
-        };
+        if (isAfterClipRect) break;
 
         // Wrap Std.int around the whole range calculation, not just indexesPerPixel, otherwise you get weird issues with zooming.
         var rangeStart:Int = Std.int(i * indexesPerPixel + startIndex);

@@ -139,9 +139,7 @@ class SongMetadata implements ICloneable<SongMetadata>
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongMetadata(${this.songName} by ${this.artist} and ${this.charter}, variation ${this.variation})';
-  }
 }
 
 enum abstract SongTimeFormat(String) from String to String
@@ -227,9 +225,7 @@ class SongTimeChange implements ICloneable<SongTimeChange>
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongTimeChange(${this.timeStamp}ms,${this.bpm}bpm)';
-  }
 }
 
 /**
@@ -292,14 +288,10 @@ class SongOffsets implements ICloneable<SongOffsets>
 
   public function setInstrumentalOffset(value:Float, ?instrumental:String):Float
   {
-    if (instrumental == null || instrumental == '')
-    {
-      this.instrumental = value;
-    }
+    if (instrumental == null || instrumental == '') this.instrumental = value;
     else
-    {
       this.altInstrumentals.set(instrumental, value);
-    }
+
     return value;
   }
 
@@ -423,9 +415,7 @@ class SongMusicData implements ICloneable<SongMusicData>
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongMusicData(${this.songName} by ${this.artist}, variation ${this.variation})';
-  }
 }
 
 class SongPlayData implements ICloneable<SongPlayData>
@@ -523,9 +513,7 @@ class SongPlayData implements ICloneable<SongPlayData>
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongPlayData(${this.songVariations}, ${this.difficulties})';
-  }
 }
 
 /**
@@ -588,9 +576,7 @@ class SongCharacterData implements ICloneable<SongCharacterData>
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongCharacterData(${this.player}, ${this.girlfriend}, ${this.opponent}, ${this.instrumental}, [${this.altInstrumentals.join(', ')}])';
-  }
 }
 
 class SongChartData implements ICloneable<SongChartData>
@@ -678,9 +664,8 @@ class SongChartData implements ICloneable<SongChartData>
     // We have to manually perform the deep clone here because Map.deepClone() doesn't work.
     var noteDataClone:Map<String, Array<SongNoteData>> = new Map<String, Array<SongNoteData>>();
     for (key in this.notes.keys())
-    {
       noteDataClone.set(key, this.notes.get(key).deepClone());
-    }
+
     var eventDataClone:Array<SongEventData> = this.events.deepClone();
 
     var result:SongChartData = new SongChartData(this.scrollSpeed.clone(), eventDataClone, noteDataClone);
@@ -695,9 +680,7 @@ class SongChartData implements ICloneable<SongChartData>
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongChartData(${this.events.length} events, ${this.notes.size()} difficulties, ${generatedBy})';
-  }
 }
 
 class SongEventDataRaw implements ICloneable<SongEventDataRaw>
@@ -785,24 +768,16 @@ class SongEventDataRaw implements ICloneable<SongEventDataRaw>
   }
 
   public function getHandler():Null<SongEvent>
-  {
     return SongEventRegistry.getEvent(this.eventKind);
-  }
 
   public function getSchema():Null<SongEventSchema>
-  {
     return SongEventRegistry.getEventSchema(this.eventKind);
-  }
 
   public function getDynamic(key:String):Null<Dynamic>
-  {
     return this.value == null ? null : Reflect.field(this.value, key);
-  }
 
   public function getBool(key:String):Null<Bool>
-  {
     return this.value == null ? null : cast Reflect.field(this.value, key);
-  }
 
   public function getInt(key:String):Null<Int>
   {
@@ -825,19 +800,13 @@ class SongEventDataRaw implements ICloneable<SongEventDataRaw>
   }
 
   public function getString(key:String):String
-  {
     return this.value == null ? null : cast Reflect.field(this.value, key);
-  }
 
   public function getArray(key:String):Array<Dynamic>
-  {
     return this.value == null ? null : cast Reflect.field(this.value, key);
-  }
 
   public function getBoolArray(key:String):Array<Bool>
-  {
     return this.value == null ? null : cast Reflect.field(this.value, key);
-  }
 
   public function buildTooltip():String
   {
@@ -887,47 +856,33 @@ abstract SongEventData(SongEventDataRaw) from SongEventDataRaw to SongEventDataR
 
   @:op(A == B)
   public function op_equals(other:SongEventData):Bool
-  {
     return this.time == other.time && this.eventKind == other.eventKind && this.value == other.value;
-  }
 
   @:op(A != B)
   public function op_notEquals(other:SongEventData):Bool
-  {
     return this.time != other.time || this.eventKind != other.eventKind || this.value != other.value;
-  }
 
   @:op(A > B)
   public function op_greaterThan(other:SongEventData):Bool
-  {
     return this.time > other.time;
-  }
 
   @:op(A < B)
   public function op_lessThan(other:SongEventData):Bool
-  {
     return this.time < other.time;
-  }
 
   @:op(A >= B)
   public function op_greaterThanOrEquals(other:SongEventData):Bool
-  {
     return this.time >= other.time;
-  }
 
   @:op(A <= B)
   public function op_lessThanOrEquals(other:SongEventData):Bool
-  {
     return this.time <= other.time;
-  }
 
   /**
    * Produces a string representation suitable for debugging.
    */
   public function toString():String
-  {
     return 'SongEventData(${this.time}ms, ${this.eventKind}: ${this.value})';
-  }
 }
 
 class SongNoteDataRaw implements ICloneable<SongNoteDataRaw>
@@ -1012,14 +967,10 @@ class SongNoteDataRaw implements ICloneable<SongNoteDataRaw>
    * 0 = left, 1 = down, 2 = up, 3 = right
    */
   public inline function getDirection(strumlineSize:Int = 4):Int
-  {
     return this.data % strumlineSize;
-  }
 
   public function getDirectionName(strumlineSize:Int = 4):String
-  {
     return SongNoteData.buildDirectionName(this.data, strumlineSize);
-  }
 
   /**
    * The strumline index of the note, if applicable.
@@ -1028,9 +979,7 @@ class SongNoteDataRaw implements ICloneable<SongNoteDataRaw>
    * 0 = player, 1 = opponent, etc.
    */
   public function getStrumlineIndex(strumlineSize:Int = 4):Int
-  {
     return Math.floor(this.data / strumlineSize);
-  }
 
   /**
    * Returns true if the note is one that Boyfriend should try to hit (i.e. it's on his side).
@@ -1039,9 +988,7 @@ class SongNoteDataRaw implements ICloneable<SongNoteDataRaw>
    * @return True if it's Boyfriend's note.
    */
   public function getMustHitNote(strumlineSize:Int = 4):Bool
-  {
     return getStrumlineIndex(strumlineSize) == 0;
-  }
 
   @:jignored
   var _stepTime:Null<Float> = null;
@@ -1080,10 +1027,7 @@ class SongNoteDataRaw implements ICloneable<SongNoteDataRaw>
 
   public function setStepLength(value:Float):Void
   {
-    if (value <= 0)
-    {
-      this.length = 0.0;
-    }
+    if (value <= 0) this.length = 0.0;
     else
     {
       var endStep:Float = getStepTime() + value;
@@ -1101,9 +1045,8 @@ class SongNoteDataRaw implements ICloneable<SongNoteDataRaw>
   {
     var params:Array<NoteParamData> = [];
     for (param in this.params)
-    {
       params.push(param.clone());
-    }
+
     return params;
   }
 
@@ -1151,9 +1094,7 @@ abstract SongNoteData(SongNoteDataRaw) from SongNoteDataRaw to SongNoteDataRaw
   public var isHoldNote(get, never):Bool;
 
   public function get_isHoldNote():Bool
-  {
     return this.length > 0;
-  }
 
   @:op(A == B)
   public function op_equals(other:SongNoteData):Bool
@@ -1162,14 +1103,8 @@ abstract SongNoteData(SongNoteDataRaw) from SongNoteDataRaw to SongNoteDataRaw
     if (this == null) return other == null;
     if (other == null) return false;
 
-    if (this.kind == null || this.kind == '')
-    {
-      if (other.kind != '' && this.kind != null) return false;
-    }
-    else
-    {
-      if (other.kind == '' || this.kind == null) return false;
-    }
+    if (this.kind == null || this.kind == '') if (other.kind != '' && this.kind != null) return false;
+    else if (other.kind == '' || this.kind == null) return false;
 
     return this.time == other.time && this.data == other.data && this.length == other.length && this.params == other.params;
   }
@@ -1181,14 +1116,8 @@ abstract SongNoteData(SongNoteDataRaw) from SongNoteDataRaw to SongNoteDataRaw
     if (this == null) return other == null;
     if (other == null) return false;
 
-    if (this.kind == '')
-    {
-      if (other.kind != '') return true;
-    }
-    else
-    {
-      if (other.kind == '') return true;
-    }
+    if (this.kind == '') if (other.kind != '') return true;
+    else if (other.kind == '') return true;
 
     return this.time != other.time || this.data != other.data || this.length != other.length || this.params != other.params;
   }
@@ -1262,7 +1191,5 @@ class NoteParamData implements ICloneable<NoteParamData>
   }
 
   public function toString():String
-  {
     return 'NoteParamData(${this.name}, ${this.value})';
-  }
 }

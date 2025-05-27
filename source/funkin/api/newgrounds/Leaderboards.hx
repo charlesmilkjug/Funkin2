@@ -286,9 +286,7 @@ enum abstract Leaderboard(Int) from Int to Int
   var Blazin = #if FEATURE_NEWGROUNDS_TESTING_MEDALS 1000000 #else 14731 #end;
 
   public function getId():Int
-  {
     return this;
-  }
 
   /**
    * Get the leaderboard for a given level and difficulty.

@@ -13,6 +13,7 @@ import funkin.ui.debug.stageeditor.StageEditorState.StageEditorTheme;
 import funkin.util.FileUtil;
 import funkin.util.SerializerUtil;
 import thx.semver.Version;
+import thx.semver.VersionRule;
 #if FEATURE_NEWGROUNDS
 import funkin.api.newgrounds.Medals;
 import funkin.api.newgrounds.Leaderboards;
@@ -21,8 +22,8 @@ import funkin.api.newgrounds.Leaderboards;
 @:nullSafety
 class Save
 {
-  public static final SAVE_DATA_VERSION:thx.semver.Version = "2.1.0";
-  public static final SAVE_DATA_VERSION_RULE:thx.semver.VersionRule = ">=2.1.0 <2.2.0";
+  public static final SAVE_DATA_VERSION:Version = "2.1.0";
+  public static final SAVE_DATA_VERSION_RULE:VersionRule = ">=2.1.0 <2.2.0";
 
   // We load this version's saves from a new save path, to maintain SOME level of backwards compatibility.
   static final SAVE_PATH:String = 'FunkinCrew';
@@ -1029,7 +1030,7 @@ class Save
     {
       data.favoriteSongs = [];
       flush();
-    };
+    }
 
     return data.favoriteSongs.contains(id);
   }
@@ -1386,7 +1387,7 @@ typedef RawSaveData =
    * The user's preferences specific to the Stage Editor.
    */
   var optionsStageEditor:SaveDataStageEditorOptions;
-};
+}
 
 typedef SaveApiData =
 {
@@ -1427,7 +1428,7 @@ typedef SaveHighScoresData =
    * Scores for individual songs.
    */
   var songs:SaveScoreSongsData;
-};
+}
 
 typedef SaveDataMods =
 {
@@ -1593,7 +1594,7 @@ typedef SaveDataOptions =
           var gamepad:SaveControlsData;
         };
     };
-};
+}
 
 /**
  * An anonymous structure containing a specific player's bound keys.
@@ -1820,7 +1821,7 @@ typedef SaveDataChartEditorOptions =
    * @default `1.0`
    */
   var ?playbackSpeed:Float;
-};
+}
 
 typedef SaveDataStageEditorOptions =
 {
@@ -1880,4 +1881,4 @@ typedef SaveDataStageEditorOptions =
    * @default dad
    */
   var ?dadChar:String;
-};
+}

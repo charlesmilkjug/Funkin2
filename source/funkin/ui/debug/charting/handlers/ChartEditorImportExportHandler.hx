@@ -126,11 +126,7 @@ class ChartEditorImportExportHandler
     Conductor.instance.mapTimeChanges(state.currentSongMetadata.timeChanges);
     state.updateTimeSignature();
 
-    state.notePreviewDirty = true;
-    state.notePreviewViewportBoundsDirty = true;
-    state.difficultySelectDirty = true;
-    state.opponentPreviewDirty = true;
-    state.playerPreviewDirty = true;
+    state.notePreviewDirty = state.notePreviewViewportBoundsDirty = state.difficultySelectDirty = state.opponentPreviewDirty = state.playerPreviewDirty = true;
 
     // Remove instrumental and vocal tracks, they will be loaded next.
     if (state.audioInstTrack != null)

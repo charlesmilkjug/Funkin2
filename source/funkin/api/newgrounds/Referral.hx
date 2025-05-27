@@ -25,21 +25,14 @@ class Referral
         .addComponentParameter("referral_name", referralName)
         .addResponseHandler(response -> {
           trace(response);
-          if (response.success)
-          {
-            WindowUtil.openURL(response.result.data.url);
-          }
+          if (response.success) WindowUtil.openURL(response.result.data.url);
           else
-          {
             WindowUtil.openURL(fallbackUrl);
-          }
         })
         .send();
     }
     else
-    {
       WindowUtil.openURL(fallbackUrl);
-    }
     #else
     WindowUtil.openURL(fallbackUrl);
     #end
@@ -49,7 +42,5 @@ class Referral
    * Opens the merch referral page.
    */
   public static function doMerchReferral():Void
-  {
     doReferral("merch_link", Constants.URL_MERCH_FALLBACK);
-  }
 }

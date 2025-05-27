@@ -28,7 +28,7 @@ typedef SavePlayerControlsData_v1_0_0 =
 {
   var keys:SaveControlsData_v1_0_0;
   var pad:SaveControlsData_v1_0_0;
-};
+}
 
 typedef SaveControlsData_v1_0_0 =
 {
@@ -48,4 +48,4 @@ typedef SaveControlsData_v1_0_0 =
   var ?VOLUME_DOWN:Array<Int>;
   var ?VOLUME_MUTE:Array<Int>;
   var ?VOLUME_UP:Array<Int>;
-};
+}

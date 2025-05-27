@@ -101,9 +101,8 @@ class LetterSort extends FlxTypedSpriteGroup<FlxSprite>
    */
   function doLetterChangeAnims(diff:Int):Void
   {
-    var ezTimer:Int->FlxSprite->Float->Void = (frameNum:Int, spr:FlxSprite, offsetNum:Float) -> {
-      new FlxTimer().start(frameNum / 24, (_) -> spr.offset.x = offsetNum);
-    };
+    var ezTimer:Int->FlxSprite->Float->Void = (frameNum:Int, spr:FlxSprite,
+      offsetNum:Float) -> new FlxTimer().start(frameNum / 24, (_) -> spr.offset.x = offsetNum);
 
     var positions:Array<Float> = [-10, -22, 2, 0];
 

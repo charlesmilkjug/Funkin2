@@ -2395,7 +2395,7 @@ typedef FreeplayStateParams =
   ?fromCharSelect:Bool,
 
   ?fromResults:FromResultsParams,
-};
+}
 
 /**
  * A set of parameters for transitioning to the FreeplayState from the ResultsState.
@@ -2426,7 +2426,7 @@ typedef FromResultsParams =
    * The difficulty ID to play the animation on.
    */
   var difficultyId:String;
-};
+}
 
 /**
  * The map storing information about the exit movers.
@@ -2471,7 +2471,7 @@ class DifficultySprite extends FlxSprite
       {
         trace('Could not find difficulty asset: freeplay/freeplay${diffId} (from ${diffId})');
         return;
-      };
+      }
       assetDiffId = assetDiffIdParts.join('-');
     }
 

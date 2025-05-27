@@ -28,7 +28,7 @@ typedef PauseSubStateParams =
    * Which mode to start in. Dictates what entries are displayed.
    */
   ?mode:PauseMode,
-};
+}
 
 /**
  * The menu displayed when the Play State is paused.
@@ -211,15 +211,10 @@ class PauseSubState extends MusicBeatSubState
     instance = this;
 
     startPauseMusic();
-
     buildBackground();
-
     buildMetadata();
-
     regenerateMenu();
-
     transitionIn();
-
     startCharterTimer();
   }
 
@@ -490,9 +485,7 @@ class PauseSubState extends MusicBeatSubState
    * Reset the current selection to the first entry.
    */
   function resetSelection():Void
-  {
     this.currentEntry = 0;
-  }
 
   /**
    * Select which menu entries to display based on the current mode.
@@ -613,9 +606,7 @@ class PauseSubState extends MusicBeatSubState
    * @param targetMode The mode to switch to.
    */
   static function switchMode(state:PauseSubState, targetMode:PauseMode):Void
-  {
     state.regenerateMenu(targetMode);
-  }
 
   /**
    * Switch the game's difficulty to the indicated difficulty, then resume the game.
@@ -717,8 +708,7 @@ class PauseSubState extends MusicBeatSubState
 
     PlayState.instance.deathCounter = 0;
 
-    FlxTransitionableState.skipNextTransIn = true;
-    FlxTransitionableState.skipNextTransOut = true;
+    FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 
     var targetState:funkin.ui.transition.stickers.StickerSubState->FlxState = (PlayStatePlaylist.isStoryMode) ? (sticker) ->
       new StoryMenuState(sticker) : (sticker) -> FreeplayState.build(sticker);
@@ -812,4 +802,4 @@ typedef PauseMenuEntry =
    * The text object currently displaying this entry.
    */
   var ?sprite:AtlasText;
-};
+}

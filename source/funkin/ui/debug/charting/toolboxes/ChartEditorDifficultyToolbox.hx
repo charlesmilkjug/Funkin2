@@ -39,9 +39,7 @@ class ChartEditorDifficultyToolbox extends ChartEditorBaseToolbox
   }
 
   function onClose(event:UIEvent)
-  {
     chartEditorState.menubarItemToggleToolboxDifficulty.selected = false;
-  }
 
   function initialize():Void
   {

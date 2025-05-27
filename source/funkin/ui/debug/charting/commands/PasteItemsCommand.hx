@@ -55,10 +55,7 @@ class PasteItemsCommand implements ChartEditorCommand
     state.currentNoteSelection = addedNotes.copy();
     state.currentEventSelection = addedEvents.copy();
 
-    state.saveDataDirty = true;
-    state.noteDisplayDirty = true;
-    state.notePreviewDirty = true;
-    state.editButtonsDirty = true;
+    state.saveDataDirty = state.noteDisplayDirty = state.notePreviewDirty = state.editButtonsDirty = true;
 
     state.sortChartData();
 
@@ -74,10 +71,7 @@ class PasteItemsCommand implements ChartEditorCommand
     state.currentNoteSelection = [];
     state.currentEventSelection = [];
 
-    state.saveDataDirty = true;
-    state.noteDisplayDirty = true;
-    state.notePreviewDirty = true;
-    state.editButtonsDirty = true;
+    state.saveDataDirty = state.noteDisplayDirty = state.notePreviewDirty = state.editButtonsDirty = true;
 
     state.sortChartData();
   }

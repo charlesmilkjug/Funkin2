@@ -117,47 +117,36 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
       var targetVolume = offsetPlayerVolume.value * 2 / 100;
       setTrackVolume(PLAYER, targetVolume);
     };
-    offsetPlayerMute.onClick = (_) -> {
-      toggleMuteTrack(PLAYER);
-    };
-    offsetPlayerSolo.onClick = (_) -> {
-      soloTrack(PLAYER);
-    };
+    offsetPlayerMute.onClick = (_) -> toggleMuteTrack(PLAYER);
+
+    offsetPlayerSolo.onClick = (_) -> soloTrack(PLAYER);
+
     offsetOpponentVolume.onChange = (_) -> {
       var targetVolume = offsetOpponentVolume.value * 2 / 100;
       setTrackVolume(OPPONENT, targetVolume);
     };
-    offsetOpponentMute.onClick = (_) -> {
-      toggleMuteTrack(OPPONENT);
-    };
-    offsetOpponentSolo.onClick = (_) -> {
-      soloTrack(OPPONENT);
-    };
+    offsetOpponentMute.onClick = (_) -> toggleMuteTrack(OPPONENT);
+
+    offsetOpponentSolo.onClick = (_) -> soloTrack(OPPONENT);
+
     offsetInstrumentalVolume.onChange = (_) -> {
       var targetVolume = offsetInstrumentalVolume.value * 2 / 100;
       setTrackVolume(INSTRUMENTAL, targetVolume);
     };
-    offsetInstrumentalMute.onClick = (_) -> {
-      toggleMuteTrack(INSTRUMENTAL);
-    };
-    offsetInstrumentalSolo.onClick = (_) -> {
-      soloTrack(INSTRUMENTAL);
-    };
-    offsetButtonZoomIn.onClick = (_) -> {
-      zoomWaveformIn();
-    };
-    offsetButtonZoomOut.onClick = (_) -> {
-      zoomWaveformOut();
-    };
-    offsetButtonPause.onClick = (_) -> {
-      pauseAudioPreview();
-    };
-    offsetButtonPlay.onClick = (_) -> {
-      playAudioPreview();
-    };
-    offsetButtonStop.onClick = (_) -> {
-      stopAudioPreview();
-    };
+    offsetInstrumentalMute.onClick = (_) -> toggleMuteTrack(INSTRUMENTAL);
+
+    offsetInstrumentalSolo.onClick = (_) -> soloTrack(INSTRUMENTAL);
+
+    offsetButtonZoomIn.onClick = (_) -> zoomWaveformIn();
+
+    offsetButtonZoomOut.onClick = (_) -> zoomWaveformOut();
+
+    offsetButtonPause.onClick = (_) -> pauseAudioPreview();
+
+    offsetButtonPlay.onClick = (_) -> playAudioPreview();
+
+    offsetButtonStop.onClick = (_) -> stopAudioPreview();
+
     offsetStepperPlayer.onChange = (event:UIEvent) -> {
       if (event.value == chartEditorState.currentVocalOffsetPlayer) return;
       if (dragWaveform != null) return;
@@ -213,19 +202,11 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
     refresh();
     refreshTicks();
 
-    waveformPlayer.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> {
-      onStartDragWaveform(PLAYER);
-    });
-    waveformOpponent.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> {
-      onStartDragWaveform(OPPONENT);
-    });
-    waveformInstrumental.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> {
-      onStartDragWaveform(INSTRUMENTAL);
-    });
+    waveformPlayer.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> onStartDragWaveform(PLAYER));
+    waveformOpponent.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> onStartDragWaveform(OPPONENT));
+    waveformInstrumental.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> onStartDragWaveform(INSTRUMENTAL));
 
-    offsetTicksContainer.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> {
-      onStartDragPlayhead();
-    });
+    offsetTicksContainer.registerEvent(MouseEvent.MOUSE_DOWN, (_) -> onStartDragPlayhead());
   }
 
   function initializeTicks():Void
@@ -321,10 +302,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
     var integerSeconds = Math.floor(seconds);
     var decimalSeconds = Math.floor((seconds - integerSeconds) * 10);
 
-    if (integerSeconds < 60)
-    {
-      return '${integerSeconds}.${decimalSeconds}';
-    }
+    if (integerSeconds < 60) return '${integerSeconds}.${decimalSeconds}';
     else
     {
       var integerMinutes = Math.floor(integerSeconds / 60);
@@ -346,9 +324,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
   }
 
   public function onDragPlayhead(event:MouseEvent):Void
-  {
     movePlayheadToMouse();
-  }
 
   public function onStopDragPlayhead(event:MouseEvent):Void
   {
@@ -457,9 +433,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
   }
 
   public function playAudioPreview():Void
-  {
     audioPreviewTracks.play(false, audioPreviewTracks.time);
-  }
 
   public function addOffsetsToAudioPreview():Void
   {
@@ -486,9 +460,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
   }
 
   public function pauseAudioPreview():Void
-  {
     audioPreviewTracks.pause();
-  }
 
   public function stopAudioPreview():Void
   {
@@ -541,9 +513,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
       refreshTicks();
     }
     else
-    {
       waveformScale = MIN_SCALE;
-    }
   }
 
   public function zoomWaveformOut():Void
@@ -568,22 +538,15 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
     {
       case Waveform.INSTRUMENTAL:
         var trackInst = audioPreviewTracks.members[0];
-        if (trackInst != null)
-        {
-          trackInst.volume = volume;
-        }
+        if (trackInst != null) trackInst.volume = volume;
+
       case Waveform.PLAYER:
         var trackPlayer = audioPreviewTracks.members[1];
-        if (trackPlayer != null)
-        {
-          trackPlayer.volume = volume;
-        }
+        if (trackPlayer != null) trackPlayer.volume = volume;
+
       case Waveform.OPPONENT:
         var trackOpponent = audioPreviewTracks.members[2];
-        if (trackOpponent != null)
-        {
-          trackOpponent.volume = volume;
-        }
+        if (trackOpponent != null) trackOpponent.volume = volume;
     }
   }
 
@@ -725,14 +688,9 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
       // BEHAVIOR C.
       // Copy Audacity!
       // If the playhead is out of view, jump forward or backward by one screen width until it's in view.
-      if (playheadAbsolutePos < waveformScrollview.hscrollPos)
-      {
-        waveformScrollview.hscrollPos -= waveformScrollview.width;
-      }
-      if (playheadAbsolutePos > waveformScrollview.hscrollPos + waveformScrollview.width)
-      {
-        waveformScrollview.hscrollPos += waveformScrollview.width;
-      }
+      if (playheadAbsolutePos < waveformScrollview.hscrollPos) waveformScrollview.hscrollPos -= waveformScrollview.width;
+
+      if (playheadAbsolutePos > waveformScrollview.hscrollPos + waveformScrollview.width) waveformScrollview.hscrollPos += waveformScrollview.width;
     }
 
     if (chartEditorState.currentInstrumentalOffset != audioPreviewInstrumentalOffset)
@@ -828,9 +786,7 @@ class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox
   }
 
   public static function build(chartEditorState:ChartEditorState):ChartEditorOffsetsToolbox
-  {
     return new ChartEditorOffsetsToolbox(chartEditorState);
-  }
 }
 
 enum Waveform

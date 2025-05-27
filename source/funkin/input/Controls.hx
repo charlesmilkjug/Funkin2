@@ -1235,7 +1235,7 @@ typedef SaveInputLists =
 {
   ?keys:Array<Int>,
   ?pad:Array<Int>
-};
+}
 
 typedef Swipes =
 {
@@ -1243,7 +1243,7 @@ typedef Swipes =
   ?touchAngle:Float,
   ?touchLength:Float,
   ?curTouchPos:FlxPoint
-};
+}
 
 /**
  * An FlxActionDigital with additional functionality, including:

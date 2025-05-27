@@ -290,10 +290,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @param id
    */
   function createEntry(id:String):Null<T>
-  {
-    // We enforce that T is Constructible to ensure this is valid.
-    return new T(id);
-  }
+    return new T(id); // We enforce that T is Constructible to ensure this is valid.
 
   /**
    * Create a entry, attached to a scripted class, from the given class name.

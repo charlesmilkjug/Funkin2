@@ -105,7 +105,7 @@ typedef DialogParams =
 {
   ?closable:Bool,
   ?modal:Bool
-};
+}
 
 typedef DialogDropTarget =
 {

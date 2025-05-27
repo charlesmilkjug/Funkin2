@@ -137,15 +137,13 @@ class ChartEditorMetadataToolbox extends ChartEditorBaseToolbox
       // Prevent the inital time change timestamp from being modified (it should always be 0) or removed.
       if (inputTimeChange.selectedIndex == 0)
       {
-        labelTimeStamp.hidden = true;
-        inputTimeStamp.hidden = true;
+        labelTimeStamp.hidden = inputTimeStamp.hidden = true;
         removeTimeChange.disabled = true;
       }
       else
       {
         inputTimeStamp.min += 1; // This here so it can't accidentally change the first/0 timechange timestamp to 1.
-        labelTimeStamp.hidden = false;
-        inputTimeStamp.hidden = false;
+        labelTimeStamp.hidden = inputTimeStamp.hidden = false;
         removeTimeChange.disabled = false;
       }
     };
@@ -338,7 +336,5 @@ class ChartEditorMetadataToolbox extends ChartEditorBaseToolbox
   }
 
   public static function build(chartEditorState:ChartEditorState):ChartEditorMetadataToolbox
-  {
     return new ChartEditorMetadataToolbox(chartEditorState);
-  }
 }

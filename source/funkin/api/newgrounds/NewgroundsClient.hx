@@ -105,13 +105,12 @@ class NewgroundsClient
       return;
     }
 
-    var dummyPassport:String->Void = (_) -> {
-      // just a dummy passport, so we don't create a popup
-      // otherwise `NG.core.requestLogin()` will automatically attempt to open a tab at the beginning of the game
-      // users should go to the Options Menu to login to NG
-      // we cancel the request, so we can call it later
-      NG.core.cancelLoginRequest();
-    };
+    // just a dummy passport, so we don't create a popup
+    // otherwise `NG.core.requestLogin()` will automatically attempt to open a tab at the beginning of the game
+    // users should go to the Options Menu to login to NG
+    // we cancel the request, so we can call it later
+
+    var dummyPassport:String->Void = (_) -> NG.core.cancelLoginRequest();
 
     if (onSuccess != null && onError != null) NG.core.requestLogin(onLoginResolvedWithCallbacks.bind(_, onSuccess, onError), dummyPassport);
     else

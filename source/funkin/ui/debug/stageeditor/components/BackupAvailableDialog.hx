@@ -70,8 +70,6 @@ class BackupAvailableDialog extends Dialog
     }
 
     // uhhh
-    onDialogClosed = (event) -> {
-      if (event.button == DialogButton.APPLY) if (state.welcomeDialog != null) state.welcomeDialog.hideDialog(DialogButton.APPLY);
-    };
+    onDialogClosed = (event) -> if (event.button == DialogButton.APPLY) if (state.welcomeDialog != null) state.welcomeDialog.hideDialog(DialogButton.APPLY);
   }
 }

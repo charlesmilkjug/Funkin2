@@ -467,4 +467,4 @@ typedef PreciseInputEvent =
    * The timestamp of the input. Measured in nanoseconds.
    */
   timestamp:Int64,
-};
+}

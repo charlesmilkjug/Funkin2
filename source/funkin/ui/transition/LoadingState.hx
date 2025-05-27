@@ -259,57 +259,66 @@ class LoadingState extends MusicBeatSubState
   static function preloadLevelAssets():Void
   {
     // TODO: This section is a hack! Redo this later when we have a proper asset caching system.
+    var toCacheTextures:Array<String> = [
+      'healthBar',
+      'menuDesat',
+      'ui/popup/funkin/combo',
+      'ui/popup/funkin/num0',
+      'ui/popup/funkin/num1',
+      'ui/popup/funkin/num2',
+      'ui/popup/funkin/num3',
+      'ui/popup/funkin/num4',
+      'ui/popup/funkin/num5',
+      'ui/popup/funkin/num6',
+      'ui/popup/funkin/num7',
+      'ui/popup/funkin/num8',
+      'ui/popup/funkin/num9',
+      'ui/popup/pixel/combo',
+      'ui/popup/pixel/combo',
+      'ui/popup/pixel/num0',
+      'ui/popup/pixel/num1',
+      'ui/popup/pixel/num2',
+      'ui/popup/pixel/num3',
+      'ui/popup/pixel/num4',
+      'ui/popup/pixel/num5',
+      'ui/popup/pixel/num6',
+      'ui/popup/pixel/num7',
+      'ui/popup/pixel/num8',
+      'ui/popup/pixel/num9',
+      'ui/popup/funkin/sick',
+      'ui/popup/funkin/good',
+      'ui/popup/funkin/bad',
+      'ui/popup/funkin/shit',
+      'ui/popup/pixel/sick',
+      'ui/popup/pixel/good',
+      'ui/popup/pixel/bad',
+      'ui/popup/pixel/shit'
+    ];
+
+    var toCacheTexturesShared:Array<String> = [
+      'notestyles/funkin/notes',
+      'notestyles/funkin/noteSplashes',
+      'notestyles/funkin/noteStrumline',
+      'notestyles/funkin/NOTE_hold_assets',
+      'notestyles/pixel/arrows-pixels',
+      'notestyles/pixel/arrowEndsNew',
+      'notestyles/pixel/pixelNoteSplash',
+      'notestyles/pixel/pixelNoteHoldCover',
+
+      'ui/countdown/funkin/ready',
+      'ui/countdown/funkin/set',
+      'ui/countdown/funkin/go',
+      'ui/countdown/pixel/ready',
+      'ui/countdown/pixel/set',
+      'ui/countdown/pixel/go'
+    ];
+
     FunkinSprite.preparePurgeCache();
-    FunkinSprite.cacheTexture(Paths.image('healthBar'));
-    FunkinSprite.cacheTexture(Paths.image('menuDesat'));
-    // Lord have mercy on me and this caching -anysad
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/combo'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num0'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num1'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num2'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num3'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num4'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num5'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num6'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num7'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num8'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/num9'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/combo'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num0'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num1'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num2'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num3'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num4'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num5'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num6'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num7'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num8'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/num9'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/funkin/notes', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/funkin/noteSplashes', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/funkin/noteStrumline', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/funkin/NOTE_hold_assets', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/pixel/arrows-pixels', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/pixel/arrowEndsNew', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/pixel/pixelNoteSplash', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('notestyles/pixel/pixelNoteHoldCover', 'shared'));
 
-    FunkinSprite.cacheTexture(Paths.image('ui/countdown/funkin/ready', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('ui/countdown/funkin/set', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('ui/countdown/funkin/go', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('ui/countdown/pixel/ready', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('ui/countdown/pixel/set', 'shared'));
-    FunkinSprite.cacheTexture(Paths.image('ui/countdown/pixel/go', 'shared'));
-
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/sick'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/good'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/bad'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/funkin/shit'));
-
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/sick'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/good'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/bad'));
-    FunkinSprite.cacheTexture(Paths.image('ui/popup/pixel/shit'));
+    for (tex in toCacheTextures)
+      FunkinSprite.cacheTexture(Paths.image(tex));
+    for (share in toCacheTexturesShared)
+      FunkinSprite.cacheTexture(Paths.image(share));
 
     // List all image assets in the level's library.
     // This is crude and I want to remove it when we have a proper asset caching system.

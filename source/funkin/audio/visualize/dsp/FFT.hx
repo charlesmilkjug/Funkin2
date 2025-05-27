@@ -58,10 +58,7 @@ class FFT
   // Radix-2 Decimation-In-Time variant of Cooley–Tukey's FFT, recursive.
   static function ditfft2(time:Array<Complex>, t:Int, freq:Array<Complex>, f:Int, n:Int, step:Int, inverse:Bool):Void
   {
-    if (n == 1)
-    {
-      freq[f] = time[t].copy();
-    }
+    if (n == 1) freq[f] = time[t].copy();
     else
     {
       final halfLen = Std.int(n / 2);
@@ -89,9 +86,8 @@ class FFT
     {
       var sum = Complex.zero;
       for (t in 0...n)
-      {
         sum += ts[t] * Complex.exp((inverse ? 1 : -1) * 2 * Math.PI * f * t / n);
-      }
+
       fs[f] = inverse ? sum.scale(1 / n) : sum;
     }
     return fs;

@@ -78,7 +78,7 @@ typedef StageDataCharacters =
   var bf:StageDataCharacter;
   var dad:StageDataCharacter;
   var gf:StageDataCharacter;
-};
+}
 
 typedef StageDataProp =
 {
@@ -226,7 +226,7 @@ typedef StageDataProp =
   @:default("#FFFFFF")
   @:optional
   var color:String;
-};
+}
 
 typedef StageDataCharacter =
 {
@@ -297,4 +297,4 @@ typedef StageDataCharacter =
   @:optional
   @:default(0.0)
   var angle:Float;
-};
+}

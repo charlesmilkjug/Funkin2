@@ -585,23 +585,23 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
         diff.clearChart();
   }
 
-  public function onPause(event:PauseScriptEvent):Void {};
+  public function onPause(event:PauseScriptEvent):Void {}
 
-  public function onResume(event:ScriptEvent):Void {};
+  public function onResume(event:ScriptEvent):Void {}
 
-  public function onSongLoaded(event:SongLoadScriptEvent):Void {};
+  public function onSongLoaded(event:SongLoadScriptEvent):Void {}
 
-  public function onSongStart(event:ScriptEvent):Void {};
+  public function onSongStart(event:ScriptEvent):Void {}
 
-  public function onSongEnd(event:ScriptEvent):Void {};
+  public function onSongEnd(event:ScriptEvent):Void {}
 
-  public function onGameOver(event:ScriptEvent):Void {};
+  public function onGameOver(event:ScriptEvent):Void {}
 
-  public function onSongRetry(event:SongRetryEvent):Void {};
+  public function onSongRetry(event:SongRetryEvent):Void {}
 
-  public function onNoteIncoming(event:NoteScriptEvent) {};
+  public function onNoteIncoming(event:NoteScriptEvent) {}
 
-  public function onNoteHit(event:HitNoteScriptEvent) {};
+  public function onNoteHit(event:HitNoteScriptEvent) {}
 
   public function onNoteMiss(event:NoteScriptEvent):Void {}
 

@@ -4004,6 +4004,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    */
   function handleSnap():Void
   {
+    if (isHaxeUIFocused || isHaxeUIDialogOpen) return;
+
     if (currentLiveInputStyle == None)
     {
       if (FlxG.keys.justPressed.LEFT && !pressingControl())
@@ -4991,6 +4993,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
   function handlePlayhead():Void
   {
+    if (isHaxeUIFocused || isHaxeUIDialogOpen) return;
+
     // Place notes at the playhead with the keyboard.
     for (note => key in LIVE_INPUT_KEYS[currentLiveInputStyle])
     {
@@ -5228,6 +5232,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    */
   function handleFileKeybinds():Void
   {
+    if (isHaxeUIFocused || isHaxeUIDialogOpen) return;
+
     // CTRL + N = New Chart
     if (pressingControl() && FlxG.keys.justPressed.N && !isHaxeUIDialogOpen && !FlxG.keys.pressed.SHIFT && !FlxG.keys.pressed.ALT) this.openWelcomeDialog(true);
 
@@ -5291,6 +5297,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    */
   function handleEditKeybinds():Void
   {
+    if (isHaxeUIFocused || isHaxeUIDialogOpen) return;
+
     // CTRL + Z = Undo
     if (undoKeyHandler.activated) undoLastCommand();
 
@@ -5405,6 +5413,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    */
   function handleViewKeybinds():Void
   {
+    if (isHaxeUIFocused || isHaxeUIDialogOpen) return;
+
     if (currentLiveInputStyle == None)
     {
       if (pressingControl() && FlxG.keys.justPressed.LEFT) incrementDifficulty(-1);
@@ -5622,7 +5632,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         minimalMode: minimal,
         startTimestamp: startTimestamp,
         playbackRate: playbackRate,
-        overrideMusic: true,
+        overrideMusic: true
       };
 
     // Override music.
@@ -6444,7 +6454,7 @@ typedef ChartEditorParams =
    * If non-null, load this variation immediately instead of the default variation.
    */
   var ?targetSongVariation:String;
-};
+}
 
 /**
  * Available themes for the chart editor state.

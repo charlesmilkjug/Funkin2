@@ -185,19 +185,13 @@ typedef FetchedMedalData =
 class MedalsSandboxed
 {
   public static function fetchMedalData(medal:Medal):Null<FetchedMedalData>
-  {
     return Medals.fetchMedalData(medal);
-  }
 
   public static function getMedalByStoryLevel(id:String):Medal
-  {
     return Medal.getMedalByStoryLevel(id);
-  }
 
   public static function getAllMedals():Array<Medal>
-  {
     return Medal.getAllMedals();
-  }
 }
 #end
 

@@ -372,10 +372,7 @@ class Project extends HXProject
     // force / allow high DPI
     this.window.allowHighDPI = true;
 
-    if (isWeb())
-    {
-      this.window.resizable = true;
-    }
+    if (isWeb()) this.window.resizable = true;
 
     if (isDesktop())
     {
@@ -449,34 +446,14 @@ class Project extends HXProject
     }
 
     // Print whether we are using HXCPP, HashLink, or something else.
-    if (isWeb())
-    {
-      info('Target Language: JavaScript (HTML5)');
-    }
-    else if (isHashLink())
-    {
-      info('Target Language: HashLink');
-    }
-    else if (isNeko())
-    {
-      info('Target Language: Neko');
-    }
-    else if (isJava())
-    {
-      info('Target Language: Java');
-    }
-    else if (isNodeJS())
-    {
-      info('Target Language: JavaScript (NodeJS)');
-    }
-    else if (isCSharp())
-    {
-      info('Target Language: C#');
-    }
+    if (isWeb()) info('Target Language: JavaScript (HTML5)');
+    else if (isHashLink()) info('Target Language: HashLink');
+    else if (isNeko()) info('Target Language: Neko');
+    else if (isJava()) info('Target Language: Java');
+    else if (isNodeJS()) info('Target Language: JavaScript (NodeJS)');
+    else if (isCSharp()) info('Target Language: C#');
     else
-    {
       info('Target Language: C++');
-    }
 
     for (arch in this.architectures)
     {
@@ -502,14 +479,10 @@ class Project extends HXProject
         case Architecture.MIPSEL:
           info('Architecture: MIPSEL');
         case null:
-          if (!isWeb())
-          {
-            error('Unsupported architecture (got null on non-web platform)');
-          }
+          if (!isWeb()) error('Unsupported architecture (got null on non-web platform)');
           else
-          {
             info('Architecture: Web');
-          }
+
         default:
           error('Unsupported architecture (got ${arch})');
       }
@@ -597,10 +570,7 @@ class Project extends HXProject
     setHaxedef("safeMode");
 
     // If we aren't using the Flixel debugger, strip it out.
-    if (FEATURE_DEBUG_FUNCTIONS.isDisabled(this))
-    {
-      setHaxedef("FLX_NO_DEBUG");
-    }
+    if (FEATURE_DEBUG_FUNCTIONS.isDisabled(this)) setHaxedef("FLX_NO_DEBUG");
 
     // Disable the built in pause screen when unfocusing the game.
     setHaxedef("FLX_NO_FOCUS_LOST_SCREEN");
@@ -733,10 +703,7 @@ class Project extends HXProject
     addHaxelib('thx.core'); // General utility library, "the lodash of Haxe"
     addHaxelib('thx.semver'); // Version string handling
 
-    if (isDebug())
-    {
-      addHaxelib('hxcpp-debug-server'); // VSCode debug support
-    }
+    if (isDebug()) addHaxelib('hxcpp-debug-server'); // VSCode debug support
 
     if ((isDesktop() || isMobile()) && !isHashLink() && FEATURE_VIDEO_PLAYBACK.isEnabled(this))
     {
@@ -745,18 +712,11 @@ class Project extends HXProject
       addHaxelib('hxvlc'); // Video playback
     }
 
-    if (isAndroid())
-       addHaxelib('extension-androidtools'); // Android Functions
+    if (isAndroid()) addHaxelib('extension-androidtools'); // Android Functions
 
-    if (FEATURE_DISCORD_RPC.isEnabled(this))
-    {
-      addHaxelib('hxdiscord_rpc'); // Discord API
-    }
+    if (FEATURE_DISCORD_RPC.isEnabled(this)) addHaxelib('hxdiscord_rpc'); // Discord API
 
-    if (FEATURE_NEWGROUNDS.isEnabled(this))
-    {
-      addHaxelib('newgrounds'); // Newgrounds API
-    }
+    if (FEATURE_NEWGROUNDS.isEnabled(this)) addHaxelib('newgrounds'); // Newgrounds API
 
     if (FEATURE_FUNKVIS.isEnabled(this))
     {
@@ -764,10 +724,7 @@ class Project extends HXProject
       addHaxelib('grig.audio'); // Audio data utilities
     }
 
-    if (FEATURE_PARTIAL_SOUNDS.isEnabled(this))
-    {
-      addHaxelib('FlxPartialSound'); // Partial sound
-    }
+    if (FEATURE_PARTIAL_SOUNDS.isEnabled(this)) addHaxelib('FlxPartialSound'); // Partial sound
   }
 
   function configureAssets()
@@ -776,14 +733,9 @@ class Project extends HXProject
     var shouldPreload = PRELOAD_ALL.isEnabled(this);
     var shouldEmbed = EMBED_ASSETS.isEnabled(this);
 
-    if (shouldEmbed)
-    {
-      info('Embedding assets into executable...');
-    }
+    if (shouldEmbed) info('Embedding assets into executable...');
     else
-    {
       info('Including assets alongside executable...');
-    }
 
     // Default asset library
     var shouldPreloadDefault = true;
@@ -850,12 +802,7 @@ class Project extends HXProject
    * For desktop platforms, copy the OpenALSoft config file into the build.
    */
   function configureALSoft()
-  {
-    if (isDesktop())
-    {
-      addAsset("alsoft.txt", 'plugins/alsoft.${isWindows() ? "ini" : "conf"}', "default", false);
-    }
-  }
+    if (isDesktop()) addAsset("alsoft.txt", 'plugins/alsoft.${isWindows() ? "ini" : "conf"}', "default", false);
 
   //
   // HELPER FUNCTIONS
@@ -863,104 +810,64 @@ class Project extends HXProject
   //
 
   public function isWeb():Bool
-  {
     return this.platformType == PlatformType.WEB;
-  }
 
   public function isMobile():Bool
-  {
     return this.platformType == PlatformType.MOBILE;
-  }
 
   public function isDesktop():Bool
-  {
     return this.platformType == PlatformType.DESKTOP;
-  }
 
   public function isConsole():Bool
-  {
     return this.platformType == PlatformType.CONSOLE;
-  }
 
   public function is32Bit():Bool
-  {
     return this.architectures.contains(Architecture.X86);
-  }
 
   public function is64Bit():Bool
-  {
     return this.architectures.contains(Architecture.X64);
-  }
 
   public function isWindows():Bool
-  {
     return this.target == Platform.WINDOWS;
-  }
 
   public function isMac():Bool
-  {
     return this.target == Platform.MAC;
-  }
 
   public function isLinux():Bool
-  {
     return this.target == Platform.LINUX;
-  }
 
   public function isAndroid():Bool
-  {
     return this.target == Platform.ANDROID;
-  }
 
   public function isIOS():Bool
-  {
     return this.target == Platform.IOS;
-  }
 
   public function isHashLink():Bool
-  {
     return this.targetFlags.exists("hl");
-  }
 
   public function isNeko():Bool
-  {
     return this.targetFlags.exists("neko");
-  }
 
   public function isJava():Bool
-  {
     return this.targetFlags.exists("java");
-  }
 
   public function isNodeJS():Bool
-  {
     return this.targetFlags.exists("nodejs");
-  }
 
   public function isCSharp():Bool
-  {
     return this.targetFlags.exists("cs");
-  }
 
   public function isDisplay():Bool
-  {
     return this.command == "display";
-  }
 
   public function isDebug():Bool
-  {
     return this.debug;
-  }
 
   public function isRelease():Bool
-  {
     return !isDebug();
-  }
 
   public function getHaxedef(name:String):Null<Dynamic>
-  {
     return this.haxedefs.get(name);
-  }
 
   public function setHaxedef(name:String, ?value:String):Void
   {
@@ -970,19 +877,13 @@ class Project extends HXProject
   }
 
   public function unsetHaxedef(name:String):Void
-  {
     this.haxedefs.remove(name);
-  }
 
   public function getDefine(name:String):Null<Dynamic>
-  {
     return this.defines.get(name);
-  }
 
   public function hasDefine(name:String):Bool
-  {
     return this.defines.exists(name);
-  }
 
   /**
    * Add a library to the list of dependencies for the project.
@@ -990,25 +891,19 @@ class Project extends HXProject
    * @param version The version of the library to add. Optional.
    */
   public function addHaxelib(name:String, version:String = ""):Void
-  {
     this.haxelibs.push(new Haxelib(name, version));
-  }
 
   /**
    * Add a `haxeflag` to the project.
    */
   public function addHaxeFlag(value:String):Void
-  {
     this.haxeflags.push(value);
-  }
 
   /**
    * Call a Haxe build macro.
    */
   public function addHaxeMacro(value:String):Void
-  {
     addHaxeFlag('--macro ${value}');
-  }
 
   /**
    * Add an icon to the project.
@@ -1016,9 +911,7 @@ class Project extends HXProject
    * @param size The size of the icon. Optional.
    */
   public function addIcon(icon:String, ?size:Int):Void
-  {
     this.icons.push(new Icon(icon, size));
-  }
 
   /**
    * Add an asset to the game build.
@@ -1060,35 +953,19 @@ class Project extends HXProject
     if (targetPath != "") targetPath += "/";
 
     // Validate path.
-    if (!sys.FileSystem.exists(path))
-    {
-      error('Could not find asset path "${path}".');
-    }
-    else if (!sys.FileSystem.isDirectory(path))
-    {
-      error('Could not parse asset path "${path}", expected a directory.');
-    }
-    else
-    {
-      // info('  Found asset path "${path}".');
-    }
+    if (!sys.FileSystem.exists(path)) error('Could not find asset path "${path}".');
+    else if (!sys.FileSystem.isDirectory(path)) error('Could not parse asset path "${path}", expected a directory.');
 
     for (file in sys.FileSystem.readDirectory(path))
     {
       if (sys.FileSystem.isDirectory('${path}/${file}'))
       {
         // Attempt to recursively add all assets in the directory.
-        if (this.filter(file, ["*"], exclude))
-        {
-          addAssetPath('${path}/${file}', '${targetPath}${file}', library, include, exclude, embed);
-        }
+        if (this.filter(file, ["*"], exclude)) addAssetPath('${path}/${file}', '${targetPath}${file}', library, include, exclude, embed);
       }
       else
       {
-        if (this.filter(file, include, exclude))
-        {
-          addAsset('${path}/${file}', '${targetPath}${file}', library, embed);
-        }
+        if (this.filter(file, include, exclude)) addAsset('${path}/${file}', '${targetPath}${file}', library, embed);
       }
     }
   }
@@ -1114,17 +991,13 @@ class Project extends HXProject
    * A CLI command to run a command in the shell.
    */
   public function buildCLICommand(cmd:String):CLICommand
-  {
     return CommandHelper.fromSingleString(cmd);
-  }
 
   /**
    * A CLI command to run a Haxe script via `--interp`.
    */
   public function buildHaxeCLICommand(path:String):CLICommand
-  {
     return CommandHelper.interpretHaxe(path);
-  }
 
   public function getGitCommit():String
   {
@@ -1204,20 +1077,13 @@ class Project extends HXProject
    * Display an error message. This should stop the build process.
    */
   public function error(message:String):Void
-  {
     Log.error('${message}');
-  }
 
   /**
    * Display an info message. This should not interfere with the build process.
    */
   public function info(message:String):Void
-  {
-    if (command != "display")
-    {
-      Log.info('[INFO] ${message}');
-    }
-  }
+    if (command != "display") Log.info('[INFO] ${message}');
 }
 
 /**
@@ -1235,9 +1101,7 @@ abstract FeatureFlag(String)
 
   @:from
   public static function fromString(input:String):FeatureFlag
-  {
     return new FeatureFlag(input);
-  }
 
   /**
    * Enable/disable a feature flag if it is unset, and handle the inverse flag.
@@ -1286,10 +1150,7 @@ abstract FeatureFlag(String)
   public function enable(project:Project, andInverse:Bool = true)
   {
     project.setHaxedef(this, "");
-    if (andInverse)
-    {
-      getInverse().disable(project, false);
-    }
+    if (andInverse) getInverse().disable(project, false);
   }
 
   /**
@@ -1301,10 +1162,7 @@ abstract FeatureFlag(String)
   public function disable(project:Project, andInverse:Bool = true)
   {
     project.unsetHaxedef(this);
-    if (andInverse)
-    {
-      getInverse().enable(project, false);
-    }
+    if (andInverse) getInverse().enable(project, false);
   }
 
   /**
@@ -1321,9 +1179,7 @@ abstract FeatureFlag(String)
    * Query if this feature flag's inverse is enabled.
    */
   public function isDisabled(project:Project):Bool
-  {
     return getInverse().isEnabled(project);
-  }
 
   /**
    * Return the inverse of this feature flag.
@@ -1331,10 +1187,8 @@ abstract FeatureFlag(String)
    */
   public function getInverse():FeatureFlag
   {
-    if (this.startsWith(INVERSE_PREFIX))
-    {
-      return this.substring(INVERSE_PREFIX.length);
-    }
+    if (this.startsWith(INVERSE_PREFIX)) return this.substring(INVERSE_PREFIX.length);
+
     return INVERSE_PREFIX + this;
   }
 }

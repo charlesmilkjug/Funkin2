@@ -1622,4 +1622,4 @@ typedef StageEditorParams =
    * If non-null, load this stage immediately instead of the welcome screen.
    */
   var ?targetStageId:String;
-};
+}

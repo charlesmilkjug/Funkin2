@@ -196,13 +196,13 @@ class CharSelectGF extends FlxAtlasSprite implements IBPMSyncedScriptedClass
     updateHitbox();
   }
 
-  public function onScriptEvent(event:ScriptEvent):Void {};
+  public function onScriptEvent(event:ScriptEvent):Void {}
 
-  public function onCreate(event:ScriptEvent):Void {};
+  public function onCreate(event:ScriptEvent):Void {}
 
-  public function onDestroy(event:ScriptEvent):Void {};
+  public function onDestroy(event:ScriptEvent):Void {}
 
-  public function onUpdate(event:UpdateScriptEvent):Void {};
+  public function onUpdate(event:UpdateScriptEvent):Void {}
 }
 
 enum FadeStatus

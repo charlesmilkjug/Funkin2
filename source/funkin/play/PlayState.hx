@@ -1138,7 +1138,7 @@ class PlayState extends MusicBeatSubState
           {
             event.activated = true;
             continue;
-          };
+          }
 
           var eventEvent:SongEventScriptEvent = new SongEventScriptEvent(event);
           dispatchEvent(eventEvent);
@@ -1976,9 +1976,8 @@ class PlayState extends MusicBeatSubState
       return;
     }
 
-    FlxG.sound.music.onComplete = () -> {
-      if (mayPauseGame) endSong(skipEndingTransition);
-    };
+    FlxG.sound.music.onComplete = () -> if (mayPauseGame) endSong(skipEndingTransition);
+
     // A negative instrumental offset means the song skips the first few milliseconds of the track.
     // This just gets added into the startTimestamp behavior so we don't need to do anything extra.
     FlxG.sound.music.pause();
@@ -2624,7 +2623,7 @@ class PlayState extends MusicBeatSubState
           {
             targetSongId: currentSong.id,
             targetSongDifficulty: currentDifficulty,
-            targetSongVariation: currentVariation,
+            targetSongVariation: currentVariation
           }));
       }
     }

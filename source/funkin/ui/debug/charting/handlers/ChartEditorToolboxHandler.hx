@@ -24,14 +24,9 @@ class ChartEditorToolboxHandler
 {
   public static function setToolboxState(state:ChartEditorState, id:String, shown:Bool):Void
   {
-    if (shown)
-    {
-      showToolbox(state, id);
-    }
+    if (shown) showToolbox(state, id);
     else
-    {
       hideToolbox(state, id);
-    }
   }
 
   public static function showToolbox(state:ChartEditorState, id:String):Void
@@ -73,9 +68,7 @@ class ChartEditorToolboxHandler
       }
     }
     else
-    {
       trace('ChartEditorToolboxHandler.showToolbox() - Could not retrieve toolbox: $id');
-    }
   }
 
   public static function hideToolbox(state:ChartEditorState, id:String):Void
@@ -104,9 +97,7 @@ class ChartEditorToolboxHandler
       }
     }
     else
-    {
       trace('ChartEditorToolboxHandler.hideToolbox() - Could not retrieve toolbox: $id');
-    }
   }
 
   public static function refreshToolbox(state:ChartEditorState, id:String):Void
@@ -115,14 +106,9 @@ class ChartEditorToolboxHandler
 
     if (toolbox == null) return;
 
-    if (toolbox != null)
-    {
-      toolbox.refresh();
-    }
+    if (toolbox != null) toolbox.refresh();
     else
-    {
       trace('ChartEditorToolboxHandler.refreshToolbox() - Could not retrieve toolbox: $id');
-    }
   }
 
   public static function rememberOpenToolboxes(state:ChartEditorState):Void {}
@@ -132,9 +118,7 @@ class ChartEditorToolboxHandler
   public static function hideAllToolboxes(state:ChartEditorState):Void
   {
     for (toolbox in state.activeToolboxes.values())
-    {
       toolbox.hideDialog(DialogButton.CANCEL);
-    }
   }
 
   public static function minimizeToolbox(state:ChartEditorState, id:String):Void
@@ -251,9 +235,7 @@ class ChartEditorToolboxHandler
 
     checkboxPracticeMode.selected = state.playtestPracticeMode;
 
-    checkboxPracticeMode.onClick = _ -> {
-      state.playtestPracticeMode = checkboxPracticeMode.selected;
-    };
+    checkboxPracticeMode.onClick = _ -> state.playtestPracticeMode = checkboxPracticeMode.selected;
 
     var checkboxStartTime:Null<CheckBox> = toolbox.findComponent('playtestStartTimeCheckbox', CheckBox);
     if (checkboxStartTime == null)
@@ -261,18 +243,14 @@ class ChartEditorToolboxHandler
 
     checkboxStartTime.selected = state.playtestStartTime;
 
-    checkboxStartTime.onClick = _ -> {
-      state.playtestStartTime = checkboxStartTime.selected;
-    };
+    checkboxStartTime.onClick = _ -> state.playtestStartTime = checkboxStartTime.selected;
 
     var checkboxBotPlay:Null<CheckBox> = toolbox.findComponent('playtestBotPlayCheckbox', CheckBox);
     if (checkboxBotPlay == null) throw 'ChartEditorToolboxHandler.buildToolboxPlaytestPropertiesLayout() - Could not find playtestBotPlayCheckbox component.';
 
     checkboxBotPlay.selected = state.playtestBotPlayMode;
 
-    checkboxBotPlay.onClick = _ -> {
-      state.playtestBotPlayMode = checkboxBotPlay.selected;
-    };
+    checkboxBotPlay.onClick = _ -> state.playtestBotPlayMode = checkboxBotPlay.selected;
 
     var checkboxSongScripts:Null<CheckBox> = toolbox.findComponent('playtestSongScriptsCheckbox', CheckBox);
 
@@ -281,9 +259,7 @@ class ChartEditorToolboxHandler
 
     state.playtestSongScripts = checkboxSongScripts.selected;
 
-    checkboxSongScripts.onClick = _ -> {
-      state.playtestSongScripts = checkboxSongScripts.selected;
-    };
+    checkboxSongScripts.onClick = _ -> state.playtestSongScripts = checkboxSongScripts.selected;
 
     return toolbox;
   }
@@ -370,9 +346,7 @@ class ChartEditorToolboxHandler
     toolbox.x = 200;
     toolbox.y = 350;
 
-    toolbox.onDialogClosed = (event:DialogEvent) -> {
-      state.menubarItemToggleToolboxOpponentPreview.selected = false;
-    }
+    toolbox.onDialogClosed = (event:DialogEvent) -> state.menubarItemToggleToolboxOpponentPreview.selected = false;
 
     var charPlayer:Null<CharacterPlayer> = toolbox.findComponent('charPlayer');
     if (charPlayer == null) throw 'ChartEditorToolboxHandler.buildToolboxOpponentPreviewLayout() - Could not find charPlayer component.';

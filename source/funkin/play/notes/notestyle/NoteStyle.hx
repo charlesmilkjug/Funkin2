@@ -274,9 +274,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function getStrumlineOffsets():Array<Float>
-  {
     return _data?.assets?.noteStrumline?.offsets ?? fallback?.getStrumlineOffsets() ?? [0.0, 0.0];
-  }
 
   public function applyStrumlineOffsets(target:StrumlineNote):Void
   {
@@ -856,10 +854,7 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
       return null;
     }
 
-    if (!FunkinSprite.isTextureCached(Paths.image(splashAssetPath)))
-    {
-      FlxG.log.warn('Note Splash texture not cached: ${splashAssetPath}');
-    }
+    if (!FunkinSprite.isTextureCached(Paths.image(splashAssetPath))) FlxG.log.warn('Note Splash texture not cached: ${splashAssetPath}');
 
     @:nullSafety(Off)
     {
@@ -908,14 +903,10 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function isSplashAnimated():Bool
-  {
     return _data?.assets?.noteSplash?.animated ?? fallback?.isSplashAnimated() ?? false;
-  }
 
   public function getSplashScale():Float
-  {
     return _data?.assets?.noteSplash?.scale ?? fallback?.getSplashScale() ?? 1.0;
-  }
 
   function fetchSplashAnimationData(dir:NoteDirection):Null<Array<AnimationData>>
   {
@@ -930,19 +921,13 @@ class NoteStyle implements IRegistryEntry<NoteStyleData>
   }
 
   public function getSplashOffsets():Array<Float>
-  {
     return _data?.assets?.noteSplash?.offsets ?? fallback?.getSplashOffsets() ?? [0.0, 0.0];
-  }
 
   public function getSplashFramerate():Int
-  {
     return _data?.assets?.noteSplash?.data?.framerateDefault ?? fallback?.getSplashFramerate() ?? 24;
-  }
 
   public function getSplashFramerateVariance():Int
-  {
     return _data?.assets?.noteSplash?.data?.framerateVariance ?? fallback?.getSplashFramerateVariance() ?? 2;
-  }
 
   public function buildHoldCoverSprite(target:NoteHoldCover):Void
   {

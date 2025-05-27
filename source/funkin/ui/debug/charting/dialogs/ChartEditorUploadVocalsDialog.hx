@@ -38,9 +38,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
     this.charIds = charIds;
     this.instId = chartEditorState.currentInstrumentalId;
 
-    dialogCancel.onClick = (_) -> {
-      hideDialog(DialogButton.CANCEL);
-    }
+    dialogCancel.onClick = (_) -> hideDialog(DialogButton.CANCEL);
 
     dialogNoVocals.onClick = (_) -> {
       // Dismiss
@@ -48,10 +46,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
       hideDialog(DialogButton.APPLY);
     };
 
-    dialogContinue.onClick = (_) -> {
-      // Dismiss
-      hideDialog(DialogButton.APPLY);
-    };
+    dialogContinue.onClick = (_) -> hideDialog(DialogButton.APPLY); // Dismiss
 
     buildDropHandlers();
   }
@@ -231,9 +226,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
         chartEditorState.failure('Failed to Load Chart', 'Failed to load chart (${path.toString()})');
     }
     catch (err)
-    {
       chartEditorState.failure('Failed to Load Chart', 'Failed to load chart (${path.toString()}): ${err}');
-    }
   }
 
   /**
@@ -258,9 +251,7 @@ class ChartEditorUploadVocalsDialog extends ChartEditorBaseDialog
         }
       }
       catch (err)
-      {
         chartEditorState.failure('Failed to Load Chart', 'Failed to load chart (${selectedFile.name}): ${err}');
-      }
     }
   }
 

@@ -136,7 +136,6 @@ class ScoreNum extends FlxSprite
   {
     var tweenFunction = (x) -> {
       var digitRounded = Math.floor(x);
-      // if(digitRounded == finalDigit) glow = true;
       digit = digitRounded;
     };
 
@@ -158,11 +157,7 @@ class ScoreNum extends FlxSprite
     if (tempDigit < 0) tempDigit = 0;
     digit = tempDigit;
 
-    if (shuffleTimer.loops > 0 && shuffleTimer.loopsLeft == 0)
-    {
-      // digit = finalDigit;
-      finishShuffleTween();
-    }
+    if (shuffleTimer.loops > 0 && shuffleTimer.loopsLeft == 0) finishShuffleTween();
   }
 
   public function shuffle():Void

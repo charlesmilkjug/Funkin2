@@ -93,4 +93,4 @@ typedef DialogParams =
 {
   ?closable:Bool,
   ?modal:Bool
-};
+}

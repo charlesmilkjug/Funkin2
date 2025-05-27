@@ -104,11 +104,9 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
             }
           }
         }
-        chartEditorState.saveDataDirty = true;
-        chartEditorState.noteDisplayDirty = true;
-        chartEditorState.notePreviewDirty = true;
+        chartEditorState.saveDataDirty = chartEditorState.noteDisplayDirty = chartEditorState.notePreviewDirty = true;
       }
-    };
+    }
     var startingValueNoteKind = ChartEditorDropdowns.populateDropdownWithNoteKinds(toolboxNotesNoteKind, '');
     toolboxNotesNoteKind.value = startingValueNoteKind;
 
@@ -122,9 +120,7 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
         for (note in chartEditorState.currentNoteSelection)
           note.kind = chartEditorState.noteKindToPlace;
 
-        chartEditorState.saveDataDirty = true;
-        chartEditorState.noteDisplayDirty = true;
-        chartEditorState.notePreviewDirty = true;
+        chartEditorState.saveDataDirty = chartEditorState.noteDisplayDirty = chartEditorState.notePreviewDirty = true;
       }
     };
     toolboxNotesCustomKind.value = chartEditorState.noteKindToPlace;
@@ -142,14 +138,12 @@ class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox
 
   function showCustom():Void
   {
-    toolboxNotesCustomKindLabel.hidden = false;
-    toolboxNotesCustomKind.hidden = false;
+    toolboxNotesCustomKindLabel.hidden = toolboxNotesCustomKind.hidden = false;
   }
 
   function hideCustom():Void
   {
-    toolboxNotesCustomKindLabel.hidden = true;
-    toolboxNotesCustomKind.hidden = true;
+    toolboxNotesCustomKindLabel.hidden = toolboxNotesCustomKind.hidden = true;
   }
 
   function createNoteKindParams(noteKind:Null<String>):Void

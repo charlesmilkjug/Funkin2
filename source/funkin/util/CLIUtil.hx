@@ -110,7 +110,7 @@ class CLIUtil
   static function printUsage():Void
   {
     trace('Usage: Funkin.exe [--chart <chart>] [--stage <stage>] [--help] [--version]');
-  };
+  }
 
   static function buildDefaultParams():CLIParams
   {
@@ -163,10 +163,10 @@ typedef CLIChartParams =
 {
   var shouldLoadChart:Bool;
   var chartPath:Null<String>;
-};
+}
 
 typedef CLIStageParams =
 {
   var shouldLoadStage:Bool;
   var stagePath:Null<String>;
-};
+}
