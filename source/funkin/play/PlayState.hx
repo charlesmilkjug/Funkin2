@@ -2048,13 +2048,15 @@ class PlayState extends MusicBeatSubState
     vocals.play(false, timeToPlayAt);
   }
 
+  var showcaseMode:Bool = false;
+
   /**
      * Updates the position and contents of the score display.
      */
   function updateScoreText():Void
   {
     // TODO: Add functionality for modules to update the score text.
-    if (isBotPlayMode) scoreText.text = 'Bot Play Enabled';
+    if (isBotPlayMode && !showcaseMode) scoreText.text = 'Bot Play Enabled';
     else
     {
       // TODO: Add an option for this maybe?
@@ -2068,7 +2070,7 @@ class PlayState extends MusicBeatSubState
      */
   function updateHealthBar():Void
   {
-    if (isBotPlayMode) healthLerp = Constants.HEALTH_MAX;
+    if (isBotPlayMode && !showcaseMode) healthLerp = Constants.HEALTH_MAX;
     else
       healthLerp = FlxMath.lerp(healthLerp, health, 0.15);
   }
@@ -2221,6 +2223,14 @@ class PlayState extends MusicBeatSubState
         // NOTE: This is what handles the strumline and cleaning up the note itself!
         playerStrumline.hitNote(note);
 
+        if (showcaseMode)
+        {
+          playerStrumline.playNoteSplash(note.noteData.getDirection());
+
+          applyScore(500, 'sick', Constants.HEALTH_SICK_BONUS, false);
+          popUpScore('sick');
+        }
+
         if (note.holdNoteSprite != null) playerStrumline.playNoteHoldCover(note.holdNoteSprite);
       }
       else if (Conductor.instance.songPosition > hitWindowStart)
@@ -2272,7 +2282,7 @@ class PlayState extends MusicBeatSubState
       if (holdNote.hitNote && !holdNote.missedNote && holdNote.sustainLength > 0)
       {
         // Grant the player health.
-        if (!isBotPlayMode)
+        if (!isBotPlayMode && !showcaseMode)
         {
           health += Constants.HEALTH_HOLD_BONUS_PER_SECOND * elapsed;
           songScore += Std.int(Constants.SCORE_HOLD_BONUS_PER_SECOND * elapsed);
@@ -2613,6 +2623,8 @@ class PlayState extends MusicBeatSubState
         FlxG.switchState(() -> new ChartEditorState(
           {
             targetSongId: currentSong.id,
+            targetSongDifficulty: currentDifficulty,
+            targetSongVariation: currentVariation,
           }));
       }
     }

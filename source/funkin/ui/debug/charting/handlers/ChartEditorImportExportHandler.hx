@@ -27,7 +27,7 @@ class ChartEditorImportExportHandler
   /**
    * Fetch's a song's existing chart and audio and loads it, replacing the current song.
    */
-  public static function loadSongAsTemplate(state:ChartEditorState, songId:String):Void
+  public static function loadSongAsTemplate(state:ChartEditorState, songId:String, targetSongDifficulty:String, targetSongVariation:String):Void
   {
     trace('===============START');
 
@@ -63,14 +63,9 @@ class ChartEditorImportExportHandler
 
     for (variation in state.availableVariations)
     {
-      if (variation == Constants.DEFAULT_VARIATION)
-      {
-        state.loadInstFromAsset(Paths.inst(songId));
-      }
+      if (variation == Constants.DEFAULT_VARIATION) state.loadInstFromAsset(Paths.inst(songId));
       else
-      {
         state.loadInstFromAsset(Paths.inst(songId, '-$variation'), variation);
-      }
 
       for (difficultyId in song.listDifficulties(variation, true, true))
       {
@@ -85,14 +80,18 @@ class ChartEditorImportExportHandler
           state.loadVocalsFromAsset(voiceList[0], diff.characters.player, instId);
           state.loadVocalsFromAsset(voiceList[1], diff.characters.opponent, instId);
         }
-        else if (voiceList.length == 1)
-        {
-          state.loadVocalsFromAsset(voiceList[0], diff.characters.player, instId);
-        }
+        else if (voiceList.length == 1) state.loadVocalsFromAsset(voiceList[0], diff.characters.player, instId);
         else
-        {
           trace('[WARN] Strange quantity of voice paths for difficulty ${difficultyId}: ${voiceList.length}');
-        }
+
+        // Set the difficulty of the song if one was passed in the params, and it isn't the default
+        if (targetSongDifficulty != null
+          && targetSongDifficulty != state.selectedDifficulty
+          && targetSongDifficulty == diff.difficulty) state.selectedDifficulty = targetSongDifficulty;
+        // Set the variation of the song if one was passed in the params, and it isn't the default
+        if (targetSongVariation != null
+          && targetSongVariation != state.selectedVariation
+          && targetSongVariation == diff.variation) state.selectedVariation = targetSongVariation;
       }
     }
 
@@ -104,7 +103,9 @@ class ChartEditorImportExportHandler
 
     state.refreshToolbox(ChartEditorState.CHART_EDITOR_TOOLBOX_METADATA_LAYOUT);
 
-    state.success('Success', 'Loaded song (${rawSongMetadata[0].songName})');
+    // Actually state the correct variation loaded.
+    for (metadata in rawSongMetadata)
+      if (metadata.variation == state.selectedVariation) state.success('Success', 'Loaded song (${metadata.songName})');
 
     trace('===============END');
   }
@@ -361,10 +362,9 @@ class ChartEditorImportExportHandler
       else
       {
         var variationMetadata:Null<SongMetadata> = state.songMetadata.get(variation);
-        if (variationMetadata != null)
-        {
-          zipEntries.push(FileUtil.makeZIPEntry('${state.currentSongId}-metadata-$variationId.json', variationMetadata.serialize()));
-        }
+        if (variationMetadata != null) zipEntries.push(FileUtil.makeZIPEntry('${state.currentSongId}-metadata-$variationId.json',
+          variationMetadata.serialize()));
+
         var variationChart:Null<SongChartData> = state.songChartData.get(variation);
         if (variationChart != null)
         {

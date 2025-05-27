@@ -2254,7 +2254,13 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
         if (shouldShowBackupAvailableDialog) this.openBackupAvailableDialog(welcomeDialog);
       }
     }
-    else if (params != null && params.targetSongId != null) this.loadSongAsTemplate(params.targetSongId);
+    else if (params != null && params.targetSongId != null)
+    {
+      var targetSongDifficulty = params.targetSongDifficulty ?? Constants.DEFAULT_DIFFICULTY;
+      var targetSongVariation = params.targetSongVariation ?? Constants.DEFAULT_VARIATION;
+
+      this.loadSongAsTemplate(params.targetSongId, targetSongDifficulty, targetSongVariation);
+    }
     else
     {
       var welcomeDialog = this.openWelcomeDialog(false);
@@ -4935,9 +4941,8 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   {
     // Make sure buttons are never nudged out of the correct spot.
     // TODO: Why do these even move in the first place? The camera never moves, LOL.
-    buttonSelectOpponent.y = GRID_INITIAL_Y_POS - NOTE_SELECT_BUTTON_HEIGHT - 2;
-    buttonSelectPlayer.y = GRID_INITIAL_Y_POS - NOTE_SELECT_BUTTON_HEIGHT - 2;
-    buttonSelectEvent.y = GRID_INITIAL_Y_POS - NOTE_SELECT_BUTTON_HEIGHT - 2;
+    for (button in [buttonSelectOpponent, buttonSelectPlayer, buttonSelectEvent])
+      button.y = GRID_INITIAL_Y_POS - NOTE_SELECT_BUTTON_HEIGHT - 2;
   }
 
   /**
@@ -4949,7 +4954,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
 
     // Move the playhead to match the song position, if we aren't dragging it.
     playbarHeadLayout.playbarHead.pos = currentScrollEase;
-
     playbarHeadLayout.playbarHead.max = songLengthInPixels;
 
     // Make sure the playbar is never nudged out of the correct spot.
@@ -5161,14 +5165,12 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     if (newNoteLength < Conductor.instance.stepLengthMs)
     {
       // Don't extend the note if it's too short.
-      // trace('Not extending note. ${column}');
       currentLiveInputPlaceNoteData[column] = null;
       gridPlayheadGhostHoldNotes[column].noteData = null;
     }
     else
     {
       // Extend the note to the playhead position.
-      // trace('Extending note. ${column}');
       this.playSound(Paths.sound('chartingSounds/stretchSNAP_UI'));
       performCommand(new ExtendNoteLengthCommand(currentLiveInputPlaceNoteData[column], newNoteLength));
       currentLiveInputPlaceNoteData[column] = null;
@@ -5446,10 +5448,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    * Handle keybinds for Help menu items.
    */
   function handleHelpKeybinds():Void
-  {
-    // F1 = Open Help
-    if (FlxG.keys.justPressed.F1 && !isHaxeUIDialogOpen) this.openUserGuideDialog();
-  }
+    if (FlxG.keys.justPressed.F1 && !isHaxeUIDialogOpen) this.openUserGuideDialog(); // F1 = Open Help
 
   /**
    * Handle keybinds for audio playback.
@@ -5634,8 +5633,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     FlxG.cameras.remove(uiCamera, false);
     FlxG.cameras.reset(new FunkinCamera('chartEditorUI2'));
 
-    this.persistentUpdate = false;
-    this.persistentDraw = false;
+    this.persistentUpdate = this.persistentDraw = false;
     stopWelcomeMusic();
 
     LoadingState.loadPlayState(targetStateParams, false, true, (targetState) -> targetState.vocals = audioVocalTrackGroup);
@@ -5999,8 +5997,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   @:nullSafety(Off)
   function resetConductorAfterTest(_:FlxSubState = null):Void
   {
-    this.persistentUpdate = true;
-    this.persistentDraw = true;
+    this.persistentUpdate = this.persistentDraw = true;
 
     if (displayAutosavePopup)
     {
@@ -6437,6 +6434,16 @@ typedef ChartEditorParams =
    * If non-null, load this song immediately instead of the welcome screen.
    */
   var ?targetSongId:String;
+
+  /**
+   * If non-null, load this difficulty immediately instead of the default difficulty.
+   */
+  var ?targetSongDifficulty:String;
+
+  /**
+   * If non-null, load this variation immediately instead of the default variation.
+   */
+  var ?targetSongVariation:String;
 };
 
 /**

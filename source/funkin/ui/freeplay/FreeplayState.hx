@@ -2322,7 +2322,6 @@ class FreeplaySongData
    */
   public function toggleFavorite():Bool
   {
-    isFav = !isFav;
     if (isFav) Save.instance.unfavoriteSong(fullSongName);
     else
       Save.instance.favoriteSong(fullSongName);
