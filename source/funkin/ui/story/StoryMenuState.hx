@@ -294,8 +294,6 @@ class StoryMenuState extends MusicBeatState
       var level:Level = LevelRegistry.instance.fetchEntry(levelId);
       if (level == null || !level.isVisible()) continue;
 
-      // TODO: Readd lock icon if unlocked is false.
-
       var levelTitleItem:LevelTitle = new LevelTitle(0, Std.int(levelBackground.y + levelBackground.height + 10), level);
       levelTitleItem.targetY = ((levelTitleItem.height + 20) * levelIndex);
       levelTitleItem.screenCenter(X);
@@ -412,7 +410,9 @@ class StoryMenuState extends MusicBeatState
       if (index == currentIndex)
       {
         currentLevelTitle = item;
-        item.alpha = 1.0;
+        if (!currentLevel.isUnlocked()) item.alpha = 0.6;
+        else
+          item.alpha = 1.0;
       }
       else
         item.alpha = 0.6;

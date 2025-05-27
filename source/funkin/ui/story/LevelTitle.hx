@@ -26,6 +26,8 @@ class LevelTitle extends FlxSpriteGroup
 
     buildLevelTitle();
     buildLevelLock();
+
+    if (!this.level.isUnlocked()) showLock();
   }
 
   override function get_width():Float
