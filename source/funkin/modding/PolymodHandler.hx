@@ -258,17 +258,17 @@ class PolymodHandler
 
       #if FEATURE_NEWGROUNDS
       // `funkin.api.newgrounds.Leaderboards` allows for submitting cheated scores.
-      'funkin.api.newgrounds.Leaderboards' =>
-      funkin.api.newgrounds.Leaderboards.LeaderboardsSandboxed // `funkin.api.newgrounds.Medals` allows for unfair granting of medals.
+      'funkin.api.newgrounds.Leaderboards' => funkin.api.newgrounds.Leaderboards.LeaderboardsSandboxed, //
 
-      'funkin.api.newgrounds.Medals' => funkin.api.newgrounds.Medals.MedalsSandboxed;
+      // `funkin.api.newgrounds.Medals` allows for unfair granting of medals.
+      'funkin.api.newgrounds.Medals' => funkin.api.newgrounds.Medals.MedalsSandboxed, //
 
       // `funkin.api.newgrounds.NewgroundsClientSandboxed` allows for submitting cheated data.
-      'funkin.api.newgrounds.NewgroundsClient' => funkin.api.newgrounds.NewgroundsClient.NewgroundsClientSandboxed;
+      'funkin.api.newgrounds.NewgroundsClient' => funkin.api.newgrounds.NewgroundsClient.NewgroundsClientSandboxed, //
       #end
 
       #if FEATURE_DISCORD_RPC
-      'funkin.api.discord.DiscordClient' => funkin.api.discord.DiscordClient.DiscordClientSandboxed;
+      'funkin.api.discord.DiscordClient' => funkin.api.discord.DiscordClient.DiscordClientSandboxed,
       #end
     ];
 
