@@ -172,6 +172,10 @@ class Save
           metronomeVolume: 1.0,
           hitsoundVolumePlayer: 1.0,
           hitsoundVolumeOpponent: 1.0,
+          instVolume: 1.0,
+          playerVoiceVolume: 1.0,
+          opponentVoiceVolume: 1.0,
+          playbackSpeed: 1.0,
           themeMusic: true,
           autoSaveExit: true,
           autoSaveTimer: 5.0
