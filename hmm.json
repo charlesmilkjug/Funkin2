@@ -11,7 +11,7 @@
       "name": "flixel",
       "type": "git",
       "dir": null,
-      "ref": "3d39053403260b6388d6b988fddff9443c868bb4",
+      "ref": "e1403d4c91831c44531f61ebe63a20959ba8259a",
       "url": "https://github.com/charlesmilkjug/flixel2"
     },
     {
@@ -44,8 +44,8 @@
       "name": "funkin.vis",
       "type": "git",
       "dir": null,
-      "ref": "fd7f4dfcb89ed4e8dc341bd1656c14d5f73861ac",
-      "url": "https://github.com/ACrazyTown/funkVis"
+      "ref": "69f0e0d5f660d1410425ac016de09a228d3bd4a0",
+      "url": "https://github.com/charlesmilkjug/funkVis"
     },
     {
       "name": "grig.audio",
@@ -58,7 +58,7 @@
       "name": "haxeui-core",
       "type": "git",
       "dir": null,
-      "ref": "a3ef67e1bb1f343cbb5933b6d2217fd61909a8e8",
+      "ref": "b3000fa73d21962a5fa27339672598faca861c77",
       "url": "https://github.com/charlesmilkjug/haxeui-core"
     },
     {
@@ -72,15 +72,15 @@
       "name": "hscript",
       "type": "git",
       "dir": null,
-      "ref": "3c0908efc4cc179ac59024f57bb0c7f2e5b88ee1",
-      "url": "https://github.com/charlesmilkjug/hscript"
+      "ref": "f604eaf60292bcfeee33e03fc4f78b3f148ac24e",
+      "url": "https://github.com/VsFreyaDevs/hscript3"
     },
     {
       "name": "hxcpp",
       "type": "git",
       "dir": null,
-      "ref": "v4.3.75",
-      "url": "https://github.com/HaxeFoundation/hxcpp"
+      "ref": "b0af6ed56f0fa63eb1ff3ffda34ebb5aaad547f3",
+      "url": "https://github.com/charlesmilkjug/hxcpp2"
     },
     {
       "name": "hxcpp-debug-server",
@@ -111,14 +111,14 @@
     {
       "name": "hxvlc",
       "type": "haxelib",
-      "version": "2.1.4"
+      "version": "2.2.1"
     },
     {
       "name": "json2object",
       "type": "git",
       "dir": null,
-      "ref": "a8c26f18463c98da32f744c214fe02273e1823fa",
-      "url": "https://github.com/FunkinCrew/json2object"
+      "ref": "63f4881615901d40af8e62d6f097e7839b08c4db",
+      "url": "https://github.com/VsFreyaDevs/json2object"
     },
     {
       "name": "jsonpatch",
