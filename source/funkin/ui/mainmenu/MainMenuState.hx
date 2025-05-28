@@ -151,9 +151,7 @@ class MainMenuState extends MusicBeatState
     // reset camera when debug menu is closed
     subStateClosed.add(_ -> resetCamStuff(false));
 
-    subStateOpened.add(sub -> {
-      if (Std.isOfType(sub, FreeplayState)) new FlxTimer().start(0.5, _ -> magenta.visible = false);
-    });
+    subStateOpened.add(sub -> if (Std.isOfType(sub, FreeplayState)) new FlxTimer().start(0.5, _ -> magenta.visible = false));
 
     // FlxG.camera.setScrollBounds(bg.x, bg.x + bg.width, bg.y, bg.y + bg.height * 1.2);
 
