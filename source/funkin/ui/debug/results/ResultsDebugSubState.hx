@@ -57,7 +57,10 @@ class ResultsDebugSubState extends MusicBeatSubState
           FlxG.switchState(() -> new funkin.play.ResultState(resultsParams));
       });
     });
-    createToggleListItem("Character", PlayerRegistry.instance.listBaseGameEntryIds(), (result:String) -> resultsParams.characterId = result);
+    // Get base game players:
+    var players = PlayerRegistry.instance.listBaseGameEntryIds();
+    players = players.concat(PlayerRegistry.instance.listModdedEntryIds());
+    createToggleListItem("Character", players, (result:String) -> resultsParams.characterId = result);
     createToggleListItem("Results Mode", ["Debug", "Story", "Freeplay"], (result:String) -> {
       returnToDebugScreen = result == "Debug"; // We will create the ResultsState as a Substate, that we will just close and return back to here
       resultsParams.storyMode = result == "Story"; // Debug overrides this, but if not using Debug, we will return to either Freeplay or Story menus

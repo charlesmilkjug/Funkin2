@@ -32,6 +32,7 @@ import funkin.ui.freeplay.FreeplayState;
 import funkin.ui.MusicBeatSubState;
 import funkin.ui.story.StoryMenuState;
 import funkin.modding.base.ScriptedFlxAtlasSprite;
+import funkin.modding.base.ScriptedFunkinSprite;
 #if FEATURE_NEWGROUNDS
 import funkin.api.newgrounds.Medals;
 #end
@@ -249,7 +250,15 @@ class ResultState extends MusicBeatSubState
           // Add to the scene.
           add(animation);
         case 'sparrow':
-          var animation:FunkinSprite = FunkinSprite.createSparrow(offsets[0], offsets[1], animPath);
+          @:nullSafety(Off)
+          var animation:FunkinSprite = null;
+
+          if (animData.scriptClass != null) animation = ScriptedFunkinSprite.init(animData.scriptClass, offsets[0], offsets[1]);
+          else
+            animation = FunkinSprite.createSparrow(offsets[0], offsets[1], animPath);
+
+          if (animation == null) continue;
+
           animation.animation.addByPrefix('idle', '', 24, false, false, false);
 
           if (animData.loopFrame != null)
