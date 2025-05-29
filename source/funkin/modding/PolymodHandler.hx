@@ -218,131 +218,128 @@ class PolymodHandler
 
   static function buildImports():Void
   {
+    // A list of classes from blacklisted packages that are allowed to be imported.
+    var allowedClasses:Array<String> = ['funkin.api.discord.DiscordClient'];
+
     // Add default imports for common classes.
-    final IMPORT_DEFAULTS:Array<Class<Dynamic>> = [
-      flixel.FlxG,
-
-      funkin.Assets,
-      funkin.Conductor,
-      funkin.Paths,
-      funkin.modding.module.ModuleHandler,
-      funkin.play.PlayState
-    ];
-
-    for (cls in IMPORT_DEFAULTS)
-      Polymod.addDefaultImport(cls);
+    Polymod.addDefaultImport(funkin.Assets);
+    Polymod.addDefaultImport(funkin.Paths);
 
     // Add import aliases for certain classes.
     // NOTE: Scripted classes are automatically aliased to their parent class.
-    final IMPORT_ALIASES:Map<String, Class<Dynamic>> = [
-      'flixel.math.FlxPoint' => flixel.math.FlxPoint.FlxBasePoint,
+    Polymod.addImportAlias('flixel.math.FlxPoint', flixel.math.FlxPoint.FlxBasePoint);
 
-      'funkin.data.event.SongEventSchema' => funkin.data.event.SongEventSchema.SongEventSchemaRaw,
+    Polymod.addImportAlias('funkin.data.event.SongEventSchema', funkin.data.event.SongEventSchema.SongEventSchemaRaw);
 
-      // `lime.utils.Assets` literally just has a private `resolveClass` function for some reason? so we replace it with our own.
-      'lime.utils.Assets' => funkin.Assets,
-      'openfl.utils.Assets' => funkin.Assets,
+    // `lime.utils.Assets` literally just has a private `resolveClass` function for some reason? so we replace it with our own.
+    Polymod.addImportAlias('lime.utils.Assets', funkin.Assets);
+    Polymod.addImportAlias('openfl.utils.Assets', funkin.Assets);
 
-      // `Reflect`
-      // Reflect.callMethod() can access blacklisted packages, but some functions are whitelisted
-      'Reflect' => funkin.util.ReflectUtil,
+    // `funkin.util.FileUtil` has unrestricted access to the file system.
+    Polymod.addImportAlias('funkin.util.FileUtil', funkin.util.FileUtilSandboxed);
 
-      // `Type`
-      // Type.createInstance(Type.resolveClass()) can access blacklisted packages, but some functions are whitelisted
-      'Type' => funkin.util.ReflectUtil,
+    Polymod.addImportAlias('flixel.util.FlxColor', funkin.util.FlxColorUtil);
 
-      // `funkin.util.FileUtil` has unrestricted access to the file system.
-      'funkin.util.FileUtil' => funkin.util.FileUtilSandboxed,
+    #if FEATURE_NEWGROUNDS
+    // `funkin.api.newgrounds.Leaderboards` allows for submitting cheated scores.
+    Polymod.addImportAlias('funkin.api.newgrounds.Leaderboards', funkin.api.newgrounds.Leaderboards.LeaderboardsSandboxed);
 
-      'flixel.util.FlxColor' => funkin.util.FlxColorUtil,
+    // `funkin.api.newgrounds.Medals` allows for unfair granting of medals.
+    Polymod.addImportAlias('funkin.api.newgrounds.Medals', funkin.api.newgrounds.Medals.MedalsSandboxed);
 
-      #if FEATURE_NEWGROUNDS
-      // `funkin.api.newgrounds.Leaderboards` allows for submitting cheated scores.
-      'funkin.api.newgrounds.Leaderboards' => funkin.api.newgrounds.Leaderboards.LeaderboardsSandboxed, //
+    // `funkin.api.newgrounds.NewgroundsClientSandboxed` allows for submitting cheated data.
+    Polymod.addImportAlias('funkin.api.newgrounds.NewgroundsClient', funkin.api.newgrounds.NewgroundsClient.NewgroundsClientSandboxed);
+    #end
 
-      // `funkin.api.newgrounds.Medals` allows for unfair granting of medals.
-      'funkin.api.newgrounds.Medals' => funkin.api.newgrounds.Medals.MedalsSandboxed, //
-
-      // `funkin.api.newgrounds.NewgroundsClientSandboxed` allows for submitting cheated data.
-      'funkin.api.newgrounds.NewgroundsClient' => funkin.api.newgrounds.NewgroundsClient.NewgroundsClientSandboxed, //
-      #end
-
-      #if FEATURE_DISCORD_RPC
-      'funkin.api.discord.DiscordClient' => funkin.api.discord.DiscordClient.DiscordClientSandboxed,
-      #end
-    ];
-
-    for (className => cls in IMPORT_ALIASES)
-      Polymod.addImportAlias(className, cls);
+    #if FEATURE_DISCORD_RPC
+    Polymod.addImportAlias('funkin.api.discord.DiscordClient', funkin.api.discord.DiscordClient.DiscordClientSandboxed);
+    #end
 
     // Add blacklisting for prohibited classes and packages.
-    final IMPORT_BLACKLIST:Array<String> = [
-      // `Sys`
-      // Sys.command() can run malicious processes.
-      'Sys',
 
-      // `cpp.Lib`
-      // Lib.load() can load malicious DLLs.
-      'cpp.Lib',
+    // `Sys`
+    // Sys.command() can run malicious processes
+    Polymod.blacklistImport('Sys');
 
-      // `haxe.Unserializer`
-      // haxe.Unserializer.DEFAULT_RESOLVER.resolveClass() can access blacklisted packages.
-      'haxe.Unserializer',
+    // `Reflect`
+    // Reflect.callMethod() can access blacklisted packages, but some functions are whitelisted
+    Polymod.addImportAlias('Reflect', funkin.util.ReflectUtil);
 
-      // `lime.system.CFFI`
-      // Can load and execute compiled binaries.
-      'lime.system.CFFI',
+    // `Type`
+    // Type.createInstance(Type.resolveClass()) can access blacklisted packages, but some functions are whitelisted
+    Polymod.addImportAlias('Type', funkin.util.ReflectUtil);
 
-      // `lime.system.JNI`
-      // Can load and execute compiled binaries.
-      'lime.system.JNI',
+    // `cpp.Lib`
+    // Lib.load() can load malicious DLLs
+    Polymod.blacklistImport('cpp.Lib');
 
-      // `lime.system.System`
-      // System.load() can load malicious DLLs.
-      'lime.system.System',
+    // `haxe.Unserializer`
+    // Unserializer.DEFAULT_RESOLVER.resolveClass() can access blacklisted packages
+    Polymod.blacklistImport('haxe.Unserializer');
 
-      // `lime.utils.Assets`
-      // Literally just has a private `resolveClass` function for some reason?
-      'lime.utils.Assets',
-      'openfl.utils.Assets',
-      'openfl.Lib',
-      'openfl.system.ApplicationDomain',
-      'openfl.net.SharedObject',
+    // `lime.system.CFFI`
+    // Can load and execute compiled binaries.
+    Polymod.blacklistImport('lime.system.CFFI');
 
-      // `openfl.desktop.NativeProcess`
-      // Can load native processes on the host operating system.
-      'openfl.desktop.NativeProcess',
+    // `lime.system.JNI`
+    // Can load and execute compiled binaries.
+    Polymod.blacklistImport('lime.system.JNI');
 
-      // `sys.FileSystem`
-      // Access to the file system.
-      'sys.FileSystem'
-    ];
+    // `lime.system.System`
+    // System.load() can load malicious DLLs
+    Polymod.blacklistImport('lime.system.System');
 
-    final IMPORT_BLACKLIST_PACKAGES:Array<List<Class<Dynamic>>> = [
-      // `polymod.*`
-      // Contains functions which may allow for un-blacklisting other modules.
-      ClassMacro.listClassesInPackage('polymod'),
+    // `lime.utils.Assets`
+    // Literally just has a private `resolveClass` function for some reason?
+    Polymod.blacklistImport('lime.utils.Assets');
+    Polymod.blacklistImport('openfl.utils.Assets');
+    Polymod.blacklistImport('openfl.Lib');
+    Polymod.blacklistImport('openfl.system.ApplicationDomain');
+    Polymod.blacklistImport('openfl.net.SharedObject');
 
-      // `io.newgrounds.*`
-      // Contains functions which allow for cheating medals and leaderboards.
-      ClassMacro.listClassesInPackage('io.newgrounds'),
+    // `openfl.desktop.NativeProcess`
+    // Can load native processes on the host operating system.
+    Polymod.blacklistImport('openfl.desktop.NativeProcess');
 
-      // `sys.io.*`
-      // Access to the file system as well as `Process` which can run malicious processes.
-      ClassMacro.listClassesInPackage('sys.io')
-    ];
-
-    for (packageClasses in IMPORT_BLACKLIST_PACKAGES)
+    // `polymod.*`
+    // Contains functions which may allow for un-blacklisting other modules.
+    for (cls in ClassMacro.listClassesInPackage('polymod'))
     {
-      for (cls in packageClasses)
-      {
-        if (cls == null) continue;
-        IMPORT_BLACKLIST.push(Type.getClassName(cls));
-      }
+      if (cls == null) continue;
+      var className:String = Type.getClassName(cls);
+      if (allowedClasses.contains(className)) continue;
+      Polymod.blacklistImport(className);
     }
 
-    for (className in IMPORT_BLACKLIST)
+    // `funkin.api.*`
+    // Contains functions which may allow for cheating and such.
+    for (cls in ClassMacro.listClassesInPackage('funkin.api'))
+    {
+      if (cls == null) continue;
+      var className:String = Type.getClassName(cls);
+      if (polymod.hscript._internal.PolymodScriptClass.importOverrides.exists(className)) continue;
       Polymod.blacklistImport(className);
+    }
+
+    // `io.newgrounds.*`
+    // Contains functions which allow for cheating medals and leaderboards.
+    for (cls in ClassMacro.listClassesInPackage('io.newgrounds'))
+    {
+      if (cls == null) continue;
+      var className:String = Type.getClassName(cls);
+      if (allowedClasses.contains(className)) continue;
+      Polymod.blacklistImport(className);
+    }
+
+    // `sys.*`
+    // Access to system utilities such as the file system.
+    for (cls in ClassMacro.listClassesInPackage('sys'))
+    {
+      if (cls == null) continue;
+      var className:String = Type.getClassName(cls);
+      if (allowedClasses.contains(className)) continue;
+      Polymod.blacklistImport(className);
+    }
   }
 
   /**
