@@ -81,6 +81,11 @@ class SustainTrail extends FlxSprite
    */
   public var uvtData:DrawData<Float> = new DrawData<Float>();
 
+  /**
+   * A `Vector` of integers, where each one defines a color.
+   */
+  public var colors:DrawData<Int> = new DrawData<Int>();
+
   private var processedGraphic:FlxGraphic;
 
   private var zoom:Float = 1;
@@ -397,7 +402,7 @@ class SustainTrail extends FlxSprite
       // if (!isOnScreen(camera)) continue; // TODO: Update this code to make it work properly.
 
       getScreenPosition(_point, camera).subtractPoint(offset);
-      camera.drawTriangles(processedGraphic, vertices, indices, uvtData, null, _point, blend, true, antialiasing, colorTransform, shader);
+      camera.drawTriangles(processedGraphic, vertices, indices, uvtData, colors, _point, blend, true, antialiasing, colorTransform, shader);
     }
 
     #if FLX_DEBUG
@@ -444,6 +449,9 @@ class SustainTrail extends FlxSprite
     hsvShader.hue = 1.0;
     hsvShader.saturation = 1.0;
     hsvShader.value = 1.0;
+
+    color = 0xFFFFFF;
+    shader = null;
   }
 
   override public function destroy():Void
@@ -456,6 +464,14 @@ class SustainTrail extends FlxSprite
     super.destroy();
   }
 
+  function updateColors():Void
+  {
+    colors = new DrawData<Int>();
+
+    for (_ in 0...Std.int(vertices.length / 2))
+      colors.push(color);
+  }
+
   override function updateColorTransform():Void
   {
     super.updateColorTransform();
@@ -464,5 +480,8 @@ class SustainTrail extends FlxSprite
 
     processedGraphic = FlxGraphic.fromGraphic(graphic, true);
     processedGraphic.bitmap.colorTransform(processedGraphic.bitmap.rect, colorTransform);
+
+    // Make sure the values in SustainTrail's colors variable match with FlxSprite's color variable.
+    updateColors();
   }
 }
