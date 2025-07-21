@@ -56,7 +56,6 @@ import funkin.ui.debug.charting.commands.DeselectAllItemsBetweenTimeCommand;
 import funkin.ui.debug.charting.commands.DeselectItemsCommand;
 import funkin.ui.debug.charting.commands.ExtendNoteLengthCommand;
 import funkin.ui.debug.charting.commands.FlipNotesCommand;
-import funkin.ui.debug.charting.commands.MirrorNotesCommand;
 import funkin.ui.debug.charting.commands.InvertSelectedItemsCommand;
 import funkin.ui.debug.charting.commands.SnapEventsCommand;
 import funkin.ui.debug.charting.commands.SnapItemsCommand;
@@ -3525,7 +3524,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     {
       currentScrollEase = scrollPositionInPixels;
 
-      if (FlxG.keys.pressed.ALT && !FlxG.keys.pressed.CONTROL)
+      if (FlxG.keys.pressed.ALT)
       {
         // If middle mouse panning during song playback, we move ONLY the playhead, without scrolling. Neat!
 
@@ -5580,11 +5579,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
   function handleFileKeybinds():Void
   {
     // CTRL + N = New Chart
-    if (pressingControl()
-      && FlxG.keys.justPressed.N
-      && !isHaxeUIDialogOpen
-      && !FlxG.keys.pressed.SHIFT
-      && !FlxG.keys.pressed.ALT)
+    if (pressingControl() && FlxG.keys.justPressed.N && !isHaxeUIDialogOpen)
     {
       this.openWelcomeDialog(true);
     }
@@ -5750,17 +5745,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     {
       // Flip selected notes.
       performCommand(new FlipNotesCommand(currentNoteSelection));
-    }
-
-    // CTRL + SHIFT + M = Mirror Notes along X axis
-    if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.M)
-    {
-      performCommand(new MirrorNotesCommand(currentNoteSelection, true, false, true, false));
-    }
-    // CTRL + ALT + M = Mirror Notes along the Y axis
-    else if (FlxG.keys.pressed.CONTROL && FlxG.keys.pressed.ALT && FlxG.keys.justPressed.M)
-    {
-      performCommand(new MirrorNotesCommand(currentNoteSelection, true, false, false, true));
     }
 
     // CTRL + A = Select All Notes
