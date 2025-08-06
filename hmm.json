@@ -1,6 +1,6 @@
 {
   "dependencies": [
-    {
+    { 
       "name": "FlxPartialSound",
       "type": "git",
       "dir": null,
